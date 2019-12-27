@@ -23,6 +23,7 @@
 #include "llvm/Support/Path.h"
 using namespace clang;
 
+LLVM_INSTANTIATE_REGISTRY(SyntaxHandlerRegistry)
 
 namespace {
 /// A comment handler that passes comments found by the preprocessor
@@ -68,6 +69,14 @@ Parser::Parser(Preprocessor &pp, Sema &actions, bool skipFunctionBodies)
   PP.addCommentHandler(CommentSemaHandler.get());
 
   PP.setCodeCompletionHandler(*this);
+
+  // Register syntax handlers from any loaded plugins.
+  for (SyntaxHandlerRegistry::iterator it = SyntaxHandlerRegistry::begin(),
+                                       ie = SyntaxHandlerRegistry::end();
+       it != ie; ++it) {
+    SyntaxHandler *Handler = it->instantiate().release();
+    SyntaxHandlers[Handler->getName()].reset(Handler);
+  }
 }
 
 DiagnosticBuilder Parser::Diag(SourceLocation Loc, unsigned DiagID) {
