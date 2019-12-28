@@ -1267,7 +1267,13 @@ def note_pragma_attribute_namespace_on_attribute : Note<
 def warn_no_support_for_eval_method_source_on_m32 : Warning<
   "Setting the floating point evaluation method to `source` on a target"
   " without SSE is not supported.">, InGroup<Pragmas>;
-
+// Syntax plugin.
+def err_attribute_syntax_plugin_not_found : Error<
+  "plugin for syntax %0 is not available">;
+def err_duplicate_syntax_plugin_attribute : Error<
+  "attribute %0 is already applied for a different plugin syntax">;
+def err_opencl_unroll_hint_on_non_loop : Error<
+  "OpenCL only supports 'opencl_unroll_hint' attribute on for, while, and do statements">;
 // OpenCL EXTENSION pragma (OpenCL 1.1 [9.1])
 def warn_pragma_expected_colon : Warning<
   "missing ':' after %0 - ignoring">, InGroup<IgnoredPragmas>;
