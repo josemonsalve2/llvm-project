@@ -25,6 +25,8 @@ using namespace clang;
 
 LLVM_INSTANTIATE_REGISTRY(SyntaxHandlerRegistry)
 
+void SyntaxHandler::anchor() {}
+
 namespace {
 /// A comment handler that passes comments found by the preprocessor
 /// to the parser action.
@@ -1216,6 +1218,7 @@ void Parser::AddPluginPredefines() {
   for (auto &SH : SyntaxHandlers)
     SH.getValue()->AddToPredefines(PredefinesOS);
 
+  PredefinesOS.flush();
   PP.setPredefines(Predefines);
 }
 
@@ -1231,7 +1234,7 @@ void Parser::ProcessPluginSyntax(ParsingDeclarator &D) {
     return SyntaxPA->getArgAsIdent(0)->Ident->getName();
   };
 
-  for (const ParsedAttr &AL : D.getAttributes())
+  for (const ParsedAttr &AL : D.getDeclSpec().getAttributes()) {
     if (AL.getKind() == ParsedAttr::AT_Syntax) {
       if (SyntaxPA &&
           AL.getArgAsIdent(0)->Ident->getName() != SynName()) {
@@ -1241,6 +1244,7 @@ void Parser::ProcessPluginSyntax(ParsingDeclarator &D) {
 
       SyntaxPA = &AL;
     }
+  }
 
   if (!SyntaxPA)
     return;
@@ -1251,6 +1255,8 @@ void Parser::ProcessPluginSyntax(ParsingDeclarator &D) {
          diag::err_attribute_syntax_plugin_not_found) << SynName();
     return;
   }
+
+  ConsumeBrace();
 
   // Collect the token stream until the closing right brace (but leave the
   // closing right brace so that we can use it to indicate the end of the
@@ -1267,7 +1273,10 @@ void Parser::ProcessPluginSyntax(ParsingDeclarator &D) {
   std::string Replacement;
   llvm::raw_string_ostream ReplacementOS(Replacement);
 
+  ReplacementOS << "\n{\n";
   SHI->second->GetReplacement(PP, D, Toks, ReplacementOS);
+  ReplacementOS << "\n}\n";
+  ReplacementOS.flush();
 
   // Now we have a replacement text buffer from the plugin, enter it for
   // lexing. After we're done with that, we'll resume parsing the original
@@ -1280,6 +1289,10 @@ void Parser::ProcessPluginSyntax(ParsingDeclarator &D) {
          "Could not create FileID for plugin replacement text?");
 
   PP.EnterSourceFile(FID, nullptr, SourceLocation());
+
+  // Discard the previously-read next token and read the token from the
+  // replacement stream.
+  ConsumeAnyToken();
 }
 
 /// ParseFunctionDefinition - We parsed and verified that the specified
