@@ -144,11 +144,7 @@ EXTERN void *__kmpc_data_sharing_coalesced_push_stack(size_t DataSize,
 // the list of references to shared variables and to pre-allocate global storage
 // for holding the globalized variables.
 //
-// By default the globalized variables are stored in global memory. If the
-// UseSharedMemory is set to true, the runtime will attempt to use shared memory
-// as long as the size requested fits the pre-allocated size.
-EXTERN void *__kmpc_data_sharing_push_stack(size_t DataSize,
-                                            int16_t UseSharedMemory) {
+EXTERN void *__kmpc_data_sharing_push_stack(size_t DataSize) {
   // Compute the total memory footprint of the requested data.
   // The master thread requires a stack only for itself. A worker
   // thread (which at this point is a warp master) will require

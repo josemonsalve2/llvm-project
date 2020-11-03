@@ -225,7 +225,6 @@ class CheckVarsEscapingDeclContext final
   llvm::SetVector<const ValueDecl *> EscapedDecls;
   llvm::SetVector<const ValueDecl *> EscapedVariableLengthDecls;
   llvm::SmallPtrSet<const Decl *, 4> EscapedParameters;
-  RecordDecl *GlobalizedRD = nullptr;
   llvm::SmallDenseMap<const ValueDecl *, const FieldDecl *> MappedDeclsFields;
   bool AllEscaped = false;
   bool IsForCombinedParallelRegion = false;
@@ -335,19 +334,6 @@ class CheckVarsEscapingDeclContext final
     }
   }
 
-  void buildRecordForGlobalizedVars(bool IsInTTDRegion) {
-    assert(!GlobalizedRD &&
-           "Record for globalized variables is built already.");
-    ArrayRef<const ValueDecl *> EscapedDeclsForParallel, EscapedDeclsForTeams;
-    unsigned WarpSize = CGF.getTarget().getGridValue(llvm::omp::GV_Warp_Size);
-    if (IsInTTDRegion)
-      EscapedDeclsForTeams = EscapedDecls.getArrayRef();
-    else
-      EscapedDeclsForParallel = EscapedDecls.getArrayRef();
-    GlobalizedRD = ::buildRecordForGlobalizedVars(
-        CGF.getContext(), EscapedDeclsForParallel, EscapedDeclsForTeams,
-        MappedDeclsFields, WarpSize);
-  }
 
 public:
   CheckVarsEscapingDeclContext(CodeGenFunction &CGF,
@@ -491,24 +477,6 @@ public:
     for (const Stmt *Child : S->children())
       if (Child)
         Visit(Child);
-  }
-
-  /// Returns the record that handles all the escaped local variables and used
-  /// instead of their original storage.
-  const RecordDecl *getGlobalizedRecord(bool IsInTTDRegion) {
-    if (!GlobalizedRD)
-      buildRecordForGlobalizedVars(IsInTTDRegion);
-    return GlobalizedRD;
-  }
-
-  /// Returns the field in the globalized record for the escaped variable.
-  const FieldDecl *getFieldForGlobalizedVar(const ValueDecl *VD) const {
-    assert(GlobalizedRD &&
-           "Record for globalized variables must be generated already.");
-    auto I = MappedDeclsFields.find(VD);
-    if (I == MappedDeclsFields.end())
-      return nullptr;
-    return I->getSecond();
   }
 
   /// Returns the list of the escaped local variables/parameters.
@@ -1098,15 +1066,7 @@ void CGOpenMPRuntimeGPU::emitNonSPMDKernel(const OMPExecutableDirective &D,
   IsInTTDRegion = true;
   // Reserve place for the globalized memory.
   GlobalizedRecords.emplace_back();
-  if (!KernelStaticGlobalized) {
-    KernelStaticGlobalized = new llvm::GlobalVariable(
-        CGM.getModule(), CGM.VoidPtrTy, /*isConstant=*/false,
-        llvm::GlobalValue::InternalLinkage,
-        llvm::UndefValue::get(CGM.VoidPtrTy),
-        "_openmp_kernel_static_glob_rd$ptr", /*InsertBefore=*/nullptr,
-        llvm::GlobalValue::NotThreadLocal,
-        CGM.getContext().getTargetAddressSpace(LangAS::cuda_shared));
-  }
+
   emitTargetOutlinedFunctionHelper(D, ParentName, OutlinedFn, OutlinedFnID,
                                    IsOffloadEntry, CodeGen);
   IsInTTDRegion = false;
@@ -1230,15 +1190,7 @@ void CGOpenMPRuntimeGPU::emitSPMDKernel(const OMPExecutableDirective &D,
   IsInTTDRegion = true;
   // Reserve place for the globalized memory.
   GlobalizedRecords.emplace_back();
-  if (!KernelStaticGlobalized) {
-    KernelStaticGlobalized = new llvm::GlobalVariable(
-        CGM.getModule(), CGM.VoidPtrTy, /*isConstant=*/false,
-        llvm::GlobalValue::InternalLinkage,
-        llvm::UndefValue::get(CGM.VoidPtrTy),
-        "_openmp_kernel_static_glob_rd$ptr", /*InsertBefore=*/nullptr,
-        llvm::GlobalValue::NotThreadLocal,
-        CGM.getContext().getTargetAddressSpace(LangAS::cuda_shared));
-  }
+
   emitTargetOutlinedFunctionHelper(D, ParentName, OutlinedFn, OutlinedFnID,
                                    IsOffloadEntry, CodeGen);
   IsInTTDRegion = false;
@@ -1676,7 +1628,6 @@ llvm::Function *CGOpenMPRuntimeGPU::emitTeamsOutlinedFunction(
           static_cast<CGOpenMPRuntimeGPU &>(CGF.CGM.getOpenMPRuntime());
       if (GlobalizedRD) {
         auto I = Rt.FunctionGlobalizedDecls.try_emplace(CGF.CurFn).first;
-        I->getSecond().GlobalRecord = GlobalizedRD;
         I->getSecond().MappedParams =
             std::make_unique<CodeGenFunction::OMPMapVars>();
         DeclToAddrMapTy &Data = I->getSecond().LocalVarData;
@@ -1684,8 +1635,7 @@ llvm::Function *CGOpenMPRuntimeGPU::emitTeamsOutlinedFunction(
           assert(Pair.getFirst()->isCanonicalDecl() &&
                  "Expected canonical declaration");
           Data.insert(std::make_pair(Pair.getFirst(),
-                                     MappedVarData(Pair.getSecond(),
-                                                   /*IsOnePerTeam=*/true)));
+                                     MappedVarData(/*IsOnePerTeam=*/true)));
         }
       }
       Rt.emitGenericVarsProlog(CGF, Loc);
@@ -1719,257 +1669,51 @@ void CGOpenMPRuntimeGPU::emitGenericVarsProlog(CodeGenFunction &CGF,
   const auto I = FunctionGlobalizedDecls.find(CGF.CurFn);
   if (I == FunctionGlobalizedDecls.end())
     return;
-  if (const RecordDecl *GlobalizedVarsRecord = I->getSecond().GlobalRecord) {
-    QualType GlobalRecTy = CGM.getContext().getRecordType(GlobalizedVarsRecord);
-    QualType SecGlobalRecTy;
 
-    // Recover pointer to this function's global record. The runtime will
-    // handle the specifics of the allocation of the memory.
-    // Use actual memory size of the record including the padding
-    // for alignment purposes.
-    unsigned Alignment =
-        CGM.getContext().getTypeAlignInChars(GlobalRecTy).getQuantity();
-    unsigned GlobalRecordSize =
-        CGM.getContext().getTypeSizeInChars(GlobalRecTy).getQuantity();
-    GlobalRecordSize = llvm::alignTo(GlobalRecordSize, Alignment);
-
-    llvm::PointerType *GlobalRecPtrTy =
-        CGF.ConvertTypeForMem(GlobalRecTy)->getPointerTo();
-    llvm::Value *GlobalRecCastAddr;
-    llvm::Value *IsTTD = nullptr;
-    if (!IsInTTDRegion &&
-        (WithSPMDCheck ||
-         getExecutionMode() == CGOpenMPRuntimeGPU::EM_Unknown)) {
-      llvm::BasicBlock *ExitBB = CGF.createBasicBlock(".exit");
-      llvm::BasicBlock *SPMDBB = CGF.createBasicBlock(".spmd");
-      llvm::BasicBlock *NonSPMDBB = CGF.createBasicBlock(".non-spmd");
-      if (I->getSecond().SecondaryGlobalRecord.hasValue()) {
-        llvm::Value *RTLoc = emitUpdateLocation(CGF, Loc);
-        llvm::Value *ThreadID = getThreadID(CGF, Loc);
-        llvm::Value *PL = CGF.EmitRuntimeCall(
-            OMPBuilder.getOrCreateRuntimeFunction(CGM.getModule(),
-                                                  OMPRTL___kmpc_parallel_level),
-            {RTLoc, ThreadID});
-        IsTTD = Bld.CreateIsNull(PL);
-      }
-      llvm::Value *IsSPMD = Bld.CreateIsNotNull(
-          CGF.EmitNounwindRuntimeCall(OMPBuilder.getOrCreateRuntimeFunction(
-              CGM.getModule(), OMPRTL___kmpc_is_spmd_exec_mode)));
-      Bld.CreateCondBr(IsSPMD, SPMDBB, NonSPMDBB);
-      // There is no need to emit line number for unconditional branch.
-      (void)ApplyDebugLocation::CreateEmpty(CGF);
-      CGF.EmitBlock(SPMDBB);
-      Address RecPtr = Address(llvm::ConstantPointerNull::get(GlobalRecPtrTy),
-                               CharUnits::fromQuantity(Alignment));
-      CGF.EmitBranch(ExitBB);
-      // There is no need to emit line number for unconditional branch.
-      (void)ApplyDebugLocation::CreateEmpty(CGF);
-      CGF.EmitBlock(NonSPMDBB);
-      llvm::Value *Size = llvm::ConstantInt::get(CGM.SizeTy, GlobalRecordSize);
-      if (const RecordDecl *SecGlobalizedVarsRecord =
-              I->getSecond().SecondaryGlobalRecord.getValueOr(nullptr)) {
-        SecGlobalRecTy =
-            CGM.getContext().getRecordType(SecGlobalizedVarsRecord);
-
-        // Recover pointer to this function's global record. The runtime will
-        // handle the specifics of the allocation of the memory.
-        // Use actual memory size of the record including the padding
-        // for alignment purposes.
-        unsigned Alignment =
-            CGM.getContext().getTypeAlignInChars(SecGlobalRecTy).getQuantity();
-        unsigned GlobalRecordSize =
-            CGM.getContext().getTypeSizeInChars(SecGlobalRecTy).getQuantity();
-        GlobalRecordSize = llvm::alignTo(GlobalRecordSize, Alignment);
-        Size = Bld.CreateSelect(
-            IsTTD, llvm::ConstantInt::get(CGM.SizeTy, GlobalRecordSize), Size);
-      }
-      // TODO: allow the usage of shared memory to be controlled by
-      // the user, for now, default to global.
-      llvm::Value *GlobalRecordSizeArg[] = {
-          Size, CGF.Builder.getInt16(/*UseSharedMemory=*/0)};
-      llvm::Value *GlobalRecValue = CGF.EmitRuntimeCall(
-          OMPBuilder.getOrCreateRuntimeFunction(
-              CGM.getModule(), OMPRTL___kmpc_data_sharing_coalesced_push_stack),
-          GlobalRecordSizeArg);
-      GlobalRecCastAddr = Bld.CreatePointerBitCastOrAddrSpaceCast(
-          GlobalRecValue, GlobalRecPtrTy);
-      CGF.EmitBlock(ExitBB);
-      auto *Phi = Bld.CreatePHI(GlobalRecPtrTy,
-                                /*NumReservedValues=*/2, "_select_stack");
-      Phi->addIncoming(RecPtr.getPointer(), SPMDBB);
-      Phi->addIncoming(GlobalRecCastAddr, NonSPMDBB);
-      GlobalRecCastAddr = Phi;
-      I->getSecond().GlobalRecordAddr = Phi;
-      I->getSecond().IsInSPMDModeFlag = IsSPMD;
-    } else if (!CGM.getLangOpts().OpenMPCUDATargetParallel && IsInTTDRegion) {
-      assert(GlobalizedRecords.back().Records.size() < 2 &&
-             "Expected less than 2 globalized records: one for target and one "
-             "for teams.");
-      unsigned Offset = 0;
-      for (const RecordDecl *RD : GlobalizedRecords.back().Records) {
-        QualType RDTy = CGM.getContext().getRecordType(RD);
-        unsigned Alignment =
-            CGM.getContext().getTypeAlignInChars(RDTy).getQuantity();
-        unsigned Size = CGM.getContext().getTypeSizeInChars(RDTy).getQuantity();
-        Offset =
-            llvm::alignTo(llvm::alignTo(Offset, Alignment) + Size, Alignment);
-      }
-      unsigned Alignment =
-          CGM.getContext().getTypeAlignInChars(GlobalRecTy).getQuantity();
-      Offset = llvm::alignTo(Offset, Alignment);
-      GlobalizedRecords.back().Records.push_back(GlobalizedVarsRecord);
-      ++GlobalizedRecords.back().RegionCounter;
-      if (GlobalizedRecords.back().Records.size() == 1) {
-        assert(KernelStaticGlobalized &&
-               "Kernel static pointer must be initialized already.");
-        auto *UseSharedMemory = new llvm::GlobalVariable(
-            CGM.getModule(), CGM.Int16Ty, /*isConstant=*/true,
-            llvm::GlobalValue::InternalLinkage, nullptr,
-            "_openmp_static_kernel$is_shared");
-        UseSharedMemory->setUnnamedAddr(llvm::GlobalValue::UnnamedAddr::Global);
-        QualType Int16Ty = CGM.getContext().getIntTypeForBitwidth(
-            /*DestWidth=*/16, /*Signed=*/0);
-        llvm::Value *IsInSharedMemory = CGF.EmitLoadOfScalar(
-            Address(UseSharedMemory,
-                    CGM.getContext().getTypeAlignInChars(Int16Ty)),
-            /*Volatile=*/false, Int16Ty, Loc);
-        auto *StaticGlobalized = new llvm::GlobalVariable(
-            CGM.getModule(), CGM.Int8Ty, /*isConstant=*/false,
-            llvm::GlobalValue::CommonLinkage, nullptr);
-        auto *RecSize = new llvm::GlobalVariable(
-            CGM.getModule(), CGM.SizeTy, /*isConstant=*/true,
-            llvm::GlobalValue::InternalLinkage, nullptr,
-            "_openmp_static_kernel$size");
-        RecSize->setUnnamedAddr(llvm::GlobalValue::UnnamedAddr::Global);
-        llvm::Value *Ld = CGF.EmitLoadOfScalar(
-            Address(RecSize, CGM.getSizeAlign()), /*Volatile=*/false,
-            CGM.getContext().getSizeType(), Loc);
-        llvm::Value *ResAddr = Bld.CreatePointerBitCastOrAddrSpaceCast(
-            KernelStaticGlobalized, CGM.VoidPtrPtrTy);
-        llvm::Value *GlobalRecordSizeArg[] = {
-            llvm::ConstantInt::get(
-                CGM.Int16Ty,
-                getExecutionMode() == CGOpenMPRuntimeGPU::EM_SPMD ? 1 : 0),
-            StaticGlobalized, Ld, IsInSharedMemory, ResAddr};
-        CGF.EmitRuntimeCall(
-            OMPBuilder.getOrCreateRuntimeFunction(
-                CGM.getModule(), OMPRTL___kmpc_get_team_static_memory),
-            GlobalRecordSizeArg);
-        GlobalizedRecords.back().Buffer = StaticGlobalized;
-        GlobalizedRecords.back().RecSize = RecSize;
-        GlobalizedRecords.back().UseSharedMemory = UseSharedMemory;
-        GlobalizedRecords.back().Loc = Loc;
-      }
-      assert(KernelStaticGlobalized && "Global address must be set already.");
-      Address FrameAddr = CGF.EmitLoadOfPointer(
-          Address(KernelStaticGlobalized, CGM.getPointerAlign()),
-          CGM.getContext()
-              .getPointerType(CGM.getContext().VoidPtrTy)
-              .castAs<PointerType>());
-      llvm::Value *GlobalRecValue =
-          Bld.CreateConstInBoundsGEP(FrameAddr, Offset).getPointer();
-      I->getSecond().GlobalRecordAddr = GlobalRecValue;
-      I->getSecond().IsInSPMDModeFlag = nullptr;
-      GlobalRecCastAddr = Bld.CreatePointerBitCastOrAddrSpaceCast(
-          GlobalRecValue, CGF.ConvertTypeForMem(GlobalRecTy)->getPointerTo());
-    } else {
-      // TODO: allow the usage of shared memory to be controlled by
-      // the user, for now, default to global.
-      bool UseSharedMemory =
-          IsInTTDRegion && GlobalRecordSize <= SharedMemorySize;
-      llvm::Value *GlobalRecordSizeArg[] = {
-          llvm::ConstantInt::get(CGM.SizeTy, GlobalRecordSize),
-          CGF.Builder.getInt16(UseSharedMemory ? 1 : 0)};
-      llvm::Value *GlobalRecValue = CGF.EmitRuntimeCall(
-          OMPBuilder.getOrCreateRuntimeFunction(
-              CGM.getModule(),
-              IsInTTDRegion ? OMPRTL___kmpc_data_sharing_push_stack
-                            : OMPRTL___kmpc_data_sharing_coalesced_push_stack),
-          GlobalRecordSizeArg);
-      GlobalRecCastAddr = Bld.CreatePointerBitCastOrAddrSpaceCast(
-          GlobalRecValue, GlobalRecPtrTy);
-      I->getSecond().GlobalRecordAddr = GlobalRecValue;
-      I->getSecond().IsInSPMDModeFlag = nullptr;
+  // Variables are marked for globalization before, based on an
+  // scape analysis.
+  for (auto &Rec : I->getSecond().LocalVarData) {
+    const auto *VD = cast<VarDecl>(Rec.first);
+    // If it is a parameter then load the value into the Globalized memory
+    bool EscapedParam = I->getSecond().EscapedParameters.count(Rec.first);
+    llvm::Value *ParValue;
+    QualType VarTy = VD->getType();
+    if (EscapedParam) {
+      LValue ParLVal =
+          CGF.MakeAddrLValue(CGF.GetAddrOfLocalVar(VD), VD->getType());
+      ParValue = CGF.EmitLoadOfScalar(ParLVal, Loc);
     }
-    LValue Base =
-        CGF.MakeNaturalAlignPointeeAddrLValue(GlobalRecCastAddr, GlobalRecTy);
+    // Get the size needed in the stack. Logic of how much to allocate
+    // and which part to give to wich thread is inside the runtime function
+    llvm::Value *Size = CGF.getTypeSize(VD->getType());
+    llvm::Value *VoidPtr = CGF.EmitRuntimeCall(
+        OMPBuilder.getOrCreateRuntimeFunction(
+            CGM.getModule(), OMPRTL___kmpc_data_sharing_push_stack),
+        {Size});
 
-    // Emit the "global alloca" which is a GEP from the global declaration
-    // record using the pointer returned by the runtime.
-    LValue SecBase;
-    decltype(I->getSecond().LocalVarData)::const_iterator SecIt;
-    if (IsTTD) {
-      SecIt = I->getSecond().SecondaryLocalVarData->begin();
-      llvm::PointerType *SecGlobalRecPtrTy =
-          CGF.ConvertTypeForMem(SecGlobalRecTy)->getPointerTo();
-      SecBase = CGF.MakeNaturalAlignPointeeAddrLValue(
-          Bld.CreatePointerBitCastOrAddrSpaceCast(
-              I->getSecond().GlobalRecordAddr, SecGlobalRecPtrTy),
-          SecGlobalRecTy);
-    }
-    for (auto &Rec : I->getSecond().LocalVarData) {
-      bool EscapedParam = I->getSecond().EscapedParameters.count(Rec.first);
-      llvm::Value *ParValue;
-      if (EscapedParam) {
-        const auto *VD = cast<VarDecl>(Rec.first);
-        LValue ParLVal =
-            CGF.MakeAddrLValue(CGF.GetAddrOfLocalVar(VD), VD->getType());
-        ParValue = CGF.EmitLoadOfScalar(ParLVal, Loc);
-      }
-      LValue VarAddr = CGF.EmitLValueForField(Base, Rec.second.FD);
-      // Emit VarAddr basing on lane-id if required.
-      QualType VarTy;
-      if (Rec.second.IsOnePerTeam) {
-        VarTy = Rec.second.FD->getType();
-      } else {
-        llvm::Value *Ptr = CGF.Builder.CreateInBoundsGEP(
-            VarAddr.getAddress(CGF).getPointer(),
-            {Bld.getInt32(0), getNVPTXLaneID(CGF)});
-        VarTy =
-            Rec.second.FD->getType()->castAsArrayTypeUnsafe()->getElementType();
-        VarAddr = CGF.MakeAddrLValue(
-            Address(Ptr, CGM.getContext().getDeclAlign(Rec.first)), VarTy,
-            AlignmentSource::Decl);
-      }
-      Rec.second.PrivateAddr = VarAddr.getAddress(CGF);
-      if (!IsInTTDRegion &&
-          (WithSPMDCheck ||
-           getExecutionMode() == CGOpenMPRuntimeGPU::EM_Unknown)) {
-        assert(I->getSecond().IsInSPMDModeFlag &&
-               "Expected unknown execution mode or required SPMD check.");
-        if (IsTTD) {
-          assert(SecIt->second.IsOnePerTeam &&
-                 "Secondary glob data must be one per team.");
-          LValue SecVarAddr = CGF.EmitLValueForField(SecBase, SecIt->second.FD);
-          VarAddr.setAddress(
-              Address(Bld.CreateSelect(IsTTD, SecVarAddr.getPointer(CGF),
-                                       VarAddr.getPointer(CGF)),
-                      VarAddr.getAlignment()));
-          Rec.second.PrivateAddr = VarAddr.getAddress(CGF);
-        }
-        Address GlobalPtr = Rec.second.PrivateAddr;
-        Address LocalAddr = CGF.CreateMemTemp(VarTy, Rec.second.FD->getName());
-        Rec.second.PrivateAddr = Address(
-            Bld.CreateSelect(I->getSecond().IsInSPMDModeFlag,
-                             LocalAddr.getPointer(), GlobalPtr.getPointer()),
-            LocalAddr.getAlignment());
-      }
-      if (EscapedParam) {
-        const auto *VD = cast<VarDecl>(Rec.first);
-        CGF.EmitStoreOfScalar(ParValue, VarAddr);
-        I->getSecond().MappedParams->setVarAddr(CGF, VD,
-                                                VarAddr.getAddress(CGF));
-      }
-      if (IsTTD)
-        ++SecIt;
+    Rec.second.globalizedVal = VoidPtr;
+
+    // Let's cast the void pointer and get the address of the globalized
+    // variable
+    llvm::PointerType *VarPtrTy = CGF.ConvertTypeForMem(VarTy)->getPointerTo();
+    llvm::Value *castedVoidPtr = Bld.CreatePointerBitCastOrAddrSpaceCast(
+        VoidPtr, VarPtrTy, VD->getName() + "_on_stack");
+    LValue VarAddr = CGF.MakeNaturalAlignAddrLValue(castedVoidPtr, VarTy);
+    Rec.second.PrivateAddr = VarAddr.getAddress(CGF);
+
+    // If we are working with a parameter it is now time to get the actual value
+    // And assign it to the newly globalized location
+    if (EscapedParam) {
+      const auto *VD = cast<VarDecl>(Rec.first);
+      CGF.EmitStoreOfScalar(ParValue, VarAddr);
+      I->getSecond().MappedParams->setVarAddr(CGF, VD, VarAddr.getAddress(CGF));
     }
   }
-  for (const ValueDecl *VD : I->getSecond().EscapedVariableLengthDecls) {
-    // Recover pointer to this function's global record. The runtime will
-    // handle the specifics of the allocation of the memory.
-    // Use actual memory size of the record including the padding
-    // for alignment purposes.
-    CGBuilderTy &Bld = CGF.Builder;
+  for (auto &VD : I->getSecond().EscapedVariableLengthDecls) {
+    // If it is a parameter then load the value into the Globalized memory
+    // QualType VarTy = VD->getType();
+    // Get the size needed in the stack. Logic of how much to allocate
+    // and which part to give to wich thread is inside the runtime function
     llvm::Value *Size = CGF.getTypeSize(VD->getType());
     CharUnits Align = CGM.getContext().getDeclAlign(VD);
     Size = Bld.CreateNUWAdd(
@@ -1978,22 +1722,17 @@ void CGOpenMPRuntimeGPU::emitGenericVarsProlog(CodeGenFunction &CGF,
         llvm::ConstantInt::get(CGF.SizeTy, Align.getQuantity());
     Size = Bld.CreateUDiv(Size, AlignVal);
     Size = Bld.CreateNUWMul(Size, AlignVal);
-    // TODO: allow the usage of shared memory to be controlled by
-    // the user, for now, default to global.
-    llvm::Value *GlobalRecordSizeArg[] = {
-        Size, CGF.Builder.getInt16(/*UseSharedMemory=*/0)};
-    llvm::Value *GlobalRecValue = CGF.EmitRuntimeCall(
+    llvm::Value *VoidPtr = CGF.EmitRuntimeCall(
         OMPBuilder.getOrCreateRuntimeFunction(
-            CGM.getModule(), OMPRTL___kmpc_data_sharing_coalesced_push_stack),
-        GlobalRecordSizeArg);
-    llvm::Value *GlobalRecCastAddr = Bld.CreatePointerBitCastOrAddrSpaceCast(
-        GlobalRecValue, CGF.ConvertTypeForMem(VD->getType())->getPointerTo());
-    LValue Base = CGF.MakeAddrLValue(GlobalRecCastAddr, VD->getType(),
+            CGM.getModule(), OMPRTL___kmpc_data_sharing_push_stack),
+        {Size});
+
+    I->getSecond().EscapedVariableLengthDeclsAddrs.emplace_back(VoidPtr);
+    LValue Base = CGF.MakeAddrLValue(VoidPtr, VD->getType(),
                                      CGM.getContext().getDeclAlign(VD),
                                      AlignmentSource::Decl);
     I->getSecond().MappedParams->setVarAddr(CGF, cast<VarDecl>(VD),
                                             Base.getAddress(CGF));
-    I->getSecond().EscapedVariableLengthDeclsAddrs.emplace_back(GlobalRecValue);
   }
   I->getSecond().MappedParams->apply(CGF);
 }
@@ -2006,9 +1745,6 @@ void CGOpenMPRuntimeGPU::emitGenericVarsEpilog(CodeGenFunction &CGF,
 
   const auto I = FunctionGlobalizedDecls.find(CGF.CurFn);
   if (I != FunctionGlobalizedDecls.end()) {
-    I->getSecond().MappedParams->restore(CGF);
-    if (!CGF.HaveInsertPoint())
-      return;
     for (llvm::Value *Addr :
          llvm::reverse(I->getSecond().EscapedVariableLengthDeclsAddrs)) {
       CGF.EmitRuntimeCall(
@@ -2016,50 +1752,17 @@ void CGOpenMPRuntimeGPU::emitGenericVarsEpilog(CodeGenFunction &CGF,
               CGM.getModule(), OMPRTL___kmpc_data_sharing_pop_stack),
           Addr);
     }
-    if (I->getSecond().GlobalRecordAddr) {
-      if (!IsInTTDRegion &&
-          (WithSPMDCheck ||
-           getExecutionMode() == CGOpenMPRuntimeGPU::EM_Unknown)) {
-        CGBuilderTy &Bld = CGF.Builder;
-        llvm::BasicBlock *ExitBB = CGF.createBasicBlock(".exit");
-        llvm::BasicBlock *NonSPMDBB = CGF.createBasicBlock(".non-spmd");
-        Bld.CreateCondBr(I->getSecond().IsInSPMDModeFlag, ExitBB, NonSPMDBB);
-        // There is no need to emit line number for unconditional branch.
-        (void)ApplyDebugLocation::CreateEmpty(CGF);
-        CGF.EmitBlock(NonSPMDBB);
-        CGF.EmitRuntimeCall(
-            OMPBuilder.getOrCreateRuntimeFunction(
-                CGM.getModule(), OMPRTL___kmpc_data_sharing_pop_stack),
-            CGF.EmitCastToVoidPtr(I->getSecond().GlobalRecordAddr));
-        CGF.EmitBlock(ExitBB);
-      } else if (!CGM.getLangOpts().OpenMPCUDATargetParallel && IsInTTDRegion) {
-        assert(GlobalizedRecords.back().RegionCounter > 0 &&
-               "region counter must be > 0.");
-        --GlobalizedRecords.back().RegionCounter;
-        // Emit the restore function only in the target region.
-        if (GlobalizedRecords.back().RegionCounter == 0) {
-          QualType Int16Ty = CGM.getContext().getIntTypeForBitwidth(
-              /*DestWidth=*/16, /*Signed=*/0);
-          llvm::Value *IsInSharedMemory = CGF.EmitLoadOfScalar(
-              Address(GlobalizedRecords.back().UseSharedMemory,
-                      CGM.getContext().getTypeAlignInChars(Int16Ty)),
-              /*Volatile=*/false, Int16Ty, GlobalizedRecords.back().Loc);
-          llvm::Value *Args[] = {
-              llvm::ConstantInt::get(
-                  CGM.Int16Ty,
-                  getExecutionMode() == CGOpenMPRuntimeGPU::EM_SPMD ? 1 : 0),
-              IsInSharedMemory};
-          CGF.EmitRuntimeCall(
-              OMPBuilder.getOrCreateRuntimeFunction(
-                  CGM.getModule(), OMPRTL___kmpc_restore_team_static_memory),
-              Args);
-        }
-      } else {
-        CGF.EmitRuntimeCall(
-            OMPBuilder.getOrCreateRuntimeFunction(
-                CGM.getModule(), OMPRTL___kmpc_data_sharing_pop_stack),
-            I->getSecond().GlobalRecordAddr);
-      }
+    for (auto &Rec : llvm::reverse(I->getSecond().LocalVarData)) {
+      I->getSecond().MappedParams->restore(CGF);
+      // const auto *VD = cast<VarDecl>(Rec.first);
+
+      // Get the size needed in the stack. Logic of how much to allocate
+      // and which part to give to wich thread is inside the runtime function
+      // llvm::Value *size = CGF.getTypeSize(VD->getType());
+      CGF.EmitRuntimeCall(
+          OMPBuilder.getOrCreateRuntimeFunction(
+              CGM.getModule(), OMPRTL___kmpc_data_sharing_pop_stack),
+          {Rec.second.globalizedVal});
     }
   }
 }
@@ -4336,18 +4039,13 @@ void CGOpenMPRuntimeGPU::emitFunctionProlog(CodeGenFunction &CGF,
     return;
   CheckVarsEscapingDeclContext VarChecker(CGF, TeamAndReductions.second);
   VarChecker.Visit(Body);
-  const RecordDecl *GlobalizedVarsRecord =
-      VarChecker.getGlobalizedRecord(IsInTTDRegion);
   TeamAndReductions.first = nullptr;
   TeamAndReductions.second.clear();
   ArrayRef<const ValueDecl *> EscapedVariableLengthDecls =
       VarChecker.getEscapedVariableLengthDecls();
-  if (!GlobalizedVarsRecord && EscapedVariableLengthDecls.empty())
-    return;
   auto I = FunctionGlobalizedDecls.try_emplace(CGF.CurFn).first;
   I->getSecond().MappedParams =
       std::make_unique<CodeGenFunction::OMPMapVars>();
-  I->getSecond().GlobalRecord = GlobalizedVarsRecord;
   I->getSecond().EscapedParameters.insert(
       VarChecker.getEscapedParameters().begin(),
       VarChecker.getEscapedParameters().end());
@@ -4356,23 +4054,9 @@ void CGOpenMPRuntimeGPU::emitFunctionProlog(CodeGenFunction &CGF,
   DeclToAddrMapTy &Data = I->getSecond().LocalVarData;
   for (const ValueDecl *VD : VarChecker.getEscapedDecls()) {
     assert(VD->isCanonicalDecl() && "Expected canonical declaration");
-    const FieldDecl *FD = VarChecker.getFieldForGlobalizedVar(VD);
-    Data.insert(std::make_pair(VD, MappedVarData(FD, IsInTTDRegion)));
+    Data.insert(std::make_pair(VD, MappedVarData(IsInTTDRegion)));
   }
-  if (!IsInTTDRegion && !NeedToDelayGlobalization && !IsInParallelRegion) {
-    CheckVarsEscapingDeclContext VarChecker(CGF, llvm::None);
-    VarChecker.Visit(Body);
-    I->getSecond().SecondaryGlobalRecord =
-        VarChecker.getGlobalizedRecord(/*IsInTTDRegion=*/true);
-    I->getSecond().SecondaryLocalVarData.emplace();
-    DeclToAddrMapTy &Data = I->getSecond().SecondaryLocalVarData.getValue();
-    for (const ValueDecl *VD : VarChecker.getEscapedDecls()) {
-      assert(VD->isCanonicalDecl() && "Expected canonical declaration");
-      const FieldDecl *FD = VarChecker.getFieldForGlobalizedVar(VD);
-      Data.insert(
-          std::make_pair(VD, MappedVarData(FD, /*IsInTTDRegion=*/true)));
-    }
-  }
+
   if (!NeedToDelayGlobalization) {
     emitGenericVarsProlog(CGF, D->getBeginLoc(), /*WithSPMDCheck=*/true);
     struct GlobalizationScope final : EHScopeStack::Cleanup {

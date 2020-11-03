@@ -429,7 +429,7 @@ __OMP_RTL(__kmpc_data_sharing_init_stack, false, Void, )
 __OMP_RTL(__kmpc_data_sharing_init_stack_spmd, false, Void, )
 
 __OMP_RTL(__kmpc_data_sharing_coalesced_push_stack, false, VoidPtr, SizeTy, Int16)
-__OMP_RTL(__kmpc_data_sharing_push_stack, false, VoidPtr, SizeTy, Int16)
+__OMP_RTL(__kmpc_data_sharing_push_stack, false, VoidPtr, SizeTy)
 __OMP_RTL(__kmpc_data_sharing_pop_stack, false, Void, VoidPtr)
 __OMP_RTL(__kmpc_begin_sharing_variables, false, Void, VoidPtrPtrPtr, SizeTy)
 __OMP_RTL(__kmpc_end_sharing_variables, false, Void, )
