@@ -47,6 +47,22 @@ endif()
 # Install plugin under the lib destination folder.
 install(TARGETS omptarget.rtl.cuda LIBRARY DESTINATION "${OPENMP_INSTALL_LIBDIR}")
 
+if(LIBOMPTARGET_DEP_CUDA_NVCOMP_LIBRARIES AND LIBOMPTARGET_DEP_CUDA_NVCOMP_EXTRA_LIBRARIES)
+target_link_libraries(omptarget.rtl.cuda
+  elf_common
+  MemoryManager
+  ${LIBOMPTARGET_DEP_LIBRARIES}
+  ${LIBOMPTARGET_DEP_LIBELF_LIBRARIES}
+  ${OPENMP_PTHREAD_LIB}
+  ${LIBOMPTARGET_DEP_CUDA_NVCOMP_LIBRARIES}
+  ${LIBOMPTARGET_DEP_CUDA_NVCOMP_EXTRA_LIBRARIES}
+  ZLIB::ZLIB
+  "-Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/../exports"
+  "-Wl,-z,defs")
+  include_directories(${LIBOMPTARGET_NVCOMP_PATH}/include)
+  include_directories(${LIBOMPTARGET_NVCOMP_EXTRA_PATH}/include)
+  add_definitions(-DLIBOMPTARGET_NVCOMP)
+  else()
 target_link_libraries(omptarget.rtl.cuda
   elf_common
   MemoryManager
@@ -55,6 +71,7 @@ target_link_libraries(omptarget.rtl.cuda
   ${OPENMP_PTHREAD_LIB}
   "-Wl,--version-script=${CMAKE_CURRENT_SOURCE_DIR}/../exports"
   "-Wl,-z,defs")
+endif(LIBOMPTARGET_DEP_CUDA_NVCOMP_LIBRARIES AND LIBOMPTARGET_DEP_CUDA_NVCOMP_EXTRA_LIBRARIES)
 
 # Report to the parent scope that we are building a plugin for CUDA.
 # This controls whether tests are run for the nvptx offloading target
