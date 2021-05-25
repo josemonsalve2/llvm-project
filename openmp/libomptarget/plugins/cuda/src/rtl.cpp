@@ -23,6 +23,12 @@
 #include "Debug.h"
 #include "omptargetplugin.h"
 
+#ifdef LIBOMPTARGET_NVCOMP
+  #include "nvcomp.h"
+  #include "gdeflate.h"
+  #include "nvcomp/gdeflate.h"
+#endif
+
 #define TARGET_NAME CUDA
 #define DEBUG_PREFIX "Target " GETNAME(TARGET_NAME) " RTL"
 
@@ -844,6 +850,31 @@ public:
     return getOffloadEntriesTable(DeviceId);
   }
 
+
+#ifdef LIBOMPTARGET_NVCOMP
+  // JOSE STARTS HERE
+  #ifdef ENABLE_GDEFLATE
+  #define CHECK_NVCOMP_STATUS(status)                                            \
+    if ((status) != nvcompSuccess)                                               \
+      throw std::runtime_error("Failed to decompress data");
+  #else
+  #define CHECK_NVCOMP_STATUS(status)                                            \
+    if ((status) != nvcompSuccess)                                               \
+      throw std::runtime_error("nvcomp not configured with gdeflate support");
+  #endif
+
+  #define CUDA_CHECK(func)                                                       \
+    do {                                                                         \
+      cudaError_t rt = (func);                                                   \
+      if (rt != cudaSuccess) {                                                   \
+        std::cout << "API call failure \"" #func "\" with " << rt << " at "      \
+                  << __FILE__ << ":" << __LINE__ << std::endl;                   \
+        throw;                                                                   \
+      }                                                                          \
+    } while (0);
+
+  #endif
+
   void *dataAlloc(const int DeviceId, const int64_t Size,
                   const TargetAllocTy Kind) {
     switch (Kind) {
@@ -865,8 +896,37 @@ public:
   }
 
   int dataSubmit(const int DeviceId, const void *TgtPtr, const void *HstPtr,
-                 const int64_t Size, __tgt_async_info *AsyncInfo) const {
+                 const int64_t Size, __tgt_async_info *AsyncInfo) {
     assert(AsyncInfo && "AsyncInfo is nullptr");
+
+#ifdef LIBOMPTARGET_NVCOMP
+    void* ModHstPtr = const_cast<void*>(HstPtr);
+    void* ModTgtPtr = const_cast<void*>(TgtPtr);
+    int64_t ModSize = Size;
+    nvcompError_t status;
+
+    // Compression parameters
+    // TODO: Create env variable for this
+    const size_t chunk_size = 1 << 16;
+    const size_t num_chunks = (Size + chunk_size - 1) / chunk_size;
+    // INPUT helper arrays
+    size_t chunks_sizes[num_chunks];
+    void* input_ptrs[num_chunks];
+    // OUTPUT CPU
+    uint8_t* compress_data;
+    size_t compressed_chunks_sizes[num_chunks];
+    void* compressed_ptrs[num_chunks];
+    int64_t comp_bytes = 0;
+
+    // OUTPUT GPU
+    void* gpu_in_ptrs_hst[num_chunks];
+    void* gpu_out_ptrs_hst[num_chunks];
+    void* gpu_in_ptrs;
+    void* gpu_out_ptrs;
+    void* gpu_chunk_sizes;
+    void* gpu_compressed_chunk_sizes;
+
+#endif
 
     CUresult Err = cuCtxSetCurrent(DeviceData[DeviceId].Context);
     if (!checkResult(Err, "Error returned from cuCtxSetCurrent\n"))
@@ -874,6 +934,131 @@ public:
 
     CUstream Stream = getStream(DeviceId, AsyncInfo);
 
+#ifdef LIBOMPTARGET_NVCOMP
+    if (const char *EnvStr = getenv("LIBOMPTARGET_COMPRESSION")) {
+
+      // Get max output size per chunk
+      size_t max_out_bytes;
+      status = nvcompBatchedGdeflateCompressGetMaxOutputChunkSize(
+          chunk_size, &max_out_bytes);
+      CHECK_NVCOMP_STATUS(status);
+
+      compress_data = new uint8_t[max_out_bytes * num_chunks];
+
+      for (int i = 0; i < num_chunks; i++) {
+        if (i != num_chunks - 1)
+          chunks_sizes[i] = chunk_size;
+        else
+          chunks_sizes[num_chunks-1] = (Size % chunk_size != 0) ? Size % chunk_size : chunk_size;
+        compressed_chunks_sizes[i] = max_out_bytes;
+        input_ptrs[i] = const_cast<void*>(static_cast<const void*>(static_cast<const uint8_t*>(HstPtr) + i*chunk_size));
+        compressed_ptrs[i] = const_cast<void*>(static_cast<const void*>(compress_data + i*max_out_bytes));
+      }
+
+      gdeflate::compressCPU(input_ptrs,
+                            chunks_sizes,
+                            chunk_size,
+                            num_chunks,
+                            compressed_ptrs,
+                            compressed_chunks_sizes);
+
+      DP("Compressing data for pointer " DPxMOD " into %zu chunks each %zu bytes \n", DPxPTR(HstPtr), num_chunks, chunk_size);
+
+      for (size_t i = 0; i < num_chunks; ++i) {
+        comp_bytes += compressed_chunks_sizes[i];
+      }
+      DP("Compressing ratio %f \n", static_cast<double>(comp_bytes)/Size);
+
+      ModHstPtr = compressed_ptrs[0];
+      ModSize = comp_bytes;
+      ModTgtPtr = dataAlloc(DeviceId, comp_bytes, TARGET_ALLOC_DEFAULT);
+      gpu_chunk_sizes = dataAlloc(DeviceId, num_chunks * sizeof(size_t), TARGET_ALLOC_DEFAULT);
+      gpu_compressed_chunk_sizes = dataAlloc(DeviceId, num_chunks * sizeof(size_t), TARGET_ALLOC_DEFAULT);
+      gpu_in_ptrs = dataAlloc(DeviceId, num_chunks * sizeof(void*), TARGET_ALLOC_DEFAULT);
+      gpu_out_ptrs = dataAlloc(DeviceId, num_chunks * sizeof(void*), TARGET_ALLOC_DEFAULT);
+
+      // Copy input sizes
+      Err = cuMemcpyHtoDAsync((CUdeviceptr)gpu_chunk_sizes, chunks_sizes, num_chunks * sizeof(size_t), Stream);
+      if (Err != CUDA_SUCCESS) {
+        DP("Error when copying data from host to device. Pointers: host "
+          "= " DPxMOD ", device = " DPxMOD ", size = %" PRId64 "\n",
+          DPxPTR(HstPtr), DPxPTR(TgtPtr), Size);
+        CUDA_ERR_STRING(Err);
+        return OFFLOAD_FAIL;
+      }
+      // Copy output sizes
+      Err = cuMemcpyHtoDAsync((CUdeviceptr)gpu_compressed_chunk_sizes, compressed_chunks_sizes, num_chunks * sizeof(size_t), Stream);
+      if (Err != CUDA_SUCCESS) {
+        DP("Error when copying data from host to device. Pointers: host "
+          "= " DPxMOD ", device = " DPxMOD ", size = %" PRId64 "\n",
+          DPxPTR(HstPtr), DPxPTR(TgtPtr), Size);
+        CUDA_ERR_STRING(Err);
+        return OFFLOAD_FAIL;
+      }
+    }
+
+    Err = cuMemcpyHtoDAsync((CUdeviceptr)ModTgtPtr, ModHstPtr, ModSize, Stream);
+    if (Err != CUDA_SUCCESS) {
+      DP("Error when copying data from host to device. Pointers: host "
+         "= " DPxMOD ", device = " DPxMOD ", size = %" PRId64 "\n",
+         DPxPTR(HstPtr), DPxPTR(TgtPtr), Size);
+      CUDA_ERR_STRING(Err);
+      return OFFLOAD_FAIL;
+    }
+
+    if (const char *EnvStr = getenv("LIBOMPTARGET_COMPRESSION")) {
+      // Get chunk pointers on the GPU
+      size_t offset = 0;
+      for (size_t i = 0; i < num_chunks; ++i) {
+        gpu_in_ptrs_hst[i] = const_cast<void*>(static_cast<const void*>(static_cast<const uint8_t*>(ModTgtPtr) + offset));
+        gpu_out_ptrs_hst[i] = const_cast<void*>(static_cast<const void*>(static_cast<const uint8_t*>(TgtPtr) + i*chunk_size));
+        offset += compressed_chunks_sizes[i];
+      }
+
+      // Copy inPtrs sizes
+      Err = cuMemcpyHtoDAsync((CUdeviceptr)gpu_in_ptrs, gpu_in_ptrs_hst, num_chunks * sizeof(void*), Stream);
+      if (Err != CUDA_SUCCESS) {
+        DP("Error when copying data from host to device. Pointers: host "
+          "= " DPxMOD ", device = " DPxMOD ", size = %" PRId64 "\n",
+          DPxPTR(HstPtr), DPxPTR(TgtPtr), Size);
+        CUDA_ERR_STRING(Err);
+        return OFFLOAD_FAIL;
+      }
+      // Copy outPtrs sizes
+      Err = cuMemcpyHtoDAsync((CUdeviceptr)gpu_out_ptrs, gpu_out_ptrs_hst, num_chunks * sizeof(void*), Stream);
+      if (Err != CUDA_SUCCESS) {
+        DP("Error when copying data from host to device. Pointers: host "
+          "= " DPxMOD ", device = " DPxMOD ", size = %" PRId64 "\n",
+          DPxPTR(HstPtr), DPxPTR(TgtPtr), Size);
+        CUDA_ERR_STRING(Err);
+        return OFFLOAD_FAIL;
+      }
+
+      // gdeflate GPU decompression
+      // TODO: This parameter is unused by NVCOMP but may be used in the future
+      size_t decomp_temp_bytes=0;
+      status = nvcompBatchedGdeflateDecompressGetTempSize(
+          ModSize, chunk_size, &decomp_temp_bytes);
+      void* d_decomp_temp = nullptr;
+      // There's an allocation here in the original example code for the GPU over d_decomp_temp for the decomp_temp_bytes
+      // But this is currently not used in their code
+      DP("decomp_temp_bytes = %zu \n", decomp_temp_bytes );
+
+      // Run decompression
+      status = nvcompBatchedGdeflateDecompressAsync(
+          static_cast<void**>(gpu_in_ptrs), // This is a GPU Pointer
+          static_cast<size_t*>(gpu_compressed_chunk_sizes), // This is a GPU Pointer
+          static_cast<size_t*>(gpu_chunk_sizes), // This is a GPU Pointer
+          chunk_size,
+          num_chunks,
+          d_decomp_temp, 
+          decomp_temp_bytes,
+          static_cast<void**>(gpu_out_ptrs), // This is a GPU Pointer
+          Stream);
+      DP("Decompressing on the GPU From " DPxMOD " to " DPxMOD " \n", DPxPTR(ModTgtPtr), DPxPTR(TgtPtr) );
+    }
+
+#else
     Err = cuMemcpyHtoDAsync((CUdeviceptr)TgtPtr, HstPtr, Size, Stream);
     if (Err != CUDA_SUCCESS) {
       DP("Error when copying data from host to device. Pointers: host "
@@ -882,6 +1067,7 @@ public:
       CUDA_ERR_STRING(Err);
       return OFFLOAD_FAIL;
     }
+#endif
 
     return OFFLOAD_SUCCESS;
   }
