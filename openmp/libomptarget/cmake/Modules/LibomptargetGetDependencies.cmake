@@ -185,6 +185,42 @@ find_package_handle_standard_args(
 mark_as_advanced(LIBOMPTARGET_DEP_CUDA_DRIVER_LIBRARIES)
 
 ################################################################################
+# Looking for CUDA NVCOMP
+################################################################################
+find_package(ZLIB)
+if (NOT LIBOMPTARGET_NVCOMP_PATH)
+  set(${LIBOMPTARGET_NVCOMP_PATH} /usr)
+endif(NOT LIBOMPTARGET_NVCOMP_PATH)
+  find_library (
+      LIBOMPTARGET_DEP_CUDA_NVCOMP_LIBRARIES
+    NAMES
+      nvcomp
+    PATHS
+    ${LIBOMPTARGET_NVCOMP_PATH}/lib)
+if (NOT LIBOMPTARGET_NVCOMP_EXTRA_PATH)
+  set(LIBOMPTARGET_NVCOMP_EXTRA_PATH ${LIBOMPTARGET_NVCOMP_PATH})
+endif(NOT LIBOMPTARGET_NVCOMP_EXTRA_PATH)
+  find_library (
+      LIBOMPTARGET_DEP_CUDA_NVCOMP_GDEFLATE
+    NAMES
+      gdeflate
+    PATHS
+    ${LIBOMPTARGET_NVCOMP_EXTRA_PATH}/lib)
+  find_library (
+      LIBOMPTARGET_DEP_CUDA_NVCOMP_BITCOMP
+    NAMES
+      bitcomp
+    PATHS
+    ${LIBOMPTARGET_NVCOMP_EXTRA_PATH}/lib)
+  set(LIBOMPTARGET_DEP_CUDA_NVCOMP_EXTRA_LIBRARIES ${LIBOMPTARGET_DEP_CUDA_NVCOMP_BITCOMP} ${LIBOMPTARGET_DEP_CUDA_NVCOMP_GDEFLATE})
+if(LIBOMPTARGET_DEP_CUDA_NVCOMP_LIBRARIES AND LIBOMPTARGET_DEP_CUDA_NVCOMP_EXTRA_LIBRARIES)
+  libomptarget_say("Found NVCOMP, attempting compression")
+  libomptarget_say("NVCOMP ${LIBOMPTARGET_DEP_CUDA_NVCOMP_LIBRARIES}")
+  libomptarget_say("NVCOMP EXTRA ${LIBOMPTARGET_DEP_CUDA_NVCOMP_EXTRA_LIBRARIES}")
+endif(LIBOMPTARGET_DEP_CUDA_NVCOMP_LIBRARIES AND LIBOMPTARGET_DEP_CUDA_NVCOMP_EXTRA_LIBRARIES)
+
+  mark_as_advanced(LIBOMPTARGET_DEP_CUDA_NVCOMP_LIBRARIES)
+################################################################################
 # Looking for VEO...
 ################################################################################
 
