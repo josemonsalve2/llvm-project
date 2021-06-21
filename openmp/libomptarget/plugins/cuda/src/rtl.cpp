@@ -12,6 +12,7 @@
 
 #include <cassert>
 #include <cstddef>
+#include <cstring>
 #include <cuda.h>
 #include <list>
 #include <memory>
@@ -309,8 +310,7 @@ public:
 class CompressionManagerTy {
 private:
   // Device elements
-  const int DeviceId;
-  DeviceAllocatorTy &DeviceAllocator;
+  int DeviceNumber;
 
   // COMPRESSION
   // Parameters
@@ -340,39 +340,7 @@ private:
   void* CompGpuChunkSizes; // Array of chunk sizes in the GPU
   void* CompGpuCompressedSizes; // Array of compressed chunk sizes in the GPU
 public:
-  CompressionManagerTy(const int devId, DeviceAllocatorTy& DevAlloc ) : DeviceId(devId), DeviceAllocator(DevAlloc), CompChunkSize(1 << 16), CompMaxChunks(100) {
-
-    if (const char *EnvStr = getenv("LIBOMPTARGET_COMP_CHUNK_SIZE")) {
-      CompChunkSize = std::stoi(EnvStr);
-      DP("Parsed LIBOMPTARGET_COMP_CHUNK_SIZE=%d\n", compChunkSize);
-    }
-    if (const char *EnvStr = getenv("LIBOMPTARGET_COMP_MAX_CHUNKS")) {
-      CompMaxChunks = std::stoi(EnvStr);
-      DP("Parsed LIBOMPTARGET_COMP_MAX_CHUNKS=%d\n", CompMaxChunks);
-    }
-    CompNumChunks = (CompMaxChunks + CompChunkSize - 1) / CompChunkSize;
-
-    // Preallocate max sizes
-    CompChunksSizes = new size_t[CompNumChunks];
-    CompInputPtrs = new void*[CompNumChunks];
-    CompOutputSizes = new size_t[CompNumChunks];
-    CompOutPtrs = new void*[CompNumChunks];
-    CompGpuInputPtrsHst = new void*[CompNumChunks];
-    CompGpuOutPtrsHst = new void*[CompNumChunks];
-
-    status = nvcompBatchedGdeflateCompressGetMaxOutputChunkSize(
-        CompChunkSize, &CompMaxOutBytes);
-    CHECK_NVCOMP_STATUS(status);
-
-    CompOutputData = new uint8_t[CompMaxOutBytes * CompNumChunks];
-    CompTmpData = new uint8_t[CompMaxOutBytes];
-    
-    CompGpuCompressedData = DeviceAllocator.allocate(CompMaxOutBytes * CompNumChunks, nullptr, TARGET_ALLOC_DEFAULT);
-    CompGpuChunkSizes = DeviceAllocator.allocate(CompNumChunks * sizeof(size_t), nullptr, TARGET_ALLOC_DEFAULT);
-    CompGpuCompressedSizes = DeviceAllocator.allocate(CompNumChunks * sizeof(size_t), nullptr, TARGET_ALLOC_DEFAULT);
-    CompGpuInPtrs = DeviceAllocator.allocate(CompNumChunks * sizeof(void*), nullptr, TARGET_ALLOC_DEFAULT);
-    CompGpuOutPtrs = DeviceAllocator.allocate(CompNumChunks * sizeof(void*), nullptr, TARGET_ALLOC_DEFAULT);
-  }
+  CompressionManagerTy(const int devId);
 
   void prepareCompression(const int64_t Size, const void * inPtr) {
     // Depending on the size to compress, initialize different compression chunks and pointers
@@ -392,7 +360,7 @@ public:
   }
 
   // Prepare compression must be called first
-  void HostCompression(const int64_t Size, const void * inPtr, __tgt_async_info *AsyncInfo) {
+  void HostCompression(const int64_t Size, const void * inPtr) {
     prepareCompression(Size, inPtr);
     
     gdeflate::compressCPU(CompInputPtrs,
@@ -424,19 +392,17 @@ public:
     DP("Compressing ratio %f \n", static_cast<double>(CompOutBytes)/CompInBytes);
   }
 
-  void DeviceDecompression(const int64_t Size, const void * OutPtr, __tgt_async_info *AsyncInfo) {
-
-    CUstream Stream = getStream(DeviceId, AsyncInfo);
+  void DeviceDecompression(const int64_t Size, const void * OutPtr, CUstream Stream) {
     nvcompError_t status;
 
     // Copy input sizes
-    CUresult Err = cuMemcpyHtoDAsync((CUdeviceptr)CompGpuChunkSizes, CompChunkSize, CompNumChunks * sizeof(size_t), Stream);
+    CUresult Err = cuMemcpyHtoDAsync((CUdeviceptr)CompGpuChunkSizes, CompChunksSizes, CompNumChunks * sizeof(size_t), Stream);
     if (Err != CUDA_SUCCESS) {
       DP("Error when copying input sizes in compression from host to device. Pointers: host "
         "= " DPxMOD ", device = " DPxMOD ", size = %" PRId64 "\n",
         DPxPTR(CompChunkSize), DPxPTR(CompGpuChunkSizes), CompNumChunks * sizeof(size_t));
       CUDA_ERR_STRING(Err);
-      return OFFLOAD_FAIL;
+      return;
     }
     // Copy output sizes
     Err = cuMemcpyHtoDAsync((CUdeviceptr)CompGpuCompressedSizes, CompOutputSizes, CompNumChunks * sizeof(size_t), Stream);
@@ -445,13 +411,13 @@ public:
         "= " DPxMOD ", device = " DPxMOD ", size = %" PRId64 "\n",
         DPxPTR(CompOutputSizes), DPxPTR(CompGpuCompressedSizes), CompNumChunks * sizeof(size_t));
       CUDA_ERR_STRING(Err);
-      return OFFLOAD_FAIL;
+      return;
     }
     // Get chunk pointers on the GPU
     size_t offset = 0;
     for (size_t i = 0; i < CompNumChunks; ++i) {
       CompGpuInputPtrsHst[i] = const_cast<void*>(static_cast<const void*>(static_cast<const uint8_t*>(CompGpuCompressedData) + offset));
-      CompGpuOutPtrsHst[i] = const_cast<void*>(static_cast<const void*>(static_cast<const uint8_t*>(OutPtr) + i*chunk_size));
+      CompGpuOutPtrsHst[i] = const_cast<void*>(static_cast<const void*>(static_cast<const uint8_t*>(OutPtr) + i*CompChunkSize));
       offset += CompOutputSizes[i];
     }
 
@@ -462,7 +428,7 @@ public:
         "= " DPxMOD ", device = " DPxMOD ", size = %" PRId64 "\n",
         DPxPTR(CompGpuInputPtrsHst), DPxPTR(CompGpuInPtrs), CompNumChunks * sizeof(void*));
       CUDA_ERR_STRING(Err);
-      return OFFLOAD_FAIL;
+      return;
     }
     // Copy outPtrs sizes
     Err = cuMemcpyHtoDAsync((CUdeviceptr)CompGpuOutPtrs, CompGpuOutPtrsHst, CompNumChunks * sizeof(void*), Stream);
@@ -471,7 +437,7 @@ public:
         "= " DPxMOD ", device = " DPxMOD ", size = %" PRId64 "\n",
         DPxPTR(CompGpuOutPtrsHst), DPxPTR(CompGpuOutPtrs), CompNumChunks * sizeof(void*));
       CUDA_ERR_STRING(Err);
-      return OFFLOAD_FAIL;
+      return;
     }
 
     // gdeflate GPU decompression
@@ -494,16 +460,16 @@ public:
         0, // Unused according to docs
         static_cast<void**>(CompGpuOutPtrs), // This is a GPU Pointer
         Stream);
+    CHECK_NVCOMP_STATUS(status);
     DP("Decompressing on the GPU From " DPxMOD " to " DPxMOD " \n", DPxPTR(CompGpuInPtrs), DPxPTR(CompGpuOutPtrs) );
   }
   void * getCompressedPtr() {
     return CompGpuOutPtrsHst[0];
   }
-  size_t getCompressedSize() {
+  // size_t getCompressedSize() {
     
-  }
+  // }
 };
-
 
 class DeviceRTLTy {
   int NumberOfDevices;
@@ -723,7 +689,7 @@ public:
     
     // Populating the compression managers for all devices
     for (int I = 0; I < NumberOfDevices; ++I)
-      CompressionManagers.emplace_back(std::make_unique<CompressionManagerTy>(I, DeviceAllocators[I]));
+      CompressionManagers.emplace_back(std::make_unique<CompressionManagerTy>(I));
   }
 
   ~DeviceRTLTy() {
@@ -1105,7 +1071,7 @@ public:
                       int64_t Size, __tgt_async_info *AsyncInfo) {
     assert(AsyncInfo && "AsyncInfo is nullptr");
 
-    CompressionManagers[DeviceId]->HostCompression(Size, *HstPtr, AsyncInfo);
+    CompressionManagers[DeviceId]->HostCompression(Size, *HstPtr);
 
     return OFFLOAD_SUCCESS;
   }
@@ -1118,7 +1084,9 @@ public:
     if (!checkResult(Err, "Error returned from cuCtxSetCurrent\n"))
       return OFFLOAD_FAIL;
 
-   CompressionManagers[DeviceId]->DeviceDecompression(Size, *TgtPtr, AsyncInfo);
+    CUstream Stream = getStream(DeviceId, AsyncInfo);
+
+    CompressionManagers[DeviceId]->DeviceDecompression(Size, *TgtPtr, Stream);
     return OFFLOAD_SUCCESS;
   }
 
@@ -1363,7 +1331,44 @@ public:
 };
 
 DeviceRTLTy DeviceRTL;
+CompressionManagerTy::CompressionManagerTy(const int devId) : 
+        DeviceNumber(devId), CompChunkSize(1 << 16), CompMaxChunks(100) {
+    nvcompError_t status;
+
+    if (const char *EnvStr = getenv("LIBOMPTARGET_COMP_CHUNK_SIZE")) {
+      CompChunkSize = std::stoi(EnvStr);
+      DP("Parsed LIBOMPTARGET_COMP_CHUNK_SIZE=%zu\n", CompChunkSize);
+    }
+    if (const char *EnvStr = getenv("LIBOMPTARGET_COMP_MAX_CHUNKS")) {
+      CompMaxChunks = std::stoi(EnvStr);
+      DP("Parsed LIBOMPTARGET_COMP_MAX_CHUNKS=%zu\n", CompMaxChunks);
+    }
+    CompNumChunks = (CompMaxChunks + CompChunkSize - 1) / CompChunkSize;
+
+    // Preallocate max sizes
+    CompChunksSizes = new size_t[CompNumChunks];
+    CompInputPtrs = new void*[CompNumChunks];
+    CompOutputSizes = new size_t[CompNumChunks];
+    CompOutPtrs = new void*[CompNumChunks];
+    CompGpuInputPtrsHst = new void*[CompNumChunks];
+    CompGpuOutPtrsHst = new void*[CompNumChunks];
+
+    status = nvcompBatchedGdeflateCompressGetMaxOutputChunkSize(
+        CompChunkSize, &CompMaxOutBytes);
+    CHECK_NVCOMP_STATUS(status);
+
+    CompOutputData = new uint8_t[CompMaxOutBytes * CompNumChunks];
+    CompTmpData = new uint8_t[CompMaxOutBytes];
+    
+    CompGpuCompressedData = DeviceRTL.dataAlloc(DeviceNumber, CompMaxOutBytes * CompNumChunks, TARGET_ALLOC_DEFAULT);
+    CompGpuChunkSizes = DeviceRTL.dataAlloc(DeviceNumber, CompNumChunks * sizeof(size_t), TARGET_ALLOC_DEFAULT);
+    CompGpuCompressedSizes = DeviceRTL.dataAlloc(DeviceNumber, CompNumChunks * sizeof(size_t), TARGET_ALLOC_DEFAULT);
+    CompGpuInPtrs = DeviceRTL.dataAlloc(DeviceNumber, CompNumChunks * sizeof(void*), TARGET_ALLOC_DEFAULT);
+    CompGpuOutPtrs = DeviceRTL.dataAlloc(DeviceNumber, CompNumChunks * sizeof(void*), TARGET_ALLOC_DEFAULT);
+  }
+
 } // namespace
+
 
 // Exposed library API function
 #ifdef __cplusplus
