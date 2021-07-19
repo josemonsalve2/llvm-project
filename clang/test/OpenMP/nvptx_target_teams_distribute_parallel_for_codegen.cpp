@@ -98,7 +98,7 @@ int bar(int n){
 // CHECK5-NEXT:    store i32 [[TMP4]], i32* [[L_CASTED]], align 4
 // CHECK5-NEXT:    [[TMP5:%.*]] = load i32, i32* [[L_CASTED]], align 4
 // CHECK5-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK5-NEXT:    call void @__omp_outlined__(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i32]* [[TMP0]], i32 [[TMP5]]) #[[ATTR2:[0-9]+]]
+// CHECK5-NEXT:    call void @__omp_outlined__(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i32]* [[TMP0]], i32 [[TMP5]]) #[[ATTR3:[0-9]+]]
 // CHECK5-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK5:       .omp.deinit:
 // CHECK5-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -404,7 +404,7 @@ int bar(int n){
 // CHECK5-NEXT:    store i32 [[TMP2]], i32* [[N_CASTED]], align 4
 // CHECK5-NEXT:    [[TMP3:%.*]] = load i32, i32* [[N_CASTED]], align 4
 // CHECK5-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK5-NEXT:    call void @__omp_outlined__2(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i16]* [[TMP0]]) #[[ATTR2]]
+// CHECK5-NEXT:    call void @__omp_outlined__2(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i16]* [[TMP0]]) #[[ATTR3]]
 // CHECK5-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK5:       .omp.deinit:
 // CHECK5-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -642,7 +642,7 @@ int bar(int n){
 // CHECK5:       .execute:
 // CHECK5-NEXT:    [[TMP1:%.*]] = call i32 @__kmpc_global_thread_num(%struct.ident_t* @[[GLOB3]])
 // CHECK5-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK5-NEXT:    call void @__omp_outlined__4(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x i32]* [[TMP0]]) #[[ATTR2]]
+// CHECK5-NEXT:    call void @__omp_outlined__4(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x i32]* [[TMP0]]) #[[ATTR3]]
 // CHECK5-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK5:       .omp.deinit:
 // CHECK5-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -825,7 +825,7 @@ int bar(int n){
 // CHECK5-NEXT:    store i32 [[TMP2]], i32* [[F_CASTED]], align 4
 // CHECK5-NEXT:    [[TMP3:%.*]] = load i32, i32* [[F_CASTED]], align 4
 // CHECK5-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK5-NEXT:    call void @__omp_outlined__6(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x [10 x i32]]* [[TMP0]], i32 [[TMP3]]) #[[ATTR2]]
+// CHECK5-NEXT:    call void @__omp_outlined__6(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x [10 x i32]]* [[TMP0]], i32 [[TMP3]]) #[[ATTR3]]
 // CHECK5-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK5:       .omp.deinit:
 // CHECK5-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -1042,7 +1042,7 @@ int bar(int n){
 // CHECK5-NEXT:    store i32 [[TMP2]], i32* [[N_CASTED]], align 4
 // CHECK5-NEXT:    [[TMP3:%.*]] = load i32, i32* [[N_CASTED]], align 4
 // CHECK5-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK5-NEXT:    call void @__omp_outlined__8(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [10 x [10 x i32]]* [[TMP0]]) #[[ATTR2]]
+// CHECK5-NEXT:    call void @__omp_outlined__8(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [10 x [10 x i32]]* [[TMP0]]) #[[ATTR3]]
 // CHECK5-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK5:       .omp.deinit:
 // CHECK5-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -1356,7 +1356,7 @@ int bar(int n){
 // CHECK5-NEXT:    [[TMP3:%.*]] = load i32, i32* [[N_CASTED]], align 4
 // CHECK5-NEXT:    [[TMP4:%.*]] = load i32*, i32** [[V_ADDR]], align 4
 // CHECK5-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK5-NEXT:    call void @__omp_outlined__10(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i32]* [[TMP0]], i32* [[TMP4]]) #[[ATTR2]]
+// CHECK5-NEXT:    call void @__omp_outlined__10(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i32]* [[TMP0]], i32* [[TMP4]]) #[[ATTR3]]
 // CHECK5-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK5:       .omp.deinit:
 // CHECK5-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -1614,7 +1614,7 @@ int bar(int n){
 // CHECK6-NEXT:    store i32 [[TMP4]], i32* [[L_CASTED]], align 4
 // CHECK6-NEXT:    [[TMP5:%.*]] = load i32, i32* [[L_CASTED]], align 4
 // CHECK6-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK6-NEXT:    call void @__omp_outlined__(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i32]* [[TMP0]], i32 [[TMP5]]) #[[ATTR2:[0-9]+]]
+// CHECK6-NEXT:    call void @__omp_outlined__(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i32]* [[TMP0]], i32 [[TMP5]]) #[[ATTR3:[0-9]+]]
 // CHECK6-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK6:       .omp.deinit:
 // CHECK6-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -1920,7 +1920,7 @@ int bar(int n){
 // CHECK6-NEXT:    store i32 [[TMP2]], i32* [[N_CASTED]], align 4
 // CHECK6-NEXT:    [[TMP3:%.*]] = load i32, i32* [[N_CASTED]], align 4
 // CHECK6-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK6-NEXT:    call void @__omp_outlined__2(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i16]* [[TMP0]]) #[[ATTR2]]
+// CHECK6-NEXT:    call void @__omp_outlined__2(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i16]* [[TMP0]]) #[[ATTR3]]
 // CHECK6-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK6:       .omp.deinit:
 // CHECK6-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -2158,7 +2158,7 @@ int bar(int n){
 // CHECK6:       .execute:
 // CHECK6-NEXT:    [[TMP1:%.*]] = call i32 @__kmpc_global_thread_num(%struct.ident_t* @[[GLOB3]])
 // CHECK6-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK6-NEXT:    call void @__omp_outlined__4(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x i32]* [[TMP0]]) #[[ATTR2]]
+// CHECK6-NEXT:    call void @__omp_outlined__4(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x i32]* [[TMP0]]) #[[ATTR3]]
 // CHECK6-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK6:       .omp.deinit:
 // CHECK6-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -2341,7 +2341,7 @@ int bar(int n){
 // CHECK6-NEXT:    store i32 [[TMP2]], i32* [[F_CASTED]], align 4
 // CHECK6-NEXT:    [[TMP3:%.*]] = load i32, i32* [[F_CASTED]], align 4
 // CHECK6-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK6-NEXT:    call void @__omp_outlined__6(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x [10 x i32]]* [[TMP0]], i32 [[TMP3]]) #[[ATTR2]]
+// CHECK6-NEXT:    call void @__omp_outlined__6(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x [10 x i32]]* [[TMP0]], i32 [[TMP3]]) #[[ATTR3]]
 // CHECK6-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK6:       .omp.deinit:
 // CHECK6-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -2558,7 +2558,7 @@ int bar(int n){
 // CHECK6-NEXT:    store i32 [[TMP2]], i32* [[N_CASTED]], align 4
 // CHECK6-NEXT:    [[TMP3:%.*]] = load i32, i32* [[N_CASTED]], align 4
 // CHECK6-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK6-NEXT:    call void @__omp_outlined__8(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [10 x [10 x i32]]* [[TMP0]]) #[[ATTR2]]
+// CHECK6-NEXT:    call void @__omp_outlined__8(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [10 x [10 x i32]]* [[TMP0]]) #[[ATTR3]]
 // CHECK6-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK6:       .omp.deinit:
 // CHECK6-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -2872,7 +2872,7 @@ int bar(int n){
 // CHECK6-NEXT:    [[TMP3:%.*]] = load i32, i32* [[N_CASTED]], align 4
 // CHECK6-NEXT:    [[TMP4:%.*]] = load i32*, i32** [[V_ADDR]], align 4
 // CHECK6-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK6-NEXT:    call void @__omp_outlined__10(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i32]* [[TMP0]], i32* [[TMP4]]) #[[ATTR2]]
+// CHECK6-NEXT:    call void @__omp_outlined__10(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i32]* [[TMP0]], i32* [[TMP4]]) #[[ATTR3]]
 // CHECK6-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK6:       .omp.deinit:
 // CHECK6-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -3130,7 +3130,7 @@ int bar(int n){
 // CHECK7-NEXT:    store i32 [[TMP4]], i32* [[L_CASTED]], align 4
 // CHECK7-NEXT:    [[TMP5:%.*]] = load i32, i32* [[L_CASTED]], align 4
 // CHECK7-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK7-NEXT:    call void @__omp_outlined__(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i32]* [[TMP0]], i32 [[TMP5]]) #[[ATTR2:[0-9]+]]
+// CHECK7-NEXT:    call void @__omp_outlined__(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i32]* [[TMP0]], i32 [[TMP5]]) #[[ATTR3:[0-9]+]]
 // CHECK7-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK7:       .omp.deinit:
 // CHECK7-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -3431,7 +3431,7 @@ int bar(int n){
 // CHECK7-NEXT:    store i32 [[TMP2]], i32* [[N_CASTED]], align 4
 // CHECK7-NEXT:    [[TMP3:%.*]] = load i32, i32* [[N_CASTED]], align 4
 // CHECK7-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK7-NEXT:    call void @__omp_outlined__2(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i16]* [[TMP0]]) #[[ATTR2]]
+// CHECK7-NEXT:    call void @__omp_outlined__2(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i16]* [[TMP0]]) #[[ATTR3]]
 // CHECK7-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK7:       .omp.deinit:
 // CHECK7-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -3669,7 +3669,7 @@ int bar(int n){
 // CHECK7:       .execute:
 // CHECK7-NEXT:    [[TMP1:%.*]] = call i32 @__kmpc_global_thread_num(%struct.ident_t* @[[GLOB3]])
 // CHECK7-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK7-NEXT:    call void @__omp_outlined__4(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x i32]* [[TMP0]]) #[[ATTR2]]
+// CHECK7-NEXT:    call void @__omp_outlined__4(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x i32]* [[TMP0]]) #[[ATTR3]]
 // CHECK7-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK7:       .omp.deinit:
 // CHECK7-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -3852,7 +3852,7 @@ int bar(int n){
 // CHECK7-NEXT:    store i32 [[TMP2]], i32* [[F_CASTED]], align 4
 // CHECK7-NEXT:    [[TMP3:%.*]] = load i32, i32* [[F_CASTED]], align 4
 // CHECK7-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK7-NEXT:    call void @__omp_outlined__6(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x [10 x i32]]* [[TMP0]], i32 [[TMP3]]) #[[ATTR2]]
+// CHECK7-NEXT:    call void @__omp_outlined__6(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x [10 x i32]]* [[TMP0]], i32 [[TMP3]]) #[[ATTR3]]
 // CHECK7-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK7:       .omp.deinit:
 // CHECK7-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -4069,7 +4069,7 @@ int bar(int n){
 // CHECK7-NEXT:    store i32 [[TMP2]], i32* [[N_CASTED]], align 4
 // CHECK7-NEXT:    [[TMP3:%.*]] = load i32, i32* [[N_CASTED]], align 4
 // CHECK7-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK7-NEXT:    call void @__omp_outlined__8(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [10 x [10 x i32]]* [[TMP0]]) #[[ATTR2]]
+// CHECK7-NEXT:    call void @__omp_outlined__8(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [10 x [10 x i32]]* [[TMP0]]) #[[ATTR3]]
 // CHECK7-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK7:       .omp.deinit:
 // CHECK7-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -4383,7 +4383,7 @@ int bar(int n){
 // CHECK7-NEXT:    [[TMP3:%.*]] = load i32, i32* [[N_CASTED]], align 4
 // CHECK7-NEXT:    [[TMP4:%.*]] = load i32*, i32** [[V_ADDR]], align 4
 // CHECK7-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK7-NEXT:    call void @__omp_outlined__10(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i32]* [[TMP0]], i32* [[TMP4]]) #[[ATTR2]]
+// CHECK7-NEXT:    call void @__omp_outlined__10(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i32]* [[TMP0]], i32* [[TMP4]]) #[[ATTR3]]
 // CHECK7-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK7:       .omp.deinit:
 // CHECK7-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -4641,7 +4641,7 @@ int bar(int n){
 // CHECK8-NEXT:    store i32 [[TMP4]], i32* [[L_CASTED]], align 4
 // CHECK8-NEXT:    [[TMP5:%.*]] = load i32, i32* [[L_CASTED]], align 4
 // CHECK8-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK8-NEXT:    call void @__omp_outlined__(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i32]* [[TMP0]], i32 [[TMP5]]) #[[ATTR2:[0-9]+]]
+// CHECK8-NEXT:    call void @__omp_outlined__(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i32]* [[TMP0]], i32 [[TMP5]]) #[[ATTR3:[0-9]+]]
 // CHECK8-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK8:       .omp.deinit:
 // CHECK8-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -4942,7 +4942,7 @@ int bar(int n){
 // CHECK8-NEXT:    store i32 [[TMP2]], i32* [[N_CASTED]], align 4
 // CHECK8-NEXT:    [[TMP3:%.*]] = load i32, i32* [[N_CASTED]], align 4
 // CHECK8-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK8-NEXT:    call void @__omp_outlined__2(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i16]* [[TMP0]]) #[[ATTR2]]
+// CHECK8-NEXT:    call void @__omp_outlined__2(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i16]* [[TMP0]]) #[[ATTR3]]
 // CHECK8-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK8:       .omp.deinit:
 // CHECK8-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -5180,7 +5180,7 @@ int bar(int n){
 // CHECK8:       .execute:
 // CHECK8-NEXT:    [[TMP1:%.*]] = call i32 @__kmpc_global_thread_num(%struct.ident_t* @[[GLOB3]])
 // CHECK8-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK8-NEXT:    call void @__omp_outlined__4(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x i32]* [[TMP0]]) #[[ATTR2]]
+// CHECK8-NEXT:    call void @__omp_outlined__4(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x i32]* [[TMP0]]) #[[ATTR3]]
 // CHECK8-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK8:       .omp.deinit:
 // CHECK8-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -5363,7 +5363,7 @@ int bar(int n){
 // CHECK8-NEXT:    store i32 [[TMP2]], i32* [[F_CASTED]], align 4
 // CHECK8-NEXT:    [[TMP3:%.*]] = load i32, i32* [[F_CASTED]], align 4
 // CHECK8-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK8-NEXT:    call void @__omp_outlined__6(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x [10 x i32]]* [[TMP0]], i32 [[TMP3]]) #[[ATTR2]]
+// CHECK8-NEXT:    call void @__omp_outlined__6(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x [10 x i32]]* [[TMP0]], i32 [[TMP3]]) #[[ATTR3]]
 // CHECK8-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK8:       .omp.deinit:
 // CHECK8-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -5580,7 +5580,7 @@ int bar(int n){
 // CHECK8-NEXT:    store i32 [[TMP2]], i32* [[N_CASTED]], align 4
 // CHECK8-NEXT:    [[TMP3:%.*]] = load i32, i32* [[N_CASTED]], align 4
 // CHECK8-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK8-NEXT:    call void @__omp_outlined__8(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [10 x [10 x i32]]* [[TMP0]]) #[[ATTR2]]
+// CHECK8-NEXT:    call void @__omp_outlined__8(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [10 x [10 x i32]]* [[TMP0]]) #[[ATTR3]]
 // CHECK8-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK8:       .omp.deinit:
 // CHECK8-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -5894,7 +5894,7 @@ int bar(int n){
 // CHECK8-NEXT:    [[TMP3:%.*]] = load i32, i32* [[N_CASTED]], align 4
 // CHECK8-NEXT:    [[TMP4:%.*]] = load i32*, i32** [[V_ADDR]], align 4
 // CHECK8-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK8-NEXT:    call void @__omp_outlined__10(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i32]* [[TMP0]], i32* [[TMP4]]) #[[ATTR2]]
+// CHECK8-NEXT:    call void @__omp_outlined__10(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i32]* [[TMP0]], i32* [[TMP4]]) #[[ATTR3]]
 // CHECK8-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK8:       .omp.deinit:
 // CHECK8-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -6156,7 +6156,7 @@ int bar(int n){
 // CHECK9-NEXT:    store i32 [[TMP4]], i32* [[CONV3]], align 4
 // CHECK9-NEXT:    [[TMP5:%.*]] = load i64, i64* [[L_CASTED]], align 8
 // CHECK9-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK9-NEXT:    call void @__omp_outlined__(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP3]], [1000 x i32]* [[TMP0]], i64 [[TMP5]]) #[[ATTR2:[0-9]+]]
+// CHECK9-NEXT:    call void @__omp_outlined__(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP3]], [1000 x i32]* [[TMP0]], i64 [[TMP5]]) #[[ATTR3:[0-9]+]]
 // CHECK9-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK9:       .omp.deinit:
 // CHECK9-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -6478,7 +6478,7 @@ int bar(int n){
 // CHECK9-NEXT:    store i32 [[TMP2]], i32* [[CONV1]], align 4
 // CHECK9-NEXT:    [[TMP3:%.*]] = load i64, i64* [[N_CASTED]], align 8
 // CHECK9-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK9-NEXT:    call void @__omp_outlined__2(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP3]], [1000 x i16]* [[TMP0]]) #[[ATTR2]]
+// CHECK9-NEXT:    call void @__omp_outlined__2(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP3]], [1000 x i16]* [[TMP0]]) #[[ATTR3]]
 // CHECK9-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK9:       .omp.deinit:
 // CHECK9-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -6725,7 +6725,7 @@ int bar(int n){
 // CHECK9:       .execute:
 // CHECK9-NEXT:    [[TMP1:%.*]] = call i32 @__kmpc_global_thread_num(%struct.ident_t* @[[GLOB3]])
 // CHECK9-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK9-NEXT:    call void @__omp_outlined__4(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x i32]* [[TMP0]]) #[[ATTR2]]
+// CHECK9-NEXT:    call void @__omp_outlined__4(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x i32]* [[TMP0]]) #[[ATTR3]]
 // CHECK9-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK9:       .omp.deinit:
 // CHECK9-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -6916,7 +6916,7 @@ int bar(int n){
 // CHECK9-NEXT:    store i32 [[TMP2]], i32* [[CONV1]], align 4
 // CHECK9-NEXT:    [[TMP3:%.*]] = load i64, i64* [[F_CASTED]], align 8
 // CHECK9-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK9-NEXT:    call void @__omp_outlined__6(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x [10 x i32]]* [[TMP0]], i64 [[TMP3]]) #[[ATTR2]]
+// CHECK9-NEXT:    call void @__omp_outlined__6(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x [10 x i32]]* [[TMP0]], i64 [[TMP3]]) #[[ATTR3]]
 // CHECK9-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK9:       .omp.deinit:
 // CHECK9-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -7145,7 +7145,7 @@ int bar(int n){
 // CHECK9-NEXT:    store i32 [[TMP2]], i32* [[CONV1]], align 4
 // CHECK9-NEXT:    [[TMP3:%.*]] = load i64, i64* [[N_CASTED]], align 8
 // CHECK9-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK9-NEXT:    call void @__omp_outlined__8(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP3]], [10 x [10 x i32]]* [[TMP0]]) #[[ATTR2]]
+// CHECK9-NEXT:    call void @__omp_outlined__8(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP3]], [10 x [10 x i32]]* [[TMP0]]) #[[ATTR3]]
 // CHECK9-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK9:       .omp.deinit:
 // CHECK9-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -7461,7 +7461,7 @@ int bar(int n){
 // CHECK9-NEXT:    [[TMP3:%.*]] = load i64, i64* [[N_CASTED]], align 8
 // CHECK9-NEXT:    [[TMP4:%.*]] = load i32*, i32** [[V_ADDR]], align 8
 // CHECK9-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK9-NEXT:    call void @__omp_outlined__10(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP3]], [1000 x i32]* [[TMP0]], i32* [[TMP4]]) #[[ATTR2]]
+// CHECK9-NEXT:    call void @__omp_outlined__10(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP3]], [1000 x i32]* [[TMP0]], i32* [[TMP4]]) #[[ATTR3]]
 // CHECK9-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK9:       .omp.deinit:
 // CHECK9-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -7733,7 +7733,7 @@ int bar(int n){
 // CHECK10-NEXT:    store i32 [[TMP4]], i32* [[CONV3]], align 4
 // CHECK10-NEXT:    [[TMP5:%.*]] = load i64, i64* [[L_CASTED]], align 8
 // CHECK10-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK10-NEXT:    call void @__omp_outlined__(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP3]], [1000 x i32]* [[TMP0]], i64 [[TMP5]]) #[[ATTR2:[0-9]+]]
+// CHECK10-NEXT:    call void @__omp_outlined__(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP3]], [1000 x i32]* [[TMP0]], i64 [[TMP5]]) #[[ATTR3:[0-9]+]]
 // CHECK10-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK10:       .omp.deinit:
 // CHECK10-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -8050,7 +8050,7 @@ int bar(int n){
 // CHECK10-NEXT:    store i32 [[TMP2]], i32* [[CONV1]], align 4
 // CHECK10-NEXT:    [[TMP3:%.*]] = load i64, i64* [[N_CASTED]], align 8
 // CHECK10-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK10-NEXT:    call void @__omp_outlined__2(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP3]], [1000 x i16]* [[TMP0]]) #[[ATTR2]]
+// CHECK10-NEXT:    call void @__omp_outlined__2(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP3]], [1000 x i16]* [[TMP0]]) #[[ATTR3]]
 // CHECK10-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK10:       .omp.deinit:
 // CHECK10-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -8297,7 +8297,7 @@ int bar(int n){
 // CHECK10:       .execute:
 // CHECK10-NEXT:    [[TMP1:%.*]] = call i32 @__kmpc_global_thread_num(%struct.ident_t* @[[GLOB3]])
 // CHECK10-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK10-NEXT:    call void @__omp_outlined__4(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x i32]* [[TMP0]]) #[[ATTR2]]
+// CHECK10-NEXT:    call void @__omp_outlined__4(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x i32]* [[TMP0]]) #[[ATTR3]]
 // CHECK10-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK10:       .omp.deinit:
 // CHECK10-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -8488,7 +8488,7 @@ int bar(int n){
 // CHECK10-NEXT:    store i32 [[TMP2]], i32* [[CONV1]], align 4
 // CHECK10-NEXT:    [[TMP3:%.*]] = load i64, i64* [[F_CASTED]], align 8
 // CHECK10-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK10-NEXT:    call void @__omp_outlined__6(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x [10 x i32]]* [[TMP0]], i64 [[TMP3]]) #[[ATTR2]]
+// CHECK10-NEXT:    call void @__omp_outlined__6(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x [10 x i32]]* [[TMP0]], i64 [[TMP3]]) #[[ATTR3]]
 // CHECK10-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK10:       .omp.deinit:
 // CHECK10-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -8717,7 +8717,7 @@ int bar(int n){
 // CHECK10-NEXT:    store i32 [[TMP2]], i32* [[CONV1]], align 4
 // CHECK10-NEXT:    [[TMP3:%.*]] = load i64, i64* [[N_CASTED]], align 8
 // CHECK10-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK10-NEXT:    call void @__omp_outlined__8(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP3]], [10 x [10 x i32]]* [[TMP0]]) #[[ATTR2]]
+// CHECK10-NEXT:    call void @__omp_outlined__8(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP3]], [10 x [10 x i32]]* [[TMP0]]) #[[ATTR3]]
 // CHECK10-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK10:       .omp.deinit:
 // CHECK10-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -9033,7 +9033,7 @@ int bar(int n){
 // CHECK10-NEXT:    [[TMP3:%.*]] = load i64, i64* [[N_CASTED]], align 8
 // CHECK10-NEXT:    [[TMP4:%.*]] = load i32*, i32** [[V_ADDR]], align 8
 // CHECK10-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK10-NEXT:    call void @__omp_outlined__10(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP3]], [1000 x i32]* [[TMP0]], i32* [[TMP4]]) #[[ATTR2]]
+// CHECK10-NEXT:    call void @__omp_outlined__10(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP3]], [1000 x i32]* [[TMP0]], i32* [[TMP4]]) #[[ATTR3]]
 // CHECK10-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK10:       .omp.deinit:
 // CHECK10-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -9305,7 +9305,7 @@ int bar(int n){
 // CHECK11-NEXT:    store i32 [[TMP4]], i32* [[CONV3]], align 4
 // CHECK11-NEXT:    [[TMP5:%.*]] = load i64, i64* [[L_CASTED]], align 8
 // CHECK11-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK11-NEXT:    call void @__omp_outlined__(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP3]], [1000 x i32]* [[TMP0]], i64 [[TMP5]]) #[[ATTR2:[0-9]+]]
+// CHECK11-NEXT:    call void @__omp_outlined__(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP3]], [1000 x i32]* [[TMP0]], i64 [[TMP5]]) #[[ATTR3:[0-9]+]]
 // CHECK11-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK11:       .omp.deinit:
 // CHECK11-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -9627,7 +9627,7 @@ int bar(int n){
 // CHECK11-NEXT:    store i32 [[TMP2]], i32* [[CONV1]], align 4
 // CHECK11-NEXT:    [[TMP3:%.*]] = load i64, i64* [[N_CASTED]], align 8
 // CHECK11-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK11-NEXT:    call void @__omp_outlined__2(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP3]], [1000 x i16]* [[TMP0]]) #[[ATTR2]]
+// CHECK11-NEXT:    call void @__omp_outlined__2(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP3]], [1000 x i16]* [[TMP0]]) #[[ATTR3]]
 // CHECK11-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK11:       .omp.deinit:
 // CHECK11-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -9874,7 +9874,7 @@ int bar(int n){
 // CHECK11:       .execute:
 // CHECK11-NEXT:    [[TMP1:%.*]] = call i32 @__kmpc_global_thread_num(%struct.ident_t* @[[GLOB3]])
 // CHECK11-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK11-NEXT:    call void @__omp_outlined__4(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x i32]* [[TMP0]]) #[[ATTR2]]
+// CHECK11-NEXT:    call void @__omp_outlined__4(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x i32]* [[TMP0]]) #[[ATTR3]]
 // CHECK11-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK11:       .omp.deinit:
 // CHECK11-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -10065,7 +10065,7 @@ int bar(int n){
 // CHECK11-NEXT:    store i32 [[TMP2]], i32* [[CONV1]], align 4
 // CHECK11-NEXT:    [[TMP3:%.*]] = load i64, i64* [[F_CASTED]], align 8
 // CHECK11-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK11-NEXT:    call void @__omp_outlined__6(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x [10 x i32]]* [[TMP0]], i64 [[TMP3]]) #[[ATTR2]]
+// CHECK11-NEXT:    call void @__omp_outlined__6(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x [10 x i32]]* [[TMP0]], i64 [[TMP3]]) #[[ATTR3]]
 // CHECK11-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK11:       .omp.deinit:
 // CHECK11-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -10294,7 +10294,7 @@ int bar(int n){
 // CHECK11-NEXT:    store i32 [[TMP2]], i32* [[CONV1]], align 4
 // CHECK11-NEXT:    [[TMP3:%.*]] = load i64, i64* [[N_CASTED]], align 8
 // CHECK11-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK11-NEXT:    call void @__omp_outlined__8(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP3]], [10 x [10 x i32]]* [[TMP0]]) #[[ATTR2]]
+// CHECK11-NEXT:    call void @__omp_outlined__8(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP3]], [10 x [10 x i32]]* [[TMP0]]) #[[ATTR3]]
 // CHECK11-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK11:       .omp.deinit:
 // CHECK11-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -10605,7 +10605,7 @@ int bar(int n){
 // CHECK11-NEXT:    [[TMP3:%.*]] = load i64, i64* [[N_CASTED]], align 8
 // CHECK11-NEXT:    [[TMP4:%.*]] = load i32*, i32** [[V_ADDR]], align 8
 // CHECK11-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK11-NEXT:    call void @__omp_outlined__10(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP3]], [1000 x i32]* [[TMP0]], i32* [[TMP4]]) #[[ATTR2]]
+// CHECK11-NEXT:    call void @__omp_outlined__10(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP3]], [1000 x i32]* [[TMP0]], i32* [[TMP4]]) #[[ATTR3]]
 // CHECK11-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK11:       .omp.deinit:
 // CHECK11-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -10877,7 +10877,7 @@ int bar(int n){
 // CHECK12-NEXT:    store i32 [[TMP4]], i32* [[CONV3]], align 4
 // CHECK12-NEXT:    [[TMP5:%.*]] = load i64, i64* [[L_CASTED]], align 8
 // CHECK12-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK12-NEXT:    call void @__omp_outlined__(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP3]], [1000 x i32]* [[TMP0]], i64 [[TMP5]]) #[[ATTR2:[0-9]+]]
+// CHECK12-NEXT:    call void @__omp_outlined__(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP3]], [1000 x i32]* [[TMP0]], i64 [[TMP5]]) #[[ATTR3:[0-9]+]]
 // CHECK12-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK12:       .omp.deinit:
 // CHECK12-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -11194,7 +11194,7 @@ int bar(int n){
 // CHECK12-NEXT:    store i32 [[TMP2]], i32* [[CONV1]], align 4
 // CHECK12-NEXT:    [[TMP3:%.*]] = load i64, i64* [[N_CASTED]], align 8
 // CHECK12-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK12-NEXT:    call void @__omp_outlined__2(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP3]], [1000 x i16]* [[TMP0]]) #[[ATTR2]]
+// CHECK12-NEXT:    call void @__omp_outlined__2(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP3]], [1000 x i16]* [[TMP0]]) #[[ATTR3]]
 // CHECK12-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK12:       .omp.deinit:
 // CHECK12-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -11441,7 +11441,7 @@ int bar(int n){
 // CHECK12:       .execute:
 // CHECK12-NEXT:    [[TMP1:%.*]] = call i32 @__kmpc_global_thread_num(%struct.ident_t* @[[GLOB3]])
 // CHECK12-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK12-NEXT:    call void @__omp_outlined__4(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x i32]* [[TMP0]]) #[[ATTR2]]
+// CHECK12-NEXT:    call void @__omp_outlined__4(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x i32]* [[TMP0]]) #[[ATTR3]]
 // CHECK12-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK12:       .omp.deinit:
 // CHECK12-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -11632,7 +11632,7 @@ int bar(int n){
 // CHECK12-NEXT:    store i32 [[TMP2]], i32* [[CONV1]], align 4
 // CHECK12-NEXT:    [[TMP3:%.*]] = load i64, i64* [[F_CASTED]], align 8
 // CHECK12-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK12-NEXT:    call void @__omp_outlined__6(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x [10 x i32]]* [[TMP0]], i64 [[TMP3]]) #[[ATTR2]]
+// CHECK12-NEXT:    call void @__omp_outlined__6(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x [10 x i32]]* [[TMP0]], i64 [[TMP3]]) #[[ATTR3]]
 // CHECK12-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK12:       .omp.deinit:
 // CHECK12-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -11861,7 +11861,7 @@ int bar(int n){
 // CHECK12-NEXT:    store i32 [[TMP2]], i32* [[CONV1]], align 4
 // CHECK12-NEXT:    [[TMP3:%.*]] = load i64, i64* [[N_CASTED]], align 8
 // CHECK12-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK12-NEXT:    call void @__omp_outlined__8(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP3]], [10 x [10 x i32]]* [[TMP0]]) #[[ATTR2]]
+// CHECK12-NEXT:    call void @__omp_outlined__8(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP3]], [10 x [10 x i32]]* [[TMP0]]) #[[ATTR3]]
 // CHECK12-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK12:       .omp.deinit:
 // CHECK12-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -12172,7 +12172,7 @@ int bar(int n){
 // CHECK12-NEXT:    [[TMP3:%.*]] = load i64, i64* [[N_CASTED]], align 8
 // CHECK12-NEXT:    [[TMP4:%.*]] = load i32*, i32** [[V_ADDR]], align 8
 // CHECK12-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK12-NEXT:    call void @__omp_outlined__10(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP3]], [1000 x i32]* [[TMP0]], i32* [[TMP4]]) #[[ATTR2]]
+// CHECK12-NEXT:    call void @__omp_outlined__10(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP3]], [1000 x i32]* [[TMP0]], i32* [[TMP4]]) #[[ATTR3]]
 // CHECK12-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK12:       .omp.deinit:
 // CHECK12-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -12440,7 +12440,7 @@ int bar(int n){
 // CHECK13-NEXT:    store i32 [[TMP4]], i32* [[L_CASTED]], align 4
 // CHECK13-NEXT:    [[TMP5:%.*]] = load i32, i32* [[L_CASTED]], align 4
 // CHECK13-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK13-NEXT:    call void @__omp_outlined__(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i32]* [[TMP0]], i32 [[TMP5]]) #[[ATTR2:[0-9]+]]
+// CHECK13-NEXT:    call void @__omp_outlined__(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i32]* [[TMP0]], i32 [[TMP5]]) #[[ATTR3:[0-9]+]]
 // CHECK13-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK13:       .omp.deinit:
 // CHECK13-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -12746,7 +12746,7 @@ int bar(int n){
 // CHECK13-NEXT:    store i32 [[TMP2]], i32* [[N_CASTED]], align 4
 // CHECK13-NEXT:    [[TMP3:%.*]] = load i32, i32* [[N_CASTED]], align 4
 // CHECK13-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK13-NEXT:    call void @__omp_outlined__2(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i16]* [[TMP0]]) #[[ATTR2]]
+// CHECK13-NEXT:    call void @__omp_outlined__2(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i16]* [[TMP0]]) #[[ATTR3]]
 // CHECK13-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK13:       .omp.deinit:
 // CHECK13-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -12984,7 +12984,7 @@ int bar(int n){
 // CHECK13:       .execute:
 // CHECK13-NEXT:    [[TMP1:%.*]] = call i32 @__kmpc_global_thread_num(%struct.ident_t* @[[GLOB3]])
 // CHECK13-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK13-NEXT:    call void @__omp_outlined__4(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x i32]* [[TMP0]]) #[[ATTR2]]
+// CHECK13-NEXT:    call void @__omp_outlined__4(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x i32]* [[TMP0]]) #[[ATTR3]]
 // CHECK13-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK13:       .omp.deinit:
 // CHECK13-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -13167,7 +13167,7 @@ int bar(int n){
 // CHECK13-NEXT:    store i32 [[TMP2]], i32* [[F_CASTED]], align 4
 // CHECK13-NEXT:    [[TMP3:%.*]] = load i32, i32* [[F_CASTED]], align 4
 // CHECK13-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK13-NEXT:    call void @__omp_outlined__6(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x [10 x i32]]* [[TMP0]], i32 [[TMP3]]) #[[ATTR2]]
+// CHECK13-NEXT:    call void @__omp_outlined__6(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x [10 x i32]]* [[TMP0]], i32 [[TMP3]]) #[[ATTR3]]
 // CHECK13-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK13:       .omp.deinit:
 // CHECK13-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -13384,7 +13384,7 @@ int bar(int n){
 // CHECK13-NEXT:    store i32 [[TMP2]], i32* [[N_CASTED]], align 4
 // CHECK13-NEXT:    [[TMP3:%.*]] = load i32, i32* [[N_CASTED]], align 4
 // CHECK13-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK13-NEXT:    call void @__omp_outlined__8(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [10 x [10 x i32]]* [[TMP0]]) #[[ATTR2]]
+// CHECK13-NEXT:    call void @__omp_outlined__8(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [10 x [10 x i32]]* [[TMP0]]) #[[ATTR3]]
 // CHECK13-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK13:       .omp.deinit:
 // CHECK13-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -13698,7 +13698,7 @@ int bar(int n){
 // CHECK13-NEXT:    [[TMP3:%.*]] = load i32, i32* [[N_CASTED]], align 4
 // CHECK13-NEXT:    [[TMP4:%.*]] = load i32*, i32** [[V_ADDR]], align 4
 // CHECK13-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK13-NEXT:    call void @__omp_outlined__10(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i32]* [[TMP0]], i32* [[TMP4]]) #[[ATTR2]]
+// CHECK13-NEXT:    call void @__omp_outlined__10(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i32]* [[TMP0]], i32* [[TMP4]]) #[[ATTR3]]
 // CHECK13-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK13:       .omp.deinit:
 // CHECK13-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -13956,7 +13956,7 @@ int bar(int n){
 // CHECK14-NEXT:    store i32 [[TMP4]], i32* [[L_CASTED]], align 4
 // CHECK14-NEXT:    [[TMP5:%.*]] = load i32, i32* [[L_CASTED]], align 4
 // CHECK14-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK14-NEXT:    call void @__omp_outlined__(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i32]* [[TMP0]], i32 [[TMP5]]) #[[ATTR2:[0-9]+]]
+// CHECK14-NEXT:    call void @__omp_outlined__(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i32]* [[TMP0]], i32 [[TMP5]]) #[[ATTR3:[0-9]+]]
 // CHECK14-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK14:       .omp.deinit:
 // CHECK14-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -14262,7 +14262,7 @@ int bar(int n){
 // CHECK14-NEXT:    store i32 [[TMP2]], i32* [[N_CASTED]], align 4
 // CHECK14-NEXT:    [[TMP3:%.*]] = load i32, i32* [[N_CASTED]], align 4
 // CHECK14-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK14-NEXT:    call void @__omp_outlined__2(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i16]* [[TMP0]]) #[[ATTR2]]
+// CHECK14-NEXT:    call void @__omp_outlined__2(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i16]* [[TMP0]]) #[[ATTR3]]
 // CHECK14-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK14:       .omp.deinit:
 // CHECK14-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -14500,7 +14500,7 @@ int bar(int n){
 // CHECK14:       .execute:
 // CHECK14-NEXT:    [[TMP1:%.*]] = call i32 @__kmpc_global_thread_num(%struct.ident_t* @[[GLOB3]])
 // CHECK14-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK14-NEXT:    call void @__omp_outlined__4(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x i32]* [[TMP0]]) #[[ATTR2]]
+// CHECK14-NEXT:    call void @__omp_outlined__4(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x i32]* [[TMP0]]) #[[ATTR3]]
 // CHECK14-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK14:       .omp.deinit:
 // CHECK14-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -14683,7 +14683,7 @@ int bar(int n){
 // CHECK14-NEXT:    store i32 [[TMP2]], i32* [[F_CASTED]], align 4
 // CHECK14-NEXT:    [[TMP3:%.*]] = load i32, i32* [[F_CASTED]], align 4
 // CHECK14-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK14-NEXT:    call void @__omp_outlined__6(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x [10 x i32]]* [[TMP0]], i32 [[TMP3]]) #[[ATTR2]]
+// CHECK14-NEXT:    call void @__omp_outlined__6(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x [10 x i32]]* [[TMP0]], i32 [[TMP3]]) #[[ATTR3]]
 // CHECK14-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK14:       .omp.deinit:
 // CHECK14-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -14900,7 +14900,7 @@ int bar(int n){
 // CHECK14-NEXT:    store i32 [[TMP2]], i32* [[N_CASTED]], align 4
 // CHECK14-NEXT:    [[TMP3:%.*]] = load i32, i32* [[N_CASTED]], align 4
 // CHECK14-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK14-NEXT:    call void @__omp_outlined__8(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [10 x [10 x i32]]* [[TMP0]]) #[[ATTR2]]
+// CHECK14-NEXT:    call void @__omp_outlined__8(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [10 x [10 x i32]]* [[TMP0]]) #[[ATTR3]]
 // CHECK14-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK14:       .omp.deinit:
 // CHECK14-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -15214,7 +15214,7 @@ int bar(int n){
 // CHECK14-NEXT:    [[TMP3:%.*]] = load i32, i32* [[N_CASTED]], align 4
 // CHECK14-NEXT:    [[TMP4:%.*]] = load i32*, i32** [[V_ADDR]], align 4
 // CHECK14-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK14-NEXT:    call void @__omp_outlined__10(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i32]* [[TMP0]], i32* [[TMP4]]) #[[ATTR2]]
+// CHECK14-NEXT:    call void @__omp_outlined__10(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i32]* [[TMP0]], i32* [[TMP4]]) #[[ATTR3]]
 // CHECK14-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK14:       .omp.deinit:
 // CHECK14-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -15472,7 +15472,7 @@ int bar(int n){
 // CHECK15-NEXT:    store i32 [[TMP4]], i32* [[L_CASTED]], align 4
 // CHECK15-NEXT:    [[TMP5:%.*]] = load i32, i32* [[L_CASTED]], align 4
 // CHECK15-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK15-NEXT:    call void @__omp_outlined__(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i32]* [[TMP0]], i32 [[TMP5]]) #[[ATTR2:[0-9]+]]
+// CHECK15-NEXT:    call void @__omp_outlined__(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i32]* [[TMP0]], i32 [[TMP5]]) #[[ATTR3:[0-9]+]]
 // CHECK15-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK15:       .omp.deinit:
 // CHECK15-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -15773,7 +15773,7 @@ int bar(int n){
 // CHECK15-NEXT:    store i32 [[TMP2]], i32* [[N_CASTED]], align 4
 // CHECK15-NEXT:    [[TMP3:%.*]] = load i32, i32* [[N_CASTED]], align 4
 // CHECK15-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK15-NEXT:    call void @__omp_outlined__2(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i16]* [[TMP0]]) #[[ATTR2]]
+// CHECK15-NEXT:    call void @__omp_outlined__2(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i16]* [[TMP0]]) #[[ATTR3]]
 // CHECK15-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK15:       .omp.deinit:
 // CHECK15-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -16011,7 +16011,7 @@ int bar(int n){
 // CHECK15:       .execute:
 // CHECK15-NEXT:    [[TMP1:%.*]] = call i32 @__kmpc_global_thread_num(%struct.ident_t* @[[GLOB3]])
 // CHECK15-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK15-NEXT:    call void @__omp_outlined__4(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x i32]* [[TMP0]]) #[[ATTR2]]
+// CHECK15-NEXT:    call void @__omp_outlined__4(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x i32]* [[TMP0]]) #[[ATTR3]]
 // CHECK15-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK15:       .omp.deinit:
 // CHECK15-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -16194,7 +16194,7 @@ int bar(int n){
 // CHECK15-NEXT:    store i32 [[TMP2]], i32* [[F_CASTED]], align 4
 // CHECK15-NEXT:    [[TMP3:%.*]] = load i32, i32* [[F_CASTED]], align 4
 // CHECK15-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK15-NEXT:    call void @__omp_outlined__6(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x [10 x i32]]* [[TMP0]], i32 [[TMP3]]) #[[ATTR2]]
+// CHECK15-NEXT:    call void @__omp_outlined__6(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x [10 x i32]]* [[TMP0]], i32 [[TMP3]]) #[[ATTR3]]
 // CHECK15-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK15:       .omp.deinit:
 // CHECK15-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -16411,7 +16411,7 @@ int bar(int n){
 // CHECK15-NEXT:    store i32 [[TMP2]], i32* [[N_CASTED]], align 4
 // CHECK15-NEXT:    [[TMP3:%.*]] = load i32, i32* [[N_CASTED]], align 4
 // CHECK15-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK15-NEXT:    call void @__omp_outlined__8(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [10 x [10 x i32]]* [[TMP0]]) #[[ATTR2]]
+// CHECK15-NEXT:    call void @__omp_outlined__8(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [10 x [10 x i32]]* [[TMP0]]) #[[ATTR3]]
 // CHECK15-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK15:       .omp.deinit:
 // CHECK15-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -16725,7 +16725,7 @@ int bar(int n){
 // CHECK15-NEXT:    [[TMP3:%.*]] = load i32, i32* [[N_CASTED]], align 4
 // CHECK15-NEXT:    [[TMP4:%.*]] = load i32*, i32** [[V_ADDR]], align 4
 // CHECK15-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK15-NEXT:    call void @__omp_outlined__10(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i32]* [[TMP0]], i32* [[TMP4]]) #[[ATTR2]]
+// CHECK15-NEXT:    call void @__omp_outlined__10(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i32]* [[TMP0]], i32* [[TMP4]]) #[[ATTR3]]
 // CHECK15-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK15:       .omp.deinit:
 // CHECK15-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -16983,7 +16983,7 @@ int bar(int n){
 // CHECK16-NEXT:    store i32 [[TMP4]], i32* [[L_CASTED]], align 4
 // CHECK16-NEXT:    [[TMP5:%.*]] = load i32, i32* [[L_CASTED]], align 4
 // CHECK16-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK16-NEXT:    call void @__omp_outlined__(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i32]* [[TMP0]], i32 [[TMP5]]) #[[ATTR2:[0-9]+]]
+// CHECK16-NEXT:    call void @__omp_outlined__(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i32]* [[TMP0]], i32 [[TMP5]]) #[[ATTR3:[0-9]+]]
 // CHECK16-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK16:       .omp.deinit:
 // CHECK16-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -17284,7 +17284,7 @@ int bar(int n){
 // CHECK16-NEXT:    store i32 [[TMP2]], i32* [[N_CASTED]], align 4
 // CHECK16-NEXT:    [[TMP3:%.*]] = load i32, i32* [[N_CASTED]], align 4
 // CHECK16-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK16-NEXT:    call void @__omp_outlined__2(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i16]* [[TMP0]]) #[[ATTR2]]
+// CHECK16-NEXT:    call void @__omp_outlined__2(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i16]* [[TMP0]]) #[[ATTR3]]
 // CHECK16-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK16:       .omp.deinit:
 // CHECK16-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -17522,7 +17522,7 @@ int bar(int n){
 // CHECK16:       .execute:
 // CHECK16-NEXT:    [[TMP1:%.*]] = call i32 @__kmpc_global_thread_num(%struct.ident_t* @[[GLOB3]])
 // CHECK16-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK16-NEXT:    call void @__omp_outlined__4(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x i32]* [[TMP0]]) #[[ATTR2]]
+// CHECK16-NEXT:    call void @__omp_outlined__4(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x i32]* [[TMP0]]) #[[ATTR3]]
 // CHECK16-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK16:       .omp.deinit:
 // CHECK16-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -17705,7 +17705,7 @@ int bar(int n){
 // CHECK16-NEXT:    store i32 [[TMP2]], i32* [[F_CASTED]], align 4
 // CHECK16-NEXT:    [[TMP3:%.*]] = load i32, i32* [[F_CASTED]], align 4
 // CHECK16-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK16-NEXT:    call void @__omp_outlined__6(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x [10 x i32]]* [[TMP0]], i32 [[TMP3]]) #[[ATTR2]]
+// CHECK16-NEXT:    call void @__omp_outlined__6(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x [10 x i32]]* [[TMP0]], i32 [[TMP3]]) #[[ATTR3]]
 // CHECK16-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK16:       .omp.deinit:
 // CHECK16-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -17922,7 +17922,7 @@ int bar(int n){
 // CHECK16-NEXT:    store i32 [[TMP2]], i32* [[N_CASTED]], align 4
 // CHECK16-NEXT:    [[TMP3:%.*]] = load i32, i32* [[N_CASTED]], align 4
 // CHECK16-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK16-NEXT:    call void @__omp_outlined__8(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [10 x [10 x i32]]* [[TMP0]]) #[[ATTR2]]
+// CHECK16-NEXT:    call void @__omp_outlined__8(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [10 x [10 x i32]]* [[TMP0]]) #[[ATTR3]]
 // CHECK16-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK16:       .omp.deinit:
 // CHECK16-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -18236,7 +18236,7 @@ int bar(int n){
 // CHECK16-NEXT:    [[TMP3:%.*]] = load i32, i32* [[N_CASTED]], align 4
 // CHECK16-NEXT:    [[TMP4:%.*]] = load i32*, i32** [[V_ADDR]], align 4
 // CHECK16-NEXT:    store i32 [[TMP1]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK16-NEXT:    call void @__omp_outlined__10(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i32]* [[TMP0]], i32* [[TMP4]]) #[[ATTR2]]
+// CHECK16-NEXT:    call void @__omp_outlined__10(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP3]], [1000 x i32]* [[TMP0]], i32* [[TMP4]]) #[[ATTR3]]
 // CHECK16-NEXT:    br label [[DOTOMP_DEINIT:%.*]]
 // CHECK16:       .omp.deinit:
 // CHECK16-NEXT:    call void @__kmpc_spmd_kernel_deinit_v2(i16 0)
@@ -18498,7 +18498,7 @@ int bar(int n){
 // CHECK1-NEXT:    store i32 [[TMP5]], i32* [[CONV3]], align 4
 // CHECK1-NEXT:    [[TMP6:%.*]] = load i64, i64* [[L_CASTED]], align 8
 // CHECK1-NEXT:    store i32 [[TMP2]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK1-NEXT:    call void @__omp_outlined__(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP4]], [1000 x i32]* [[TMP0]], i64 [[TMP6]]) #[[ATTR1:[0-9]+]]
+// CHECK1-NEXT:    call void @__omp_outlined__(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], %struct.anon* [[OMP_OUTLINED_ARG_AGG_]]) #[[ATTR2:[0-9]+]]
 // CHECK1-NEXT:    call void @__kmpc_target_deinit(%struct.ident_t* @[[GLOB1]], i1 true, i1 false)
 // CHECK1-NEXT:    ret void
 // CHECK1:       worker.exit:
@@ -18795,7 +18795,7 @@ int bar(int n){
 //
 //
 // CHECK1-LABEL: define {{[^@]+}}@{{__omp_offloading_[0-9a-z]+_[0-9a-z]+}}__Z9ftemplateIiET_i_l34
-// CHECK1-SAME: (i64 [[N:%.*]], [1000 x i16]* nonnull align 2 dereferenceable(2000) [[AA:%.*]]) #[[ATTR0]] {
+// CHECK1-SAME: (i64 [[N:%.*]], [1000 x i16]* nonnull align 2 dereferenceable(2000) [[AA:%.*]]) #[[ATTR1:[0-9]+]] {
 // CHECK1-NEXT:  entry:
 // CHECK1-NEXT:    [[N_ADDR:%.*]] = alloca i64, align 8
 // CHECK1-NEXT:    [[AA_ADDR:%.*]] = alloca [1000 x i16]*, align 8
@@ -18817,7 +18817,7 @@ int bar(int n){
 // CHECK1-NEXT:    store i32 [[TMP3]], i32* [[CONV1]], align 4
 // CHECK1-NEXT:    [[TMP4:%.*]] = load i64, i64* [[N_CASTED]], align 8
 // CHECK1-NEXT:    store i32 [[TMP2]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK1-NEXT:    call void @__omp_outlined__2(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP4]], [1000 x i16]* [[TMP0]]) #[[ATTR1]]
+// CHECK1-NEXT:    call void @__omp_outlined__2(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], %struct.anon.2* [[OMP_OUTLINED_ARG_AGG_]]) #[[ATTR2]]
 // CHECK1-NEXT:    call void @__kmpc_target_deinit(%struct.ident_t* @[[GLOB1]], i1 true, i1 false)
 // CHECK1-NEXT:    ret void
 // CHECK1:       worker.exit:
@@ -19068,7 +19068,7 @@ int bar(int n){
 // CHECK1:       user_code.entry:
 // CHECK1-NEXT:    [[TMP2:%.*]] = call i32 @__kmpc_global_thread_num(%struct.ident_t* @[[GLOB4]])
 // CHECK1-NEXT:    store i32 [[TMP2]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK1-NEXT:    call void @__omp_outlined__4(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x i32]* [[TMP0]]) #[[ATTR1]]
+// CHECK1-NEXT:    call void @__omp_outlined__4(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], %struct.anon.4* [[OMP_OUTLINED_ARG_AGG_]]) #[[ATTR2]]
 // CHECK1-NEXT:    call void @__kmpc_target_deinit(%struct.ident_t* @[[GLOB1]], i1 true, i1 false)
 // CHECK1-NEXT:    ret void
 // CHECK1:       worker.exit:
@@ -19263,7 +19263,7 @@ int bar(int n){
 // CHECK1-NEXT:    store i32 [[TMP3]], i32* [[CONV1]], align 4
 // CHECK1-NEXT:    [[TMP4:%.*]] = load i64, i64* [[F_CASTED]], align 8
 // CHECK1-NEXT:    store i32 [[TMP2]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK1-NEXT:    call void @__omp_outlined__6(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x [10 x i32]]* [[TMP0]], i64 [[TMP4]]) #[[ATTR1]]
+// CHECK1-NEXT:    call void @__omp_outlined__6(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], %struct.anon.6* [[OMP_OUTLINED_ARG_AGG_]]) #[[ATTR2]]
 // CHECK1-NEXT:    call void @__kmpc_target_deinit(%struct.ident_t* @[[GLOB1]], i1 true, i1 false)
 // CHECK1-NEXT:    ret void
 // CHECK1:       worker.exit:
@@ -19496,7 +19496,7 @@ int bar(int n){
 // CHECK1-NEXT:    store i32 [[TMP3]], i32* [[CONV1]], align 4
 // CHECK1-NEXT:    [[TMP4:%.*]] = load i64, i64* [[N_CASTED]], align 8
 // CHECK1-NEXT:    store i32 [[TMP2]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK1-NEXT:    call void @__omp_outlined__8(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP4]], [10 x [10 x i32]]* [[TMP0]]) #[[ATTR1]]
+// CHECK1-NEXT:    call void @__omp_outlined__8(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], %struct.anon.10* [[OMP_OUTLINED_ARG_AGG_]]) #[[ATTR2]]
 // CHECK1-NEXT:    call void @__kmpc_target_deinit(%struct.ident_t* @[[GLOB1]], i1 true, i1 false)
 // CHECK1-NEXT:    ret void
 // CHECK1:       worker.exit:
@@ -19816,7 +19816,7 @@ int bar(int n){
 // CHECK1-NEXT:    [[TMP4:%.*]] = load i64, i64* [[N_CASTED]], align 8
 // CHECK1-NEXT:    [[TMP5:%.*]] = load i32*, i32** [[V_ADDR]], align 8
 // CHECK1-NEXT:    store i32 [[TMP2]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK1-NEXT:    call void @__omp_outlined__10(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP4]], [1000 x i32]* [[TMP0]], i32* [[TMP5]]) #[[ATTR1]]
+// CHECK1-NEXT:    call void @__omp_outlined__10(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], %struct.anon.12* [[OMP_OUTLINED_ARG_AGG_]]) #[[ATTR2]]
 // CHECK1-NEXT:    call void @__kmpc_target_deinit(%struct.ident_t* @[[GLOB1]], i1 true, i1 false)
 // CHECK1-NEXT:    ret void
 // CHECK1:       worker.exit:
@@ -20092,7 +20092,7 @@ int bar(int n){
 // CHECK2-NEXT:    store i32 [[TMP5]], i32* [[CONV3]], align 4
 // CHECK2-NEXT:    [[TMP6:%.*]] = load i64, i64* [[L_CASTED]], align 8
 // CHECK2-NEXT:    store i32 [[TMP2]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK2-NEXT:    call void @__omp_outlined__(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP4]], [1000 x i32]* [[TMP0]], i64 [[TMP6]]) #[[ATTR1:[0-9]+]]
+// CHECK2-NEXT:    call void @__omp_outlined__(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], %struct.anon* [[OMP_OUTLINED_ARG_AGG_]]) #[[ATTR2:[0-9]+]]
 // CHECK2-NEXT:    call void @__kmpc_target_deinit(%struct.ident_t* @[[GLOB1]], i1 true, i1 false)
 // CHECK2-NEXT:    ret void
 // CHECK2:       worker.exit:
@@ -20389,7 +20389,7 @@ int bar(int n){
 //
 //
 // CHECK2-LABEL: define {{[^@]+}}@{{__omp_offloading_[0-9a-z]+_[0-9a-z]+}}__Z9ftemplateIiET_i_l34
-// CHECK2-SAME: (i64 [[N:%.*]], [1000 x i16]* nonnull align 2 dereferenceable(2000) [[AA:%.*]]) #[[ATTR0]] {
+// CHECK2-SAME: (i64 [[N:%.*]], [1000 x i16]* nonnull align 2 dereferenceable(2000) [[AA:%.*]]) #[[ATTR1:[0-9]+]] {
 // CHECK2-NEXT:  entry:
 // CHECK2-NEXT:    [[N_ADDR:%.*]] = alloca i64, align 8
 // CHECK2-NEXT:    [[AA_ADDR:%.*]] = alloca [1000 x i16]*, align 8
@@ -20411,7 +20411,7 @@ int bar(int n){
 // CHECK2-NEXT:    store i32 [[TMP3]], i32* [[CONV1]], align 4
 // CHECK2-NEXT:    [[TMP4:%.*]] = load i64, i64* [[N_CASTED]], align 8
 // CHECK2-NEXT:    store i32 [[TMP2]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK2-NEXT:    call void @__omp_outlined__2(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP4]], [1000 x i16]* [[TMP0]]) #[[ATTR1]]
+// CHECK2-NEXT:    call void @__omp_outlined__2(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], %struct.anon.2* [[OMP_OUTLINED_ARG_AGG_]]) #[[ATTR2]]
 // CHECK2-NEXT:    call void @__kmpc_target_deinit(%struct.ident_t* @[[GLOB1]], i1 true, i1 false)
 // CHECK2-NEXT:    ret void
 // CHECK2:       worker.exit:
@@ -20662,7 +20662,7 @@ int bar(int n){
 // CHECK2:       user_code.entry:
 // CHECK2-NEXT:    [[TMP2:%.*]] = call i32 @__kmpc_global_thread_num(%struct.ident_t* @[[GLOB4]])
 // CHECK2-NEXT:    store i32 [[TMP2]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK2-NEXT:    call void @__omp_outlined__4(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x i32]* [[TMP0]]) #[[ATTR1]]
+// CHECK2-NEXT:    call void @__omp_outlined__4(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], %struct.anon.4* [[OMP_OUTLINED_ARG_AGG_]]) #[[ATTR2]]
 // CHECK2-NEXT:    call void @__kmpc_target_deinit(%struct.ident_t* @[[GLOB1]], i1 true, i1 false)
 // CHECK2-NEXT:    ret void
 // CHECK2:       worker.exit:
@@ -20857,7 +20857,7 @@ int bar(int n){
 // CHECK2-NEXT:    store i32 [[TMP3]], i32* [[CONV1]], align 4
 // CHECK2-NEXT:    [[TMP4:%.*]] = load i64, i64* [[F_CASTED]], align 8
 // CHECK2-NEXT:    store i32 [[TMP2]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK2-NEXT:    call void @__omp_outlined__6(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x [10 x i32]]* [[TMP0]], i64 [[TMP4]]) #[[ATTR1]]
+// CHECK2-NEXT:    call void @__omp_outlined__6(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], %struct.anon.6* [[OMP_OUTLINED_ARG_AGG_]]) #[[ATTR2]]
 // CHECK2-NEXT:    call void @__kmpc_target_deinit(%struct.ident_t* @[[GLOB1]], i1 true, i1 false)
 // CHECK2-NEXT:    ret void
 // CHECK2:       worker.exit:
@@ -21090,7 +21090,7 @@ int bar(int n){
 // CHECK2-NEXT:    store i32 [[TMP3]], i32* [[CONV1]], align 4
 // CHECK2-NEXT:    [[TMP4:%.*]] = load i64, i64* [[N_CASTED]], align 8
 // CHECK2-NEXT:    store i32 [[TMP2]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK2-NEXT:    call void @__omp_outlined__8(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP4]], [10 x [10 x i32]]* [[TMP0]]) #[[ATTR1]]
+// CHECK2-NEXT:    call void @__omp_outlined__8(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], %struct.anon.10* [[OMP_OUTLINED_ARG_AGG_]]) #[[ATTR2]]
 // CHECK2-NEXT:    call void @__kmpc_target_deinit(%struct.ident_t* @[[GLOB1]], i1 true, i1 false)
 // CHECK2-NEXT:    ret void
 // CHECK2:       worker.exit:
@@ -21405,7 +21405,7 @@ int bar(int n){
 // CHECK2-NEXT:    [[TMP4:%.*]] = load i64, i64* [[N_CASTED]], align 8
 // CHECK2-NEXT:    [[TMP5:%.*]] = load i32*, i32** [[V_ADDR]], align 8
 // CHECK2-NEXT:    store i32 [[TMP2]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK2-NEXT:    call void @__omp_outlined__10(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i64 [[TMP4]], [1000 x i32]* [[TMP0]], i32* [[TMP5]]) #[[ATTR1]]
+// CHECK2-NEXT:    call void @__omp_outlined__10(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], %struct.anon.12* [[OMP_OUTLINED_ARG_AGG_]]) #[[ATTR2]]
 // CHECK2-NEXT:    call void @__kmpc_target_deinit(%struct.ident_t* @[[GLOB1]], i1 true, i1 false)
 // CHECK2-NEXT:    ret void
 // CHECK2:       worker.exit:
@@ -21677,7 +21677,7 @@ int bar(int n){
 // CHECK3-NEXT:    store i32 [[TMP5]], i32* [[L_CASTED]], align 4
 // CHECK3-NEXT:    [[TMP6:%.*]] = load i32, i32* [[L_CASTED]], align 4
 // CHECK3-NEXT:    store i32 [[TMP2]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK3-NEXT:    call void @__omp_outlined__(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP4]], [1000 x i32]* [[TMP0]], i32 [[TMP6]]) #[[ATTR1:[0-9]+]]
+// CHECK3-NEXT:    call void @__omp_outlined__(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], %struct.anon* [[OMP_OUTLINED_ARG_AGG_]]) #[[ATTR2:[0-9]+]]
 // CHECK3-NEXT:    call void @__kmpc_target_deinit(%struct.ident_t* @[[GLOB1]], i1 true, i1 false)
 // CHECK3-NEXT:    ret void
 // CHECK3:       worker.exit:
@@ -21961,7 +21961,7 @@ int bar(int n){
 //
 //
 // CHECK3-LABEL: define {{[^@]+}}@{{__omp_offloading_[0-9a-z]+_[0-9a-z]+}}__Z9ftemplateIiET_i_l34
-// CHECK3-SAME: (i32 [[N:%.*]], [1000 x i16]* nonnull align 2 dereferenceable(2000) [[AA:%.*]]) #[[ATTR0]] {
+// CHECK3-SAME: (i32 [[N:%.*]], [1000 x i16]* nonnull align 2 dereferenceable(2000) [[AA:%.*]]) #[[ATTR1:[0-9]+]] {
 // CHECK3-NEXT:  entry:
 // CHECK3-NEXT:    [[N_ADDR:%.*]] = alloca i32, align 4
 // CHECK3-NEXT:    [[AA_ADDR:%.*]] = alloca [1000 x i16]*, align 4
@@ -21981,7 +21981,7 @@ int bar(int n){
 // CHECK3-NEXT:    store i32 [[TMP3]], i32* [[N_CASTED]], align 4
 // CHECK3-NEXT:    [[TMP4:%.*]] = load i32, i32* [[N_CASTED]], align 4
 // CHECK3-NEXT:    store i32 [[TMP2]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK3-NEXT:    call void @__omp_outlined__2(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP4]], [1000 x i16]* [[TMP0]]) #[[ATTR1]]
+// CHECK3-NEXT:    call void @__omp_outlined__2(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], %struct.anon.1* [[OMP_OUTLINED_ARG_AGG_]]) #[[ATTR2]]
 // CHECK3-NEXT:    call void @__kmpc_target_deinit(%struct.ident_t* @[[GLOB1]], i1 true, i1 false)
 // CHECK3-NEXT:    ret void
 // CHECK3:       worker.exit:
@@ -22223,7 +22223,7 @@ int bar(int n){
 // CHECK3:       user_code.entry:
 // CHECK3-NEXT:    [[TMP2:%.*]] = call i32 @__kmpc_global_thread_num(%struct.ident_t* @[[GLOB4]])
 // CHECK3-NEXT:    store i32 [[TMP2]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK3-NEXT:    call void @__omp_outlined__4(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x i32]* [[TMP0]]) #[[ATTR1]]
+// CHECK3-NEXT:    call void @__omp_outlined__4(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], %struct.anon.3* [[OMP_OUTLINED_ARG_AGG_]]) #[[ATTR2]]
 // CHECK3-NEXT:    call void @__kmpc_target_deinit(%struct.ident_t* @[[GLOB1]], i1 true, i1 false)
 // CHECK3-NEXT:    ret void
 // CHECK3:       worker.exit:
@@ -22410,7 +22410,7 @@ int bar(int n){
 // CHECK3-NEXT:    store i32 [[TMP3]], i32* [[F_CASTED]], align 4
 // CHECK3-NEXT:    [[TMP4:%.*]] = load i32, i32* [[F_CASTED]], align 4
 // CHECK3-NEXT:    store i32 [[TMP2]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK3-NEXT:    call void @__omp_outlined__6(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x [10 x i32]]* [[TMP0]], i32 [[TMP4]]) #[[ATTR1]]
+// CHECK3-NEXT:    call void @__omp_outlined__6(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], %struct.anon.5* [[OMP_OUTLINED_ARG_AGG_]]) #[[ATTR2]]
 // CHECK3-NEXT:    call void @__kmpc_target_deinit(%struct.ident_t* @[[GLOB1]], i1 true, i1 false)
 // CHECK3-NEXT:    ret void
 // CHECK3:       worker.exit:
@@ -22631,7 +22631,7 @@ int bar(int n){
 // CHECK3-NEXT:    store i32 [[TMP3]], i32* [[N_CASTED]], align 4
 // CHECK3-NEXT:    [[TMP4:%.*]] = load i32, i32* [[N_CASTED]], align 4
 // CHECK3-NEXT:    store i32 [[TMP2]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK3-NEXT:    call void @__omp_outlined__8(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP4]], [10 x [10 x i32]]* [[TMP0]]) #[[ATTR1]]
+// CHECK3-NEXT:    call void @__omp_outlined__8(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], %struct.anon.7* [[OMP_OUTLINED_ARG_AGG_]]) #[[ATTR2]]
 // CHECK3-NEXT:    call void @__kmpc_target_deinit(%struct.ident_t* @[[GLOB1]], i1 true, i1 false)
 // CHECK3-NEXT:    ret void
 // CHECK3:       worker.exit:
@@ -22949,7 +22949,7 @@ int bar(int n){
 // CHECK3-NEXT:    [[TMP4:%.*]] = load i32, i32* [[N_CASTED]], align 4
 // CHECK3-NEXT:    [[TMP5:%.*]] = load i32*, i32** [[V_ADDR]], align 4
 // CHECK3-NEXT:    store i32 [[TMP2]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK3-NEXT:    call void @__omp_outlined__10(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP4]], [1000 x i32]* [[TMP0]], i32* [[TMP5]]) #[[ATTR1]]
+// CHECK3-NEXT:    call void @__omp_outlined__10(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], %struct.anon.9* [[OMP_OUTLINED_ARG_AGG_]]) #[[ATTR2]]
 // CHECK3-NEXT:    call void @__kmpc_target_deinit(%struct.ident_t* @[[GLOB1]], i1 true, i1 false)
 // CHECK3-NEXT:    ret void
 // CHECK3:       worker.exit:
@@ -23211,7 +23211,7 @@ int bar(int n){
 // CHECK4-NEXT:    store i32 [[TMP5]], i32* [[L_CASTED]], align 4
 // CHECK4-NEXT:    [[TMP6:%.*]] = load i32, i32* [[L_CASTED]], align 4
 // CHECK4-NEXT:    store i32 [[TMP2]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK4-NEXT:    call void @__omp_outlined__(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP4]], [1000 x i32]* [[TMP0]], i32 [[TMP6]]) #[[ATTR1:[0-9]+]]
+// CHECK4-NEXT:    call void @__omp_outlined__(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], %struct.anon* [[OMP_OUTLINED_ARG_AGG_]]) #[[ATTR2:[0-9]+]]
 // CHECK4-NEXT:    call void @__kmpc_target_deinit(%struct.ident_t* @[[GLOB1]], i1 true, i1 false)
 // CHECK4-NEXT:    ret void
 // CHECK4:       worker.exit:
@@ -23495,7 +23495,7 @@ int bar(int n){
 //
 //
 // CHECK4-LABEL: define {{[^@]+}}@{{__omp_offloading_[0-9a-z]+_[0-9a-z]+}}__Z9ftemplateIiET_i_l34
-// CHECK4-SAME: (i32 [[N:%.*]], [1000 x i16]* nonnull align 2 dereferenceable(2000) [[AA:%.*]]) #[[ATTR0]] {
+// CHECK4-SAME: (i32 [[N:%.*]], [1000 x i16]* nonnull align 2 dereferenceable(2000) [[AA:%.*]]) #[[ATTR1:[0-9]+]] {
 // CHECK4-NEXT:  entry:
 // CHECK4-NEXT:    [[N_ADDR:%.*]] = alloca i32, align 4
 // CHECK4-NEXT:    [[AA_ADDR:%.*]] = alloca [1000 x i16]*, align 4
@@ -23515,7 +23515,7 @@ int bar(int n){
 // CHECK4-NEXT:    store i32 [[TMP3]], i32* [[N_CASTED]], align 4
 // CHECK4-NEXT:    [[TMP4:%.*]] = load i32, i32* [[N_CASTED]], align 4
 // CHECK4-NEXT:    store i32 [[TMP2]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK4-NEXT:    call void @__omp_outlined__2(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP4]], [1000 x i16]* [[TMP0]]) #[[ATTR1]]
+// CHECK4-NEXT:    call void @__omp_outlined__2(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], %struct.anon.1* [[OMP_OUTLINED_ARG_AGG_]]) #[[ATTR2]]
 // CHECK4-NEXT:    call void @__kmpc_target_deinit(%struct.ident_t* @[[GLOB1]], i1 true, i1 false)
 // CHECK4-NEXT:    ret void
 // CHECK4:       worker.exit:
@@ -23757,7 +23757,7 @@ int bar(int n){
 // CHECK4:       user_code.entry:
 // CHECK4-NEXT:    [[TMP2:%.*]] = call i32 @__kmpc_global_thread_num(%struct.ident_t* @[[GLOB4]])
 // CHECK4-NEXT:    store i32 [[TMP2]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK4-NEXT:    call void @__omp_outlined__4(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x i32]* [[TMP0]]) #[[ATTR1]]
+// CHECK4-NEXT:    call void @__omp_outlined__4(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], %struct.anon.3* [[OMP_OUTLINED_ARG_AGG_]]) #[[ATTR2]]
 // CHECK4-NEXT:    call void @__kmpc_target_deinit(%struct.ident_t* @[[GLOB1]], i1 true, i1 false)
 // CHECK4-NEXT:    ret void
 // CHECK4:       worker.exit:
@@ -23944,7 +23944,7 @@ int bar(int n){
 // CHECK4-NEXT:    store i32 [[TMP3]], i32* [[F_CASTED]], align 4
 // CHECK4-NEXT:    [[TMP4:%.*]] = load i32, i32* [[F_CASTED]], align 4
 // CHECK4-NEXT:    store i32 [[TMP2]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK4-NEXT:    call void @__omp_outlined__6(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], [10 x [10 x i32]]* [[TMP0]], i32 [[TMP4]]) #[[ATTR1]]
+// CHECK4-NEXT:    call void @__omp_outlined__6(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], %struct.anon.5* [[OMP_OUTLINED_ARG_AGG_]]) #[[ATTR2]]
 // CHECK4-NEXT:    call void @__kmpc_target_deinit(%struct.ident_t* @[[GLOB1]], i1 true, i1 false)
 // CHECK4-NEXT:    ret void
 // CHECK4:       worker.exit:
@@ -24165,7 +24165,7 @@ int bar(int n){
 // CHECK4-NEXT:    store i32 [[TMP3]], i32* [[N_CASTED]], align 4
 // CHECK4-NEXT:    [[TMP4:%.*]] = load i32, i32* [[N_CASTED]], align 4
 // CHECK4-NEXT:    store i32 [[TMP2]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK4-NEXT:    call void @__omp_outlined__8(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP4]], [10 x [10 x i32]]* [[TMP0]]) #[[ATTR1]]
+// CHECK4-NEXT:    call void @__omp_outlined__8(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], %struct.anon.7* [[OMP_OUTLINED_ARG_AGG_]]) #[[ATTR2]]
 // CHECK4-NEXT:    call void @__kmpc_target_deinit(%struct.ident_t* @[[GLOB1]], i1 true, i1 false)
 // CHECK4-NEXT:    ret void
 // CHECK4:       worker.exit:
@@ -24483,7 +24483,7 @@ int bar(int n){
 // CHECK4-NEXT:    [[TMP4:%.*]] = load i32, i32* [[N_CASTED]], align 4
 // CHECK4-NEXT:    [[TMP5:%.*]] = load i32*, i32** [[V_ADDR]], align 4
 // CHECK4-NEXT:    store i32 [[TMP2]], i32* [[DOTTHREADID_TEMP_]], align 4
-// CHECK4-NEXT:    call void @__omp_outlined__10(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], i32 [[TMP4]], [1000 x i32]* [[TMP0]], i32* [[TMP5]]) #[[ATTR1]]
+// CHECK4-NEXT:    call void @__omp_outlined__10(i32* [[DOTTHREADID_TEMP_]], i32* [[DOTZERO_ADDR]], %struct.anon.9* [[OMP_OUTLINED_ARG_AGG_]]) #[[ATTR2]]
 // CHECK4-NEXT:    call void @__kmpc_target_deinit(%struct.ident_t* @[[GLOB1]], i1 true, i1 false)
 // CHECK4-NEXT:    ret void
 // CHECK4:       worker.exit:
