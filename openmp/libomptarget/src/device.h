@@ -275,6 +275,8 @@ struct DeviceTy {
   /// OFFLOAD_SUCCESS/OFFLOAD_FAIL when succeeds/fails.
   int32_t synchronize(AsyncInfoTy &AsyncInfo);
 
+  bool printDeviceInfo(int32_t RTLDevID);
+
 private:
   // Call to RTL
   void init(); // To be called only via DeviceTy::initOnce()
