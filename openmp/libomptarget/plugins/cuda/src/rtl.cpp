@@ -20,6 +20,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <string.h>
 
 #include "Debug.h"
 #include "omptargetplugin.h"
