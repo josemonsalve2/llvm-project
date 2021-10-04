@@ -2551,8 +2551,8 @@ struct AAExecutionDomainFunction : public AAExecutionDomain {
         dbgs() << TAG << " Basic block @" << getAnchorScope()->getName() << " "
                << BB->getName()
                << " is executed by all threads in the same epoch.\n";
-      if (isExitedByAllThreadsInTheSameEpoch())
-        dbgs() << "All threads exist the function in the same epoch.\n";
+      if (isExitedAligned())
+        dbgs() << "All threads exist the function aligned.\n";
     });
     return ChangeStatus::UNCHANGED;
   }
@@ -2573,24 +2573,33 @@ struct AAExecutionDomainFunction : public AAExecutionDomain {
     return isExecutedByAllThreadsInTheSameEpoch(*I.getParent());
   }
 
+  bool isExecutedAligned(const Instruction &I) const override {
+    return isValidState() && AlignedBBs.count(I.getParent());
+  }
+
+  bool isExecutedAligned(const BasicBlock &BB) const override {
+    return isValidState() && AlignedBBs.count(&BB);
+  }
+
+  bool isExitedAligned() const override {
+    return isValidState() && IsExitedAligned;
+  }
+
   bool
   isExecutedByAllThreadsInTheSameEpoch(const BasicBlock &BB) const override {
     return isValidState() && SameEpochBBs.count(&BB);
   }
 
-  bool isExitedByAllThreadsInTheSameEpoch() const override {
-    return isValidState() && IsExitedByAllThreadsInTheSameEpoch;
-  }
-
   /// Set of basic blocks that are executed by a single thread.
   DenseSet<const BasicBlock *> SingleThreadedBBs;
 
+  DenseSet<const BasicBlock *> AlignedBBs;
   DenseSet<const BasicBlock *> SameEpochBBs;
 
   /// Total number of basic blocks in this function.
   long unsigned NumBBs;
 
-  bool IsExitedByAllThreadsInTheSameEpoch = true;
+  bool IsExitedAligned = true;
 };
 
 ChangeStatus AAExecutionDomainFunction::updateImpl(Attributor &A) {
@@ -2608,6 +2617,8 @@ ChangeStatus AAExecutionDomainFunction::updateImpl(Attributor &A) {
       SingleThreadedBBs.erase(&F->getEntryBlock());
     if (!ExecDomAA.isExecutedByAllThreadsInTheSameEpoch(I))
       SameEpochBBs.erase(&F->getEntryBlock());
+    if (!ExecDomAA.isExecutedAligned(I))
+      AlignedBBs.erase(&F->getEntryBlock());
     return true;
   };
 
@@ -2617,8 +2628,10 @@ ChangeStatus AAExecutionDomainFunction::updateImpl(Attributor &A) {
     // Something went wrong visiting all call sites, conservatively assume the
     // worst.
     SingleThreadedBBs.erase(&F->getEntryBlock());
-    if (!F->hasFnAttribute("kernel"))
+    if (!F->hasFnAttribute("kernel")) {
       SameEpochBBs.erase(&F->getEntryBlock());
+      AlignedBBs.erase(&F->getEntryBlock());
+    }
   }
 
   auto &OMPInfoCache = static_cast<OMPInformationCache &>(A.getInfoCache());
@@ -2715,7 +2728,7 @@ ChangeStatus AAExecutionDomainFunction::updateImpl(Attributor &A) {
     const auto &ExecDomAA = A.getAAFor<AAExecutionDomain>(
         *this, IRPosition::function(*CB->getCalledFunction()),
         DepClassTy::REQUIRED);
-    return ExecDomAA.isExitedByAllThreadsInTheSameEpoch();
+    return ExecDomAA.isExitedAligned();
   };
 
   auto CheckBB = [&](BasicBlock &BB) {
@@ -2744,6 +2757,7 @@ ChangeStatus AAExecutionDomainFunction::updateImpl(Attributor &A) {
       if (!InstIsAlignedSync.getValue()) {
         SEI.ContainsNonAlignedSync = true;
         SameEpochBBs.erase(&BB);
+        AlignedBBs.erase(&BB);
       }
     }
   };
@@ -2753,7 +2767,6 @@ ChangeStatus AAExecutionDomainFunction::updateImpl(Attributor &A) {
   auto MergePredecessorStates = [&](BasicBlock &BB) {
     if (SameEpochMap[&BB].IsDead)
       return;
-    bool PredsSameEpoche = true;
     for (BasicBlock *PredBB : predecessors(&BB)) {
       SameEpochInfo &SEI = SameEpochMap[PredBB];
       if (SEI.IsDead)
@@ -2767,17 +2780,36 @@ ChangeStatus AAExecutionDomainFunction::updateImpl(Attributor &A) {
           SEI.EndsWithAlignedBarrierAsSync.getValue())
         continue;
       if (!SameEpochBBs.contains(PredBB))
-        PredsSameEpoche = false;
+        SameEpochBBs.erase(&BB);
+      if (!AlignedBBs.contains(PredBB))
+        AlignedBBs.erase(&BB);
     }
-    if (!PredsSameEpoche)
+  };
+
+  auto MergeSuccessorStates = [&](BasicBlock &BB) {
+    if (SameEpochMap[&BB].IsDead)
+      return;
+    for (BasicBlock *SuccBB : successors(&BB)) {
+      SameEpochInfo &SEI = SameEpochMap[SuccBB];
+      if (SEI.IsDead)
+        continue;
+      if (SEI.StartsWithAlignedBarrierAsSync.hasValue() &&
+          SEI.StartsWithAlignedBarrierAsSync.getValue())
+        continue;
+      if (!SEI.ContainsNonAlignedSync && SameEpochBBs.contains(SuccBB))
+        continue;
       SameEpochBBs.erase(&BB);
+      return;
+    }
   };
 
   ReversePostOrderTraversal<Function *> RPOT(F);
-  for (auto *BB : RPOT) {
+  for (auto *BB : RPOT)
     CheckBB(*BB);
+  for (auto *BB : RPOT)
     MergePredecessorStates(*BB);
-  }
+  for (auto &BB : reverse(*F))
+    MergeSuccessorStates(BB);
 
   return (NumSingleThreadedBBs == SingleThreadedBBs.size() &&
           NumSameEpochBBs == SameEpochBBs.size())
