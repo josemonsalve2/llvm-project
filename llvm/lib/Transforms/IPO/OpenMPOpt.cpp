@@ -3039,8 +3039,9 @@ ChangeStatus AAExecutionDomainFunction::updateImpl(Attributor &A) {
         continue;
       bool StartWithAligned = SEI.StartsWithAlignedBarrierAsSync.hasValue() &&
                               SEI.StartsWithAlignedBarrierAsSync.getValue();
-      AllStartWithAligned &= (StartWithAligned | (!SEI.ContainsNonAlignedSync &
-                                                  AlignedBBs.count(SuccBB)));
+      AllStartWithAligned &=
+          (StartWithAligned |
+           ((!SEI.ContainsNonAlignedSync) & AlignedBBs.count(SuccBB)));
       if (StartWithAligned) {
         continue;
       }
