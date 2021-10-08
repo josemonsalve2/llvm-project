@@ -662,27 +662,57 @@ void __kmpc_for_static_fini(IdentTy *loc, int32_t global_tid) {}
 
 void __kmpc_distribute_static_fini(IdentTy *loc, int32_t global_tid) {}
 
+
+const uint32_t __omp_rtl_assume_threads_oversubscription = false;
+const uint32_t __omp_rtl_assume_teams_oversubscription = false;
+
+
+void CommonStaticIncreasingLoop( void *loop_body, int64_t loop_inc, void **args, 
+                                        int64_t block_chunk, int64_t b_offset, int64_t n_blocks,
+                                        int64_t thread_chunk, int64_t t_offset, 
+                                        int64_t n_threads, int64_t tid, int64_t upper) {
+  
+  // Cover the whole array
+  while (t_offset < upper) {
+    uint64_t b_upper_lim = b_offset + block_chunk * loop_inc;
+    // Cover the whole block_chunk
+    while (t_offset < b_upper_lim) {
+      uint64_t t_upper_lim = t_offset + thread_chunk * loop_inc;
+      // Cover the whole thread_chunk
+      while (t_offset < t_upper_lim) {
+        ((void (*)(int32_t, int32_t *, int32_t *, void *))loop_body)(
+          t_offset, nullptr, nullptr, args);
+        t_offset += loop_inc;
+        // Check for border case
+        if (t_offset >= upper)
+          break;
+      }
+      t_offset += n_threads * thread_chunk * loop_inc - loop_inc;
+      if (__omp_rtl_assume_threads_oversubscription)
+        break;
+    }
+    b_offset += n_blocks * block_chunk * loop_inc;
+    // Restart thread location to beginning of block
+    t_offset = b_offset + tid * thread_chunk * loop_inc;
+    if (__omp_rtl_assume_teams_oversubscription)
+      break;
+  }
+}
+
+
 // FIXME: Change chunk, lower, upper to unsigned integers
 void __kmpc_for_static_loop(void *loop_body, int64_t loop_inc, void **args,
                             int64_t chunk, int64_t lower, int64_t upper) {
-  // inner_chunk = 2;
-  __builtin_assume(loop_inc == 1);
-  __builtin_assume(lower == 0);
-  __builtin_assume(upper > lower);
+  __builtin_assume(loop_inc > 0);
 
-  uint64_t nt = omp_get_num_threads();
-
-  int64_t tid = mapping::getThreadIdInBlock() * chunk;
-
-  int64_t num_iters = upper - lower;
-
-  while (tid < num_iters) {
-    int64_t tid_end = tid + chunk;
-    while (tid < tid_end)
-      ((void (*)(int32_t, int32_t *, int32_t *, void *))loop_body)(
-          tid++, nullptr, nullptr, args);
-    tid += nt;
-  }
+  int64_t tid = mapping::getThreadIdInBlock();
+  int64_t n_threads = omp_get_num_threads();
+  int64_t t_offset = lower + tid * chunk * loop_inc;
+  if (loop_inc > 0)
+    CommonStaticIncreasingLoop(loop_body, loop_inc, args, 
+                                upper, 0, 1,
+                                chunk, t_offset,
+                                n_threads, tid, upper);
 }
 
 // FIXME: Change {outer, inner}_chunk, lower, upper to unsigned integers
@@ -690,26 +720,33 @@ void __kmpc_distribute_for_static_loop(void *loop_body, int64_t loop_inc,
                                        void **args, int64_t outer_chunk,
                                        int64_t inner_chunk, int64_t lower,
                                        int64_t upper) {
-  // inner_chunk = 2;
-  __builtin_assume(loop_inc == 1);
-  __builtin_assume(lower == 0);
-  __builtin_assume(upper > lower);
+  // If no outer_chunk provided, use full capacity.
+  if (outer_chunk < 1)
+    outer_chunk = mapping::getBlockSize() * mapping::getNumberOfBlocks();
+  
+  int64_t n_blocks = mapping::getNumberOfBlocks();
+  int64_t b_offset = lower + mapping::getBlockId() * outer_chunk * loop_inc;
+  int64_t tid = mapping::getThreadIdInBlock();
+  int64_t n_threads = omp_get_num_threads();
+  int64_t t_offset = b_offset + tid * inner_chunk * loop_inc;
+  if (loop_inc > 0)
+    CommonStaticIncreasingLoop(loop_body, loop_inc, args, 
+                                outer_chunk, b_offset, n_blocks, 
+                                inner_chunk, t_offset, 
+                                n_threads, tid, upper);
+}
 
-  uint64_t nt = mapping::getBlockSize();
-  uint64_t nk = mapping::getBlockSize() * mapping::getNumberOfBlocks();
-
-  int64_t tid = (mapping::getBlockId() * nt + mapping::getThreadIdInBlock()) *
-                inner_chunk;
-
-  int64_t num_iters = upper - lower;
-
-  while (tid < num_iters) {
-    int64_t tid_end = tid + inner_chunk;
-    while (tid < tid_end)
-      ((void (*)(int32_t, int32_t *, int32_t *, void *))loop_body)(
-          tid++, nullptr, nullptr, args);
-    tid += nk;
-  }
+void __kmpc_distribute_static_loop(void *loop_body, int64_t loop_inc,
+                                    void **args, int64_t chunk,
+                                    int64_t lower, int64_t upper) {
+  int64_t n_blocks = mapping::getNumberOfBlocks();
+  int64_t b_offset = mapping::getBlockId() * chunk;
+  if (loop_inc > 0)
+    CommonStaticIncreasingLoop(loop_body, loop_inc, args, 
+                                chunk, b_offset, n_blocks, 
+                                chunk, b_offset, 
+                                0, 0,
+                                upper);
 }
 }
 

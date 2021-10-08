@@ -26,8 +26,20 @@ void __assert_fail(const char *assertion, const char *file, unsigned line,
 ///}
 
 // TODO: We need to allow actual printf.
-#define PRINTF(fmt, ...) (void)fmt;
+//#define PRINTF(fmt, ...) (void)fmt;
+//#define PRINT(str) PRINTF("%s", str)
+
+#ifndef __AMDGCN__
+extern "C" {
+int printf(const char *format, ...);
+}
+
+#define PRINTF(fmt, ...) (void)printf(fmt, __VA_ARGS__);
 #define PRINT(str) PRINTF("%s", str)
+#else
+#define PRINTF(fmt, ...) (void)fmt;
+#define PRINT(str)
+#endif
 
 ///}
 
