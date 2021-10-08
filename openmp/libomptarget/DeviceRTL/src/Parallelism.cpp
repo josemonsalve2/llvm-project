@@ -111,9 +111,10 @@ void __kmpc_parallel_51(IdentTy *ident, int32_t, int32_t if_expr,
 
       if (TId < NumThreads)
         invokeMicrotask(TId, 0, fn, args, nargs);
+
+      // Synchronize all threads at the end of a parallel region.
+      synchronize::threadsAligned();
     }
-    // Synchronize all threads at the end of a parallel region.
-    synchronize::threadsAligned();
 
     ASSERT(state::ParallelTeamSize == 1u);
     ASSERT(icv::ActiveLevel == 0u);
