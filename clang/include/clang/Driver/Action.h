@@ -75,6 +75,7 @@ public:
     OffloadUnbundlingJobClass,
     OffloadWrapperJobClass,
     OffloadPackagerJobClass,
+    ColossusExternalCompilerJobClass,
     LinkerWrapperJobClass,
     StaticLibJobClass,
 
@@ -700,6 +701,17 @@ public:
 
   static bool classof(const Action *A) {
     return A->getKind() == StaticLibJobClass;
+  }
+};
+
+class ColossusExternalCompiler : public JobAction {
+  void anchor() override;
+
+public:
+  ColossusExternalCompiler(Action *Inputs, types::ID Type);
+
+  static bool classof(const Action *A) {
+    return A->getKind() == ColossusExternalCompilerJobClass;
   }
 };
 

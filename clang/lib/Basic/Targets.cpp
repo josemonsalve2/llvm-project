@@ -28,6 +28,7 @@
 #include "Targets/MSP430.h"
 #include "Targets/Mips.h"
 #include "Targets/NVPTX.h"
+#include "Targets/Colossus.h"
 #include "Targets/OSTargets.h"
 #include "Targets/PNaCl.h"
 #include "Targets/PPC.h"
@@ -395,6 +396,9 @@ TargetInfo *AllocateTarget(const llvm::Triple &Triple,
     return new NVPTXTargetInfo(Triple, Opts, /*TargetPointerWidth=*/32);
   case llvm::Triple::nvptx64:
     return new NVPTXTargetInfo(Triple, Opts, /*TargetPointerWidth=*/64);
+
+  case llvm::Triple::colossus:
+    return new ColossusTargetInfo(Triple, Opts, /*TargetPointerWidth=*/64);
 
   case llvm::Triple::amdgcn:
   case llvm::Triple::r600:

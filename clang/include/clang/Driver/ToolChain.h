@@ -755,6 +755,8 @@ public:
         return llvm::Triple("nvptx64-nvidia-cuda");
       if (TT.getArch() == llvm::Triple::amdgcn)
         return llvm::Triple("amdgcn-amd-amdhsa");
+      if (TT.getArch() == llvm::Triple::colossus)
+        return llvm::Triple("colossus-graphcore-unknown-elf");
     }
     return TT;
   }

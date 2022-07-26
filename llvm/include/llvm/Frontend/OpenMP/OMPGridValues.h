@@ -81,6 +81,16 @@ struct GV {
 };
 
 /// For AMDGPU GPUs
+static constexpr GV ColossusGridValues = {
+    1,  // GV_Slot_Size
+    1,   // GV_Warp_Size
+    1,  // GV_Max_Teams
+    1,  // GV_SimpleBufferSize
+    1, // GV_Max_WG_Size,
+    1,  // GV_Default_WG_Size
+};
+
+/// For AMDGPU GPUs
 static constexpr GV AMDGPUGridValues64 = {
     256,  // GV_Slot_Size
     64,   // GV_Warp_Size

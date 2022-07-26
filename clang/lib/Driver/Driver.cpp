@@ -44,6 +44,7 @@
 #include "ToolChains/PPCFreeBSD.h"
 #include "ToolChains/PPCLinux.h"
 #include "ToolChains/PS4CPU.h"
+#include "ToolChains/Colossus.h"
 #include "ToolChains/RISCVToolchain.h"
 #include "ToolChains/SPIRV.h"
 #include "ToolChains/Solaris.h"
@@ -155,6 +156,22 @@ getHIPOffloadTargetTriple(const Driver &D, const ArgList &Args) {
       TT->getOS() == llvm::Triple::AMDHSA)
     return TT;
   if (TT->getArch() == llvm::Triple::spirv64)
+    return TT;
+  D.Diag(diag::err_drv_invalid_or_unsupported_offload_target) << TT->str();
+  return llvm::None;
+}
+
+static llvm::Optional<llvm::Triple>
+getColossusOffloadTargetTriple(const Driver &D, const ArgList &Args) {
+  if (!Args.hasArg(options::OPT_offload_EQ)) {
+    return llvm::Triple("colossus-graphcore-unknown-elf"); // Default Colossus triple.
+  }
+  auto TT = getOffloadTargetTriple(D, Args);
+  if (!TT)
+    return llvm::None;
+  if (TT->getArch() == llvm::Triple::colossus &&
+      TT->getVendor() == llvm::Triple::Graphcore &&
+      TT->getOS() == llvm::Triple::Colossus)
     return TT;
   D.Diag(diag::err_drv_invalid_or_unsupported_offload_target) << TT->str();
   return llvm::None;
@@ -819,6 +836,7 @@ void Driver::CreateOffloadingDeviceToolChains(Compilation &C,
       auto AMDTriple = getHIPOffloadTargetTriple(*this, C.getInputArgs());
       auto NVPTXTriple = getNVIDIAOffloadTargetTriple(*this, C.getInputArgs(),
                                                       HostTC->getTriple());
+      auto ColossusTriple = getColossusOffloadTargetTriple(*this, C.getInputArgs());
 
       // Attempt to deduce the offloading triple from the set of architectures.
       // We can only correctly deduce NVPTX / AMDGPU triples currently.
@@ -832,6 +850,8 @@ void Driver::CreateOffloadingDeviceToolChains(Compilation &C,
                    IsAMDGpuArch(StringToCudaArch(
                        getProcessorFromTargetID(*AMDTriple, Arch)))) {
           DerivedArchs[AMDTriple->getTriple()].insert(Arch);
+        } else if (ColossusTriple) {
+          DerivedArchs[ColossusTriple->getTriple()].insert(Arch);
         } else {
           Diag(clang::diag::err_drv_failed_to_deduce_target_from_arch) << Arch;
           return;
@@ -865,7 +885,7 @@ void Driver::CreateOffloadingDeviceToolChains(Compilation &C,
         const ToolChain *TC;
         // Device toolchains have to be selected differently. They pair host
         // and device in their implementation.
-        if (TT.isNVPTX() || TT.isAMDGCN()) {
+        if (TT.isNVPTX() || TT.isAMDGCN() || TT.isColossus()) {
           const ToolChain *HostTC =
               C.getSingleOffloadToolChain<Action::OFK_Host>();
           assert(HostTC && "Host toolchain should be always defined.");
@@ -878,6 +898,9 @@ void Driver::CreateOffloadingDeviceToolChains(Compilation &C,
             else if (TT.isAMDGCN())
               DeviceTC = std::make_unique<toolchains::AMDGPUOpenMPToolChain>(
                   *this, TT, *HostTC, C.getInputArgs());
+            else if (TT.isColossus())
+              DeviceTC = std::make_unique<toolchains::ColossusToolChain>(
+                  *this, TT, *HostTC, C.getInputArgs(), Action::OFK_OpenMP);
             else
               assert(DeviceTC && "Device toolchain not defined.");
           }
@@ -4445,7 +4468,16 @@ Action *Driver::BuildOffloadingActions(Compilation &C,
 
       auto TCAndArch = TCAndArchs.begin();
       for (Action *&A : DeviceActions) {
-        A = ConstructPhaseAction(C, Args, Phase, A, Kind);
+        if (TCAndArch->first->getTriple().isColossus() && Kind == Action::OFK_OpenMP) {
+          if (Phase == phases::Compile)
+            A = C.MakeAction<CompileJobAction>(A, types::TY_LLVM_IR);
+          else if (Phase == phases::Backend)
+            A = C.MakeAction<ColossusExternalCompiler>(A, types::TY_PP_Asm);
+          else if (Phase == phases::Assemble)
+            A = C.MakeAction<ColossusExternalCompiler>(A, types::TY_Object);
+          else
+          A = ConstructPhaseAction(C, Args, Phase, A, Kind);
+        }
 
         if (isa<CompileJobAction>(A) && isa<CompileJobAction>(HostAction) &&
             Kind == Action::OFK_OpenMP) {

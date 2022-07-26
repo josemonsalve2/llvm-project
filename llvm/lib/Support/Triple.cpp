@@ -55,6 +55,7 @@ StringRef Triple::getArchTypeName(ArchType Kind) {
   case msp430:         return "msp430";
   case nvptx64:        return "nvptx64";
   case nvptx:          return "nvptx";
+  case colossus:       return "colossus";
   case ppc64:          return "powerpc64";
   case ppc64le:        return "powerpc64le";
   case ppc:            return "powerpc";
@@ -190,6 +191,7 @@ StringRef Triple::getVendorTypeName(VendorType Kind) {
   case Myriad: return "myriad";
   case NVIDIA: return "nvidia";
   case OpenEmbedded: return "oe";
+  case Graphcore: return "graphcore";
   case PC: return "pc";
   case SCEI: return "scei";
   case SUSE: return "suse";
@@ -230,6 +232,7 @@ StringRef Triple::getOSTypeName(OSType Kind) {
   case NaCl: return "nacl";
   case NetBSD: return "netbsd";
   case OpenBSD: return "openbsd";
+  case Colossus: return "unknown";
   case PS4: return "ps4";
   case PS5: return "ps5";
   case RTEMS: return "rtems";
@@ -487,6 +490,7 @@ static Triple::ArchType parseArch(StringRef ArchName) {
     .Case("xcore", Triple::xcore)
     .Case("nvptx", Triple::nvptx)
     .Case("nvptx64", Triple::nvptx64)
+    .Case("colossus", Triple::colossus)
     .Case("le32", Triple::le32)
     .Case("le64", Triple::le64)
     .Case("amdil", Triple::amdil)
@@ -537,6 +541,7 @@ static Triple::VendorType parseVendor(StringRef VendorName) {
     .Case("img", Triple::ImaginationTechnologies)
     .Case("mti", Triple::MipsTechnologies)
     .Case("nvidia", Triple::NVIDIA)
+    .Case("graphcore", Triple::Graphcore)
     .Case("csr", Triple::CSR)
     .Case("myriad", Triple::Myriad)
     .Case("amd", Triple::AMD)
@@ -573,6 +578,7 @@ static Triple::OSType parseOS(StringRef OSName) {
     .StartsWith("cuda", Triple::CUDA)
     .StartsWith("nvcl", Triple::NVCL)
     .StartsWith("amdhsa", Triple::AMDHSA)
+    .StartsWith("colossus", Triple::Colossus)
     .StartsWith("ps4", Triple::PS4)
     .StartsWith("ps5", Triple::PS5)
     .StartsWith("elfiamcu", Triple::ELFIAMCU)
@@ -817,6 +823,7 @@ static Triple::ObjectFormatType getDefaultFormat(const Triple &T) {
   case Triple::msp430:
   case Triple::nvptx64:
   case Triple::nvptx:
+  case Triple::colossus:
   case Triple::ppc64le:
   case Triple::ppcle:
   case Triple::r600:
@@ -1425,6 +1432,7 @@ static unsigned getArchPointerBitWidth(llvm::Triple::ArchType Arch) {
   case llvm::Triple::mips64:
   case llvm::Triple::mips64el:
   case llvm::Triple::nvptx64:
+  case llvm::Triple::colossus:
   case llvm::Triple::ppc64:
   case llvm::Triple::ppc64le:
   case llvm::Triple::renderscript64:
@@ -1484,6 +1492,7 @@ Triple Triple::get32BitArchVariant() const {
   case Triple::mips:
   case Triple::mipsel:
   case Triple::nvptx:
+  case Triple::colossus:
   case Triple::ppc:
   case Triple::ppcle:
   case Triple::r600:
@@ -1545,6 +1554,7 @@ Triple Triple::get64BitArchVariant() const {
   case Triple::lanai:
   case Triple::m68k:
   case Triple::msp430:
+  case Triple::colossus:
   case Triple::r600:
   case Triple::shave:
   case Triple::sparcel:

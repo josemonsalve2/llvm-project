@@ -21,6 +21,7 @@
 #include "CGOpenCLRuntime.h"
 #include "CGOpenMPRuntime.h"
 #include "CGOpenMPRuntimeGPU.h"
+#include "CGOpenMPRuntimeColossus.h"
 #include "CodeGenFunction.h"
 #include "CodeGenPGO.h"
 #include "ConstantEmitter.h"
@@ -250,6 +251,11 @@ void CodeGenModule::createOpenMPRuntime() {
     assert(getLangOpts().OpenMPIsDevice &&
            "OpenMP AMDGPU/NVPTX is only prepared to deal with device code.");
     OpenMPRuntime.reset(new CGOpenMPRuntimeGPU(*this));
+    break;
+  case llvm::Triple::colossus:
+    assert(getLangOpts().OpenMPIsDevice &&
+           "OpenMP Colossus is only prepared to deal with device code.");
+    OpenMPRuntime.reset(new CGOpenMPRuntimeColossus(*this));
     break;
   default:
     if (LangOpts.OpenMPSimd)

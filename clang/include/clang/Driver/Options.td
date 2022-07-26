@@ -898,7 +898,10 @@ def cl_ext_EQ : CommaJoined<["-"], "cl-ext=">, Group<opencl_Group>, Flags<[CC1Op
   HelpText<"OpenCL only. Enable or disable OpenCL extensions/optional features. The argument is a comma-separated "
            "sequence of one or more extension names, each prefixed by '+' or '-'.">,
   MarshallingInfoStringVector<TargetOpts<"OpenCLExtensionsAsWritten">>;
-
+def poplar_path_EQ : Joined<["--"], "poplar-path=">, Group<i_Group>,
+  HelpText<"POPLAR installation path">;
+def poplar_path_ignore_env : Flag<["--"], "poplar-path-ignore-env">, Group<i_Group>,
+  HelpText<"Ignore environment variables to detect POPLAR installation">;
 def client__name : JoinedOrSeparate<["-"], "client_name">;
 def combine : Flag<["-", "--"], "combine">, Flags<[NoXarchOption, Unsupported]>;
 def compatibility__version : JoinedOrSeparate<["-"], "compatibility_version">;

@@ -93,6 +93,7 @@ public:
     amdil64,        // AMDIL with 64-bit pointers
     hsail,          // AMD HSAIL
     hsail64,        // AMD HSAIL with 64-bit pointers
+    colossus,         // GraphCore Colossus Architecture
     spir,           // SPIR: standard portable IR for OpenCL 32-bit version
     spir64,         // SPIR: standard portable IR for OpenCL 64-bit version
     spirv32,        // SPIR-V with 32-bit pointers
@@ -173,6 +174,7 @@ public:
     CSR,
     Myriad,
     AMD,
+    Graphcore,
     Mesa,
     SUSE,
     OpenEmbedded,
@@ -205,6 +207,7 @@ public:
     CUDA,       // NVIDIA CUDA
     NVCL,       // NVIDIA OpenCL
     AMDHSA,     // AMD HSA Runtime
+    Colossus,     // AMD HSA Runtime
     PS4,
     PS5,
     ELFIAMCU,
@@ -738,6 +741,11 @@ public:
   /// Tests whether the target is NVPTX (32- or 64-bit).
   bool isNVPTX() const {
     return getArch() == Triple::nvptx || getArch() == Triple::nvptx64;
+  }
+
+    /// Tests whether the target is NVPTX (32- or 64-bit).
+  bool isColossus() const {
+    return getArch() == Triple::colossus;
   }
 
   /// Tests whether the target is AMDGCN

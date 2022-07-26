@@ -47,6 +47,8 @@ const char *Action::getClassName(ActionClass AC) {
     return "clang-offload-wrapper";
   case OffloadPackagerJobClass:
     return "clang-offload-packager";
+  case ColossusExternalCompilerJobClass:
+    return "colossus-popc-compiler";
   case LinkerWrapperJobClass:
     return "clang-linker-wrapper";
   case StaticLibJobClass:
@@ -450,3 +452,9 @@ void StaticLibJobAction::anchor() {}
 
 StaticLibJobAction::StaticLibJobAction(ActionList &Inputs, types::ID Type)
     : JobAction(StaticLibJobClass, Inputs, Type) {}
+
+void ColossusExternalCompiler::anchor() {}
+
+ColossusExternalCompiler::ColossusExternalCompiler(Action *Inputs,
+                                               types::ID Type)
+    : JobAction(ColossusExternalCompilerJobClass, Inputs, Type) {}
