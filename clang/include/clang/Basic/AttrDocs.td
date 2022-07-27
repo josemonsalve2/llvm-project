@@ -6109,7 +6109,6 @@ the SyntaxHandlerRegistry.
       This text is parsed using a plugin, and so, what this function actually
       does is determined by the plugin.
     }
->>>>>>> 815a998982f5 (adding a syntax-handler registry, etc.)
   }];
 }
 

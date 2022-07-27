@@ -1241,7 +1241,9 @@ void Parser::ProcessPluginSyntax(ParsingDeclarator &D) {
     return SyntaxPA->getArgAsIdent(0)->Ident->getName();
   };
 
-  for (const ParsedAttr &AL : D.getDeclSpec().getAttributes()) {
+  for (const ParsedAttr &AL : D.getDeclarationAttributes()) {
+    if (AL.getNumArgs() > 0)
+      if (AL.isArgIdent(0))
     if (AL.getKind() == ParsedAttr::AT_Syntax) {
       if (SyntaxPA &&
           AL.getArgAsIdent(0)->Ident->getName() != SynName()) {

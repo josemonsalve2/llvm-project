@@ -1,0 +1,64 @@
+function (build_jinja)
+  ## Adding for Jinja C++ Lite
+  set (LIB_BUILD_TYPE STATIC)
+  if(UNIX)
+      SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+      set (LIB_BUILD_TYPE SHARED)
+  endif()
+
+  # https://cmake.org/Wiki/CMake_RPATH_handling
+  SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+  SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+  SET(CMAKE_MACOSX_RPATH TRUE)
+
+  execute_process(COMMAND python -V ERROR_VARIABLE python_test)
+  if(${python_test} MATCHES "Python 2\\.7\\..*")
+      #message("Python 2.7 found")
+      OPTION(PYTHON_AVAILABLE "Facilitates development, not needed for normal build." ON)
+  else()
+      OPTION(PYTHON_AVAILABLE "Facilitates development, not needed for normal build." OFF)
+  endif()
+
+  add_library(Jinja2CppLight ${LIB_BUILD_TYPE} Jinja2CppLight/src/Jinja2CppLight.cpp Jinja2CppLight/src/stringhelper.cpp)
+
+  if(PYTHON_AVAILABLE)
+      add_custom_target(
+          cog
+          python ${CMAKE_CURRENT_SOURCE_DIR}/Jinja2CppLight/thirdparty/cogapp/cog.py -q -I ${CMAKE_CURRENT_SOURCE_DIR}/Jinja2CppLight/cog-batteries -r ${CMAKE_CURRENT_SOURCE_DIR}/Jinja2CppLight/src/*.h ${CMAKE_CURRENT_SOURCE_DIR}/Jinja2CppLight/src/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/Jinja2CppLight/test/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/Jinja2CppLight/test/*.h
+      )
+      add_dependencies(Jinja2CppLight cog)
+  endif(PYTHON_AVAILABLE)
+
+  INSTALL(TARGETS Jinja2CppLight
+      LIBRARY DESTINATION lib
+      ARCHIVE DESTINATION lib
+      RUNTIME DESTINATION bin
+  )
+  install(FILES Jinja2CppLight/src/Jinja2CppLight.h Jinja2CppLight/src/stringhelper.h DESTINATION include/Jinja2CppLight)
+
+endfunction(build_jinja)
+
+build_jinja()
+
+if(LLVM_ENABLE_PLUGINS)
+  add_compile_definitions(BASE_PATH="${CMAKE_INSTALL_PREFIX}")
+  add_llvm_library(UpDownRecodePython MODULE pythonsyntax.cpp PLUGIN_TOOL clang)
+  include_directories(BEFORE
+    ${CMAKE_CURRENT_SOURCE_DIR}/../clang/include
+    ${CMAKE_CURRENT_BINARY_DIR}/../../tools/clang/include
+    Jinja2CppLight/src
+  )
+  set(LLVM_LINK_COMPONENTS
+    Support
+  )
+
+  target_link_libraries(UpDownRecodePython PRIVATE
+    Jinja2CppLight
+    clangAST
+    clangBasic
+    clangParse
+    clangLex
+    )
+  
+  install(FILES templates/python.jinja DESTINATION templates)
+endif()
