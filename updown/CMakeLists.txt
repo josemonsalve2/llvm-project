@@ -1,3 +1,5 @@
+
+## Function needed for building support for jinja templates
 function (build_jinja)
   ## Adding for Jinja C++ Lite
   set (LIB_BUILD_TYPE STATIC)
@@ -38,8 +40,12 @@ function (build_jinja)
 
 endfunction(build_jinja)
 
+
+## Building support for jinja templates
 build_jinja()
 
+
+## Building the python syntax plugin
 if(LLVM_ENABLE_PLUGINS)
   add_compile_definitions(BASE_PATH="${CMAKE_INSTALL_PREFIX}")
   add_llvm_library(UpDownRecodePython MODULE pythonsyntax.cpp PLUGIN_TOOL clang)
@@ -62,3 +68,7 @@ if(LLVM_ENABLE_PLUGINS)
   
   install(FILES templates/python.jinja DESTINATION templates)
 endif()
+
+## Building runtime system
+
+add_subdirectory(runtime)
