@@ -47,12 +47,19 @@ build_jinja()
 
 ## Building the python syntax plugin
 if(LLVM_ENABLE_PLUGINS)
+  set(UPDOWN_INSTALL_DIR "updown")
+  set(UPDOWN_HEADERS_INSTALL_PATH "${UPDOWN_INSTALL_DIR}/include")
+  set(UPDOWN_LIB "${UPDOWN_INSTALL_DIR}/lib")
+  set(UPDOWN_BIN "${UPDOWN_INSTALL_DIR}/bin")
+  
+
   add_compile_definitions(BASE_PATH="${CMAKE_INSTALL_PREFIX}")
   add_llvm_library(UpDownRecodePython MODULE pythonsyntax.cpp PLUGIN_TOOL clang)
   include_directories(BEFORE
     ${CMAKE_CURRENT_SOURCE_DIR}/../clang/include
     ${CMAKE_CURRENT_BINARY_DIR}/../../tools/clang/include
     Jinja2CppLight/src
+    common/include
   )
   set(LLVM_LINK_COMPONENTS
     Support
@@ -65,7 +72,18 @@ if(LLVM_ENABLE_PLUGINS)
     clangParse
     clangLex
     )
-  
+
+  set_target_properties(UpDownRecodePython PROPERTIES PUBLIC_HEADER 
+      "common/include/debug.h")
+
+  INSTALL(TARGETS UpDownRecodePython
+    LIBRARY DESTINATION ${UPDOWN_LIB}
+    ARCHIVE DESTINATION ${UPDOWN_LIB}
+    RUNTIME DESTINATION ${UPDOWN_BIN}
+    INCLUDES DESTINATION ${UPDOWN_HEADERS_INSTALL_PATH}
+    PUBLIC_HEADER DESTINATION ${UPDOWN_HEADERS_INSTALL_PATH}
+  )
+
   install(FILES templates/python.jinja DESTINATION templates)
 endif()
 

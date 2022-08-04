@@ -2,11 +2,18 @@
 #include <cstdio>
 #include <cstdlib>
 
-void calc_addrmap(int num_lanes, uint64_t memsize) {
-  uint64_t ubase = memsize;
+volatile uint32_t *eaddr;  //= (uint32_t *)(UBASE+EBASE);
+volatile uint32_t *oaddr;  //= (uint32_t *)(UBASE+OBASE);
+volatile uint32_t *saddr;  //= (uint32_t *)(UBASE+SBASE);
+volatile uint32_t *sbaddr; //= (uint32_t *)(UBASE+SBASE);
+volatile uint32_t *exec;   //= (uint32_t *)(UBASE+EXEC);
+volatile uint32_t *status; //= (uint32_t *)(UBASE+STATBASE);
+
+void calc_addrmap() {
+  uint64_t ubase = MEMSIZE;
   saddr = (uint32_t *)ubase;
-  sbaddr = (uint32_t *)(ubase + num_lanes * LMBANK_SIZE);
-  eaddr = (uint32_t *)(ubase + 2 * num_lanes * LMBANK_SIZE);
+  sbaddr = (uint32_t *)(ubase + NUMLANES * LMBANK_SIZE);
+  eaddr = (uint32_t *)(ubase + 2 * NUMLANES * LMBANK_SIZE);
   oaddr = (uint32_t *)(eaddr + 64);
   exec = (uint32_t *)(oaddr + 64);
   status = (uint32_t *)(exec + 64);

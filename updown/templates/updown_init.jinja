@@ -1,0 +1,7 @@
+__attribute__((constructor))
+static void _updown_init()
+{
+    // Initialize the updown memory base pointers
+    calc_addrmap();
+    {{code}}
+}

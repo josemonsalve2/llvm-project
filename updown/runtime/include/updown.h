@@ -47,12 +47,13 @@ extern volatile uint32_t *exec;   //= (uint32_t *)(UBASE+EXEC);
 extern volatile uint32_t *status; //= (uint32_t *)(UBASE+STATBASE);
 
 /**
- * @brief
+ * @brief Initializes the base addresses for queues and states
+ * 
+ * This function initializes eaddr, oaddr, saddr, sbaddr, exec
+ * and status for their use in the rest of the runtime
  *
- * @param num_lanes
- * @param memsize
  */
-void calc_addrmap(int num_lanes, uint64_t memsize);
+void calc_addrmap();
 
 /**
  * @brief Contains information of an event in the UpDown system
@@ -129,6 +130,7 @@ struct operands {
    */
   void setoperands(uint8_t num, uint32_t *oper, uint32_t cont = 0) {
     num_operands = num;
+    // We should avoid this malloc
     data = (uint32_t *)malloc(sizeof(uint32_t) * (num_operands + 1));
     data[0] = cont; // Fake continuation
 

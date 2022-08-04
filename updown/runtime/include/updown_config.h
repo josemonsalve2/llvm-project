@@ -41,6 +41,7 @@
 #define EXEC 0x10200         // Exec Addr
 #define STATBASE 0x10300     // Status - Unused now
 #define NUMLANES 1           // NumLanes
+#define MEMSIZE 2<<32        // Top Memory Size
 #define LMBANK_SIZE 65536    // LM Bank Size
 #define LMBANK_SIZE_4B 16384 // Event Queue (Local)
 #endif
