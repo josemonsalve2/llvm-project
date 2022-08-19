@@ -53,11 +53,13 @@ public:
       std::cerr<<"Error with different indentaiton in between multiple python functions"<<std::endl;
       return;
     } else if (!this->indentation.size()) {
+      UPDOWN_INFOMSG("Setting indentation to '%s'",newIndt.c_str());
       this->indentation = newIndt;
     }
   }
 
   void generatePythonFile() {
+    UPDOWN_INFOMSG("Generating Python Code in '%s'",PYTHON_TEMPLATE_FILE);
     std::ifstream f(PYTHON_TEMPLATE_FILE);
     std::string TemplateString((std::istreambuf_iterator<char>(f)),
                                   std::istreambuf_iterator<char>());
@@ -129,12 +131,14 @@ public:
     auto FunctionName = getFunctionName(PP,D);
     auto FunctionText = getFunctionText(PP,Toks);
 
+    UPDOWN_INFOMSG("Adding new event to vector for '%s'",FunctionName.str().c_str());
     events.push_back(std::make_pair(FunctionName.str(), FunctionText.str()));
     return events.size()-1; // Event ID is the position in the vector
   }
 
   void outputInitFnc(llvm::raw_string_ostream &OS)
   {
+    UPDOWN_INFOMSG("Creating UpDown init function");
     std::ifstream f(INIT_TEMPLATE_FILE);
     std::string TemplateString((std::istreambuf_iterator<char>(f)),
                               std::istreambuf_iterator<char>());
@@ -170,6 +174,7 @@ public:
     // Get name of the first file that gets here
     if (originalFileName.size() == 0) {
       originalFileName = PP.getSourceManager().getFilename(Toks.front().getLocation()).str();
+      UPDOWN_INFOMSG("Setting originalFileName to %s",originalFileName.c_str());
       outputInitFnc(OS);
     }
 
@@ -181,34 +186,39 @@ public:
 
     unsigned NumParams = D.getFunctionTypeInfo().NumParams;
     DeclaratorChunk::ParamInfo *Params = D.getFunctionTypeInfo().Params;
+    UPDOWN_INFOMSG("Found %d function parameters", NumParams);
 
     if (NumParams > 3) {
+      std::string output;
+      llvm::raw_string_ostream OS2(output);
       // First three arguments are the lane ID and thread ID
       auto ud_id = getParamName(Params, 0);
       auto lane_id = getParamName(Params, 0);
       auto thread_id = getParamName(Params, 0);
       auto numEventOperands = NumParams - 3; // First 3 operands are UD_ID, LANE_ID and THREAD_ID
 
-      OS << "event_t ev;\n"
-         << "ev.setevent_word("<<event_id<<", "<<numEventOperands <<", "<<lane_id<<", " <<thread_id <<");\n";
+      OS2 << "event_t ev;\n"
+         << "ev.setevent_word("<<event_id<<", "<<numEventOperands <<", "<<ud_id<<", "<<lane_id<<", " <<thread_id <<");\n";
       
       if (numEventOperands > 0) {
-        OS << "operands_t op;\n" 
+        OS2 << "operands_t op;\n" 
            << "uint32_t ops_data[" << numEventOperands << "];\n"
            << "uint32_t tmp;\n";
         for (unsigned i = 0; i < numEventOperands; i++) {
           // We need to copy the bits one by one. Let's read it as a pointer
-          OS << "tmp = *((uint32_t*)(&"<<getParamName(Params, 3+i)<<"));\n"
-             << "ops_data[" << i << "];\n"; // First 3 are decoded above
+          OS2 << "tmp = *((uint32_t*)(&"<<getParamName(Params, 3+i)<<"));\n"
+             << "ops_data[" << i << "] = tmp;\n"; // First 3 are decoded above
         }
-        OS << "op.setoperands(" << numEventOperands <<", ops_data);\n";
-        OS << "send_operands(" << lane_id << ", op);\n";
+        OS2 << "op.setoperands(" << numEventOperands <<", ops_data);\n";
+        OS2 << "send_operands(op);\n";
       }
 
-      OS << "send_event(lane_num, ev);\n";
+      OS2 << "send_event(ev);\n";
+      UPDOWN_INFOMSG("Changing function in top for: \n%s", output.c_str());
+      OS << output;
     }
     
-    OS <<"}a\n";
+    OS <<"}\n";
   }
 
   ~PythonHandler() {

@@ -54,6 +54,13 @@ if(LLVM_ENABLE_PLUGINS)
   
 
   add_compile_definitions(BASE_PATH="${CMAKE_INSTALL_PREFIX}")
+
+  if (UPDOWN_ENABLE_DEBUG)
+    add_compile_definitions(DEBUG_MODE=1)
+    set(UPDOWN_DEBUG True)
+  else()
+    set(UPDOWN_DEBUG False)
+  endif()
   add_llvm_library(UpDownRecodePython MODULE pythonsyntax.cpp PLUGIN_TOOL clang)
   include_directories(BEFORE
     ${CMAKE_CURRENT_SOURCE_DIR}/../clang/include
