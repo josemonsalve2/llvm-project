@@ -146,6 +146,8 @@ namespace UpDown
    * This class constructs the information of the event word based on
    * each of its parameters. It also contains a pointer to the operands
    * that is used when sending the event
+   * 
+   * @todo the event word may not be needed the lane_id. 
    *
    */
   class event_t {
@@ -154,9 +156,11 @@ namespace UpDown
       uint8_t LaneId; // Lane ID
       uint8_t ThreadId; // Thread ID. ANY_THREAD for any thread
       uint8_t EventLabel; // Number representing the event label
+      
+      operands_t *Operands; // Operands to be sent with this event
+
       word_t EventWord; // Concatenated event word that contains all the fields
 
-      operands_t *Operands; // Operands to be sent with this event
     public:
       /**
        * @brief Construct a new empty event object
@@ -167,13 +171,14 @@ namespace UpDown
         LaneId(0),
         ThreadId(0xFF),
         EventLabel(0),
+        Operands(nullptr),
         EventWord(((LaneId << 24) & 0xff000000) | ((ThreadId << 16) & 0xff0000) |
-                  ((0 << 8) & 0xff00) | (EventLabel & 0xff)),
-        Operands(nullptr) {
+                  ((0 << 8) & 0xff00) | (EventLabel & 0xff))
+        {
           UPDOWN_INFOMSG("Creating a new event label = %d, lane_id = %d, "
                         "thread_id = %d, num_operands = %d, ev_word = %X",
                         EventLabel, LaneId, ThreadId, 0, EventWord);
-      }
+        }
 
       /**
        * @brief Construct a new event_t object
@@ -190,14 +195,15 @@ namespace UpDown
         LaneId(lid),
         ThreadId(tid),
         EventLabel(e_label),
+        Operands(operands),
         EventWord(((LaneId << 24) & 0xff000000) | ((ThreadId << 16) & 0xff0000) |
-                  (((Operands != nullptr) ? Operands->get_NumOperands() : 0 << 8) & 0xff00) | (EventLabel & 0xff)), 
-        Operands(operands) {
+                  (((Operands != nullptr ? Operands->get_NumOperands() : 0) << 8) & 0xff00) | (EventLabel & 0xff))
+        {
           UPDOWN_INFOMSG("Creating a new event label = %d, lane_id = %d, "
                         "thread_id = %d, num_operands = %d, ev_word = %X",
                         EventLabel, LaneId, ThreadId, 
                         (Operands != nullptr) ? Operands->get_NumOperands() : 0, EventWord);
-      }
+        }
 
       /**
        * @brief Set the event word object with new values
@@ -215,7 +221,7 @@ namespace UpDown
         ThreadId = tid;
         Operands = operands;
         EventWord = ((LaneId << 24) & 0xff000000) | ((ThreadId << 16) & 0xff0000) |
-                  (((Operands != nullptr) ? Operands->get_NumOperands() : 0 << 8) & 0xff00) | (EventLabel & 0xff);
+                  (((Operands != nullptr ? Operands->get_NumOperands() : 0) << 8) & 0xff00) | (EventLabel & 0xff);
         UPDOWN_INFOMSG("Setting the event word = %d, lane_id = %d, "
                       "thread_id = %d, num_operands = %d, ev_word = %X",
                       EventLabel, LaneId, ThreadId, (Operands != nullptr) ? Operands->get_NumOperands() : 0, EventWord);
@@ -226,9 +232,9 @@ namespace UpDown
        *
        * @return word_t with the event word
        */
-      word_t get_event_word() { return EventWord; }
+      word_t get_EventWord() { return EventWord; }
 
-      operands_t* get_operands() { return Operands; }
+      operands_t* get_Operands() { return Operands; }
 
       void set_operands(operands_t *ops) { Operands = ops; }
       uint8_t get_UdId() { return UdId; }

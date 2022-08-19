@@ -29,7 +29,7 @@ namespace UpDown
     // Locking the lane's queues
     *(BaseAddrs.locks + offset) = 1;
     // Set the event Queue
-    *(BaseAddrs.eaddr + offset) = ev.get_event_word();
+    *(BaseAddrs.eaddr + offset) = ev.get_EventWord();
     UPDOWN_INFOMSG("Sending Event:%u to [%u,%u,%u],", 
                   ev.get_EventLabel(), ev.get_UdId(), 
                   ev.get_LaneId(), ev.get_ThreadId());
@@ -97,7 +97,7 @@ namespace UpDown
 
   bool
   UDRuntime_t::test_addr(uint8_t ud_id, uint8_t lane_num, uint32_t offset, word_t expected) {
-    uint64_t apply_offset = get_aligned_offset(ud_id, lane_num, apply_offset);
+    uint64_t apply_offset = get_aligned_offset(ud_id, lane_num, offset);
     return *(BaseAddrs.saddr + apply_offset) == expected;
   }
 
