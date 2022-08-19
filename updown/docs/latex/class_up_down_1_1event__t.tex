@@ -1,0 +1,157 @@
+\hypertarget{class_up_down_1_1event__t}{}\doxysection{Up\+Down\+::event\+\_\+t Class Reference}
+\label{class_up_down_1_1event__t}\index{UpDown::event\_t@{UpDown::event\_t}}
+
+
+Contains information of an event in the Up\+Down.  
+
+
+
+
+{\ttfamily \#include $<$updown.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_up_down_1_1event__t_a3ace3ad56fae2536c8f516f220ce0002}\label{class_up_down_1_1event__t_a3ace3ad56fae2536c8f516f220ce0002}} 
+{\bfseries event\+\_\+t} ()
+\begin{DoxyCompactList}\small\item\em Construct a new empty event object. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_up_down_1_1event__t_a1136178568e8e060cd5878d5a06157cf}{event\+\_\+t}} (uint8\+\_\+t e\+\_\+label, uint8\+\_\+t udid, uint8\+\_\+t lid=0, uint8\+\_\+t tid=ANY\+\_\+\+THREAD, \mbox{\hyperlink{class_up_down_1_1operands__t}{operands\+\_\+t}} $\ast$operands=nullptr)
+\begin{DoxyCompactList}\small\item\em Construct a new \mbox{\hyperlink{class_up_down_1_1event__t}{event\+\_\+t}} object. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_up_down_1_1event__t_a82bb035d6e694deee44a89eab676911a}{set\+\_\+event}} (uint8\+\_\+t e\+\_\+label, uint8\+\_\+t udid, uint8\+\_\+t lid=0, uint8\+\_\+t tid=ANY\+\_\+\+THREAD, \mbox{\hyperlink{class_up_down_1_1operands__t}{operands\+\_\+t}} $\ast$operands=nullptr)
+\begin{DoxyCompactList}\small\item\em Set the event word object with new values. \end{DoxyCompactList}\item 
+word\+\_\+t \mbox{\hyperlink{class_up_down_1_1event__t_adc88794ca0c1dc5b269aae78df8c64ee}{get\+\_\+\+Event\+Word}} ()
+\begin{DoxyCompactList}\small\item\em Get the event word object. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_up_down_1_1event__t_a00d3a9196502424e96ab7a4b69831b9a}\label{class_up_down_1_1event__t_a00d3a9196502424e96ab7a4b69831b9a}} 
+\mbox{\hyperlink{class_up_down_1_1operands__t}{operands\+\_\+t}} $\ast$ {\bfseries get\+\_\+\+Operands} ()
+\item 
+\mbox{\Hypertarget{class_up_down_1_1event__t_a34e30cf7b0f39a63a696608fceeec4cb}\label{class_up_down_1_1event__t_a34e30cf7b0f39a63a696608fceeec4cb}} 
+void {\bfseries set\+\_\+operands} (\mbox{\hyperlink{class_up_down_1_1operands__t}{operands\+\_\+t}} $\ast$ops)
+\item 
+\mbox{\Hypertarget{class_up_down_1_1event__t_a77cb23cb5c78429d8e499600da826c5d}\label{class_up_down_1_1event__t_a77cb23cb5c78429d8e499600da826c5d}} 
+uint8\+\_\+t {\bfseries get\+\_\+\+Ud\+Id} ()
+\item 
+\mbox{\Hypertarget{class_up_down_1_1event__t_a0a4e2c5a71668d68025f2674606a1d55}\label{class_up_down_1_1event__t_a0a4e2c5a71668d68025f2674606a1d55}} 
+uint8\+\_\+t {\bfseries get\+\_\+\+Lane\+Id} ()
+\item 
+\mbox{\Hypertarget{class_up_down_1_1event__t_ac55aa9959679d6d548579a023ae3c342}\label{class_up_down_1_1event__t_ac55aa9959679d6d548579a023ae3c342}} 
+uint8\+\_\+t {\bfseries get\+\_\+\+Thread\+Id} ()
+\item 
+\mbox{\Hypertarget{class_up_down_1_1event__t_a13eaef28af45e95e37c2637c473e7815}\label{class_up_down_1_1event__t_a13eaef28af45e95e37c2637c473e7815}} 
+uint8\+\_\+t {\bfseries get\+\_\+\+Event\+Label} ()
+\item 
+\mbox{\Hypertarget{class_up_down_1_1event__t_aa555dd741a6dd2c94afb7eced53bec21}\label{class_up_down_1_1event__t_aa555dd741a6dd2c94afb7eced53bec21}} 
+uint8\+\_\+t {\bfseries get\+\_\+\+Num\+Operands} ()
+\item 
+\mbox{\Hypertarget{class_up_down_1_1event__t_a7ce31c7138a3064cc1ce9b3a480300ba}\label{class_up_down_1_1event__t_a7ce31c7138a3064cc1ce9b3a480300ba}} 
+ptr\+\_\+t {\bfseries get\+\_\+\+Operands\+Data} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_up_down_1_1event__t_a3fc6c468a0bf8f3761b6e1f01955d1f8}\label{class_up_down_1_1event__t_a3fc6c468a0bf8f3761b6e1f01955d1f8}} 
+uint8\+\_\+t {\bfseries Ud\+Id}
+\item 
+\mbox{\Hypertarget{class_up_down_1_1event__t_acb460dae32b7996fa3a46004beb4ba19}\label{class_up_down_1_1event__t_acb460dae32b7996fa3a46004beb4ba19}} 
+uint8\+\_\+t {\bfseries Lane\+Id}
+\item 
+\mbox{\Hypertarget{class_up_down_1_1event__t_a6bb760730f1aa7acd842ca3359e8c00e}\label{class_up_down_1_1event__t_a6bb760730f1aa7acd842ca3359e8c00e}} 
+uint8\+\_\+t {\bfseries Thread\+Id}
+\item 
+\mbox{\Hypertarget{class_up_down_1_1event__t_a16333e0b326e56f0b29b15dfa90f80ee}\label{class_up_down_1_1event__t_a16333e0b326e56f0b29b15dfa90f80ee}} 
+uint8\+\_\+t {\bfseries Event\+Label}
+\item 
+\mbox{\Hypertarget{class_up_down_1_1event__t_a0f094a4ce4813ec8e4b805ddc80959b8}\label{class_up_down_1_1event__t_a0f094a4ce4813ec8e4b805ddc80959b8}} 
+\mbox{\hyperlink{class_up_down_1_1operands__t}{operands\+\_\+t}} $\ast$ {\bfseries Operands}
+\item 
+\mbox{\Hypertarget{class_up_down_1_1event__t_ae0f73ca455cb6782ab14a4a698c475b2}\label{class_up_down_1_1event__t_ae0f73ca455cb6782ab14a4a698c475b2}} 
+word\+\_\+t {\bfseries Event\+Word}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Contains information of an event in the Up\+Down. 
+
+This class constructs the information of the event word based on each of its parameters. It also contains a pointer to the operands that is used when sending the event
+
+\begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000001}{Todo}}]the event word may not be needed the lane\+\_\+id. \end{DoxyRefDesc}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_up_down_1_1event__t_a1136178568e8e060cd5878d5a06157cf}\label{class_up_down_1_1event__t_a1136178568e8e060cd5878d5a06157cf}} 
+\index{UpDown::event\_t@{UpDown::event\_t}!event\_t@{event\_t}}
+\index{event\_t@{event\_t}!UpDown::event\_t@{UpDown::event\_t}}
+\doxysubsubsection{\texorpdfstring{event\_t()}{event\_t()}}
+{\footnotesize\ttfamily Up\+Down\+::event\+\_\+t\+::event\+\_\+t (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{e\+\_\+label,  }\item[{uint8\+\_\+t}]{udid,  }\item[{uint8\+\_\+t}]{lid = {\ttfamily 0},  }\item[{uint8\+\_\+t}]{tid = {\ttfamily ANY\+\_\+THREAD},  }\item[{\mbox{\hyperlink{class_up_down_1_1operands__t}{operands\+\_\+t}} $\ast$}]{operands = {\ttfamily nullptr} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Construct a new \mbox{\hyperlink{class_up_down_1_1event__t}{event\+\_\+t}} object. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em e\+\_\+label} & \\
+\hline
+{\em udid} & \\
+\hline
+{\em lid} & \\
+\hline
+{\em tid} & \\
+\hline
+{\em operands} & \\
+\hline
+\end{DoxyParams}
+
+
+References \mbox{\hyperlink{class_up_down_1_1operands__t_aa769b305fb95f01c74f1230386f6914c}{Up\+Down\+::operands\+\_\+t\+::get\+\_\+\+Num\+Operands()}}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_up_down_1_1event__t_adc88794ca0c1dc5b269aae78df8c64ee}\label{class_up_down_1_1event__t_adc88794ca0c1dc5b269aae78df8c64ee}} 
+\index{UpDown::event\_t@{UpDown::event\_t}!get\_EventWord@{get\_EventWord}}
+\index{get\_EventWord@{get\_EventWord}!UpDown::event\_t@{UpDown::event\_t}}
+\doxysubsubsection{\texorpdfstring{get\_EventWord()}{get\_EventWord()}}
+{\footnotesize\ttfamily word\+\_\+t Up\+Down\+::event\+\_\+t\+::get\+\_\+\+Event\+Word (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the event word object. 
+
+\begin{DoxyReturn}{Returns}
+word\+\_\+t with the event word 
+\end{DoxyReturn}
+
+
+Referenced by \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_af58fb869d8558462617fa84bf83bb595}{Up\+Down\+::\+UDRuntime\+\_\+t\+::send\+\_\+event()}}.
+
+\mbox{\Hypertarget{class_up_down_1_1event__t_a82bb035d6e694deee44a89eab676911a}\label{class_up_down_1_1event__t_a82bb035d6e694deee44a89eab676911a}} 
+\index{UpDown::event\_t@{UpDown::event\_t}!set\_event@{set\_event}}
+\index{set\_event@{set\_event}!UpDown::event\_t@{UpDown::event\_t}}
+\doxysubsubsection{\texorpdfstring{set\_event()}{set\_event()}}
+{\footnotesize\ttfamily void Up\+Down\+::event\+\_\+t\+::set\+\_\+event (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{e\+\_\+label,  }\item[{uint8\+\_\+t}]{udid,  }\item[{uint8\+\_\+t}]{lid = {\ttfamily 0},  }\item[{uint8\+\_\+t}]{tid = {\ttfamily ANY\+\_\+THREAD},  }\item[{\mbox{\hyperlink{class_up_down_1_1operands__t}{operands\+\_\+t}} $\ast$}]{operands = {\ttfamily nullptr} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Set the event word object with new values. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em e\+\_\+label} & the ID of the event in the updown \\
+\hline
+{\em noperands} & the number of operands \\
+\hline
+{\em lid} & Lane ID \\
+\hline
+{\em tid} & Thread ID \\
+\hline
+\end{DoxyParams}
+
+
+References \mbox{\hyperlink{class_up_down_1_1operands__t_aa769b305fb95f01c74f1230386f6914c}{Up\+Down\+::operands\+\_\+t\+::get\+\_\+\+Num\+Operands()}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/josemonsalvediaz/\+Documents/\+Tmp/llvm-\/project/updown/runtime/include/updown.\+h\end{DoxyCompactItemize}

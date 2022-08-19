@@ -1,0 +1,244 @@
+\hypertarget{updown_8h_source}{}\doxysection{updown.\+h}
+\label{updown_8h_source}\index{/Users/josemonsalvediaz/Documents/Tmp/llvm-\/project/updown/runtime/include/updown.h@{/Users/josemonsalvediaz/Documents/Tmp/llvm-\/project/updown/runtime/include/updown.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/*}}
+\DoxyCodeLine{2 \textcolor{comment}{ * Copyright (c) 2021 University of Chicago and Argonne National Laboratory}}
+\DoxyCodeLine{3 \textcolor{comment}{ * All rights reserved.}}
+\DoxyCodeLine{4 \textcolor{comment}{ *}}
+\DoxyCodeLine{5 \textcolor{comment}{ * Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{6 \textcolor{comment}{ * modification, are permitted provided that the following conditions are}}
+\DoxyCodeLine{7 \textcolor{comment}{ * met: redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{8 \textcolor{comment}{ * notice, this list of conditions and the following disclaimer;}}
+\DoxyCodeLine{9 \textcolor{comment}{ * redistributions in binary form must reproduce the above copyright}}
+\DoxyCodeLine{10 \textcolor{comment}{ * notice, this list of conditions and the following disclaimer in the}}
+\DoxyCodeLine{11 \textcolor{comment}{ * documentation and/or other materials provided with the distribution;}}
+\DoxyCodeLine{12 \textcolor{comment}{ * neither the name of the copyright holders nor the names of its}}
+\DoxyCodeLine{13 \textcolor{comment}{ * contributors may be used to endorse or promote products derived from}}
+\DoxyCodeLine{14 \textcolor{comment}{ * this software without specific prior written permission.}}
+\DoxyCodeLine{15 \textcolor{comment}{ *}}
+\DoxyCodeLine{16 \textcolor{comment}{ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS}}
+\DoxyCodeLine{17 \textcolor{comment}{ * "{}AS IS"{} AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT}}
+\DoxyCodeLine{18 \textcolor{comment}{ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR}}
+\DoxyCodeLine{19 \textcolor{comment}{ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT}}
+\DoxyCodeLine{20 \textcolor{comment}{ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,}}
+\DoxyCodeLine{21 \textcolor{comment}{ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT}}
+\DoxyCodeLine{22 \textcolor{comment}{ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,}}
+\DoxyCodeLine{23 \textcolor{comment}{ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY}}
+\DoxyCodeLine{24 \textcolor{comment}{ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT}}
+\DoxyCodeLine{25 \textcolor{comment}{ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE}}
+\DoxyCodeLine{26 \textcolor{comment}{ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.}}
+\DoxyCodeLine{27 \textcolor{comment}{ *}}
+\DoxyCodeLine{28 \textcolor{comment}{ * Author -\/ Andronicus}}
+\DoxyCodeLine{29 \textcolor{comment}{ *}}
+\DoxyCodeLine{30 \textcolor{comment}{ *}}
+\DoxyCodeLine{31 \textcolor{comment}{ */}}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33 \textcolor{preprocessor}{\#ifndef UPDOWN\_H}}
+\DoxyCodeLine{34 \textcolor{preprocessor}{\#define UPDOWN\_H}}
+\DoxyCodeLine{35 \textcolor{preprocessor}{\#include "{}debug.h"{}}}
+\DoxyCodeLine{36 \textcolor{preprocessor}{\#include "{}updown\_config.h"{}}}
+\DoxyCodeLine{37 \textcolor{preprocessor}{\#include <cstdio>}}
+\DoxyCodeLine{38 \textcolor{preprocessor}{\#include <cstdio>}}
+\DoxyCodeLine{39 \textcolor{preprocessor}{\#include <cstdlib>}}
+\DoxyCodeLine{40 \textcolor{preprocessor}{\#include <cstdint>}}
+\DoxyCodeLine{41 \textcolor{preprocessor}{\#include <cstring>}}
+\DoxyCodeLine{42 \textcolor{preprocessor}{\#include <utility>}}
+\DoxyCodeLine{43 }
+\DoxyCodeLine{44 }
+\DoxyCodeLine{45 \textcolor{keyword}{namespace }UpDown}
+\DoxyCodeLine{46 \{}
+\DoxyCodeLine{47     }
+\DoxyCodeLine{48   \textcolor{keyword}{typedef} uint32\_t word\_t;}
+\DoxyCodeLine{49   \textcolor{keyword}{typedef} word\_t * ptr\_t;}
+\DoxyCodeLine{50 }
+\DoxyCodeLine{51   \textcolor{keyword}{static} \textcolor{keyword}{constexpr} uint8\_t ANY\_THREAD = 0xFF;}
+\DoxyCodeLine{52 }
+\DoxyCodeLine{63   \textcolor{keyword}{class }\mbox{\hyperlink{class_up_down_1_1operands__t}{operands\_t}} \{}
+\DoxyCodeLine{64     \textcolor{keyword}{private}:}
+\DoxyCodeLine{65       uint8\_t NumOperands;}
+\DoxyCodeLine{66       ptr\_t Data;}
+\DoxyCodeLine{67 }
+\DoxyCodeLine{68     \textcolor{keyword}{public}:}
+\DoxyCodeLine{69 }
+\DoxyCodeLine{75       \mbox{\hyperlink{class_up_down_1_1operands__t_ac6ee39cc5caa0d26a4506cbe38f99db7}{operands\_t}}() : NumOperands(0), Data(nullptr) \{\}}
+\DoxyCodeLine{76 }
+\DoxyCodeLine{82       \mbox{\hyperlink{class_up_down_1_1operands__t_a44a0e3e7568886b69809d4bedde0edf1}{operands\_t}}(\textcolor{keyword}{const} \mbox{\hyperlink{class_up_down_1_1operands__t}{operands\_t}} \&o) :}
+\DoxyCodeLine{83       NumOperands(o.NumOperands),}
+\DoxyCodeLine{84       Data((ptr\_t)malloc(sizeof(word\_t) * (NumOperands + 1))) \{}
+\DoxyCodeLine{85         \textcolor{comment}{// Copy the data}}
+\DoxyCodeLine{86         \textcolor{keywordflow}{if} (NumOperands != 0)}
+\DoxyCodeLine{87           std::memcpy(o.Data, Data, \textcolor{keyword}{sizeof}(word\_t) * (NumOperands + 1));}
+\DoxyCodeLine{88       \}}
+\DoxyCodeLine{89 }
+\DoxyCodeLine{95       \mbox{\hyperlink{class_up_down_1_1operands__t_abf4294c7e85bff1d380dbaacac2e5615}{operands\_t}}(\mbox{\hyperlink{class_up_down_1_1operands__t}{operands\_t}} \&\& o) :}
+\DoxyCodeLine{96         NumOperands(o.NumOperands), }
+\DoxyCodeLine{97         Data(o.Data) \{}
+\DoxyCodeLine{98           \textcolor{comment}{// Reset the other operand's pointer}}
+\DoxyCodeLine{99           o.Data = \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{100         \}}
+\DoxyCodeLine{101 }
+\DoxyCodeLine{111       \mbox{\hyperlink{class_up_down_1_1operands__t_aef9a024a90d4073d82d1195cf82fa660}{operands\_t}}(uint8\_t num, ptr\_t oper = \textcolor{keyword}{nullptr}, word\_t cont = 0):}
+\DoxyCodeLine{112         NumOperands(num), }
+\DoxyCodeLine{113         Data((ptr\_t)malloc(sizeof(word\_t) * (NumOperands + 1))) \{ \textcolor{comment}{// TODO: Avoid this malloc}}
+\DoxyCodeLine{114 }
+\DoxyCodeLine{115           Data[0] = cont; \textcolor{comment}{// Fake continuation}}
+\DoxyCodeLine{116 }
+\DoxyCodeLine{117           \textcolor{comment}{// TODO: This should be a memcpy?}}
+\DoxyCodeLine{118           \textcolor{keywordflow}{for} (uint8\_t i = 1; i < NumOperands + 1; i++)}
+\DoxyCodeLine{119             Data[i] = oper[i -\/ 1];}
+\DoxyCodeLine{120       \}}
+\DoxyCodeLine{121 }
+\DoxyCodeLine{127       ptr\_t \mbox{\hyperlink{class_up_down_1_1operands__t_a4f59ca5f7e3d814256818b7b74d791bc}{get\_Data}}() \{ \textcolor{keywordflow}{return} Data; \}}
+\DoxyCodeLine{128 }
+\DoxyCodeLine{134       uint8\_t \mbox{\hyperlink{class_up_down_1_1operands__t_aa769b305fb95f01c74f1230386f6914c}{get\_NumOperands}}() \{ \textcolor{keywordflow}{return} NumOperands; \}}
+\DoxyCodeLine{135 }
+\DoxyCodeLine{136       \mbox{\hyperlink{class_up_down_1_1operands__t}{\string~operands\_t}}() }
+\DoxyCodeLine{137       \{}
+\DoxyCodeLine{138         \textcolor{keyword}{delete} Data;}
+\DoxyCodeLine{139       \}}
+\DoxyCodeLine{140   \};}
+\DoxyCodeLine{141 }
+\DoxyCodeLine{142 }
+\DoxyCodeLine{153   \textcolor{keyword}{class }\mbox{\hyperlink{class_up_down_1_1event__t}{event\_t}} \{}
+\DoxyCodeLine{154     \textcolor{keyword}{private}:}
+\DoxyCodeLine{155       uint8\_t UdId; \textcolor{comment}{// UpDown ID}}
+\DoxyCodeLine{156       uint8\_t LaneId; \textcolor{comment}{// Lane ID}}
+\DoxyCodeLine{157       uint8\_t ThreadId; \textcolor{comment}{// Thread ID. ANY\_THREAD for any thread}}
+\DoxyCodeLine{158       uint8\_t EventLabel; \textcolor{comment}{// Number representing the event label}}
+\DoxyCodeLine{159       }
+\DoxyCodeLine{160       \mbox{\hyperlink{class_up_down_1_1operands__t}{operands\_t}} *Operands; \textcolor{comment}{// Operands to be sent with this event}}
+\DoxyCodeLine{161 }
+\DoxyCodeLine{162       word\_t EventWord; \textcolor{comment}{// Concatenated event word that contains all the fields}}
+\DoxyCodeLine{163 }
+\DoxyCodeLine{164     \textcolor{keyword}{public}:}
+\DoxyCodeLine{169       \mbox{\hyperlink{class_up_down_1_1event__t_a3ace3ad56fae2536c8f516f220ce0002}{event\_t}}() : }
+\DoxyCodeLine{170         UdId(0), }
+\DoxyCodeLine{171         LaneId(0),}
+\DoxyCodeLine{172         ThreadId(0xFF),}
+\DoxyCodeLine{173         EventLabel(0),}
+\DoxyCodeLine{174         Operands(nullptr),}
+\DoxyCodeLine{175         EventWord(((LaneId << 24) \& 0xff000000) | ((ThreadId << 16) \& 0xff0000) |}
+\DoxyCodeLine{176                   ((0 << 8) \& 0xff00) | (EventLabel \& 0xff))}
+\DoxyCodeLine{177         \{}
+\DoxyCodeLine{178           UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Creating a new event label = \%d, lane\_id = \%d, "{}}}
+\DoxyCodeLine{179                         \textcolor{stringliteral}{"{}thread\_id = \%d, num\_operands = \%d, ev\_word = \%X"{}},}
+\DoxyCodeLine{180                         EventLabel, LaneId, ThreadId, 0, EventWord);}
+\DoxyCodeLine{181         \}}
+\DoxyCodeLine{182 }
+\DoxyCodeLine{192       \mbox{\hyperlink{class_up_down_1_1event__t_a1136178568e8e060cd5878d5a06157cf}{event\_t}}(uint8\_t e\_label, uint8\_t udid,  uint8\_t lid = 0,}
+\DoxyCodeLine{193                     uint8\_t tid = ANY\_THREAD, \mbox{\hyperlink{class_up_down_1_1operands__t}{operands\_t}} *operands = \textcolor{keyword}{nullptr}) : }
+\DoxyCodeLine{194         UdId(udid), }
+\DoxyCodeLine{195         LaneId(lid),}
+\DoxyCodeLine{196         ThreadId(tid),}
+\DoxyCodeLine{197         EventLabel(e\_label),}
+\DoxyCodeLine{198         Operands(operands),}
+\DoxyCodeLine{199         EventWord(((LaneId << 24) \& 0xff000000) | ((ThreadId << 16) \& 0xff0000) |}
+\DoxyCodeLine{200                   (((Operands != nullptr ? Operands-\/>get\_NumOperands() : 0) << 8) \& 0xff00) | (EventLabel \& 0xff))}
+\DoxyCodeLine{201         \{}
+\DoxyCodeLine{202           UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Creating a new event label = \%d, lane\_id = \%d, "{}}}
+\DoxyCodeLine{203                         \textcolor{stringliteral}{"{}thread\_id = \%d, num\_operands = \%d, ev\_word = \%X"{}},}
+\DoxyCodeLine{204                         EventLabel, LaneId, ThreadId, }
+\DoxyCodeLine{205                         (Operands != \textcolor{keyword}{nullptr}) ? Operands-\/>\mbox{\hyperlink{class_up_down_1_1operands__t_aa769b305fb95f01c74f1230386f6914c}{get\_NumOperands}}() : 0, EventWord);}
+\DoxyCodeLine{206         \}}
+\DoxyCodeLine{207 }
+\DoxyCodeLine{216       \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1event__t_a82bb035d6e694deee44a89eab676911a}{set\_event}}(uint8\_t e\_label, uint8\_t udid,  uint8\_t lid = 0,}
+\DoxyCodeLine{217                         uint8\_t tid = ANY\_THREAD, \mbox{\hyperlink{class_up_down_1_1operands__t}{operands\_t}} *operands = \textcolor{keyword}{nullptr}) \{}
+\DoxyCodeLine{218         EventLabel = e\_label;}
+\DoxyCodeLine{219         LaneId = lid;}
+\DoxyCodeLine{220         UdId = udid;}
+\DoxyCodeLine{221         ThreadId = tid;}
+\DoxyCodeLine{222         Operands = operands;}
+\DoxyCodeLine{223         EventWord = ((LaneId << 24) \& 0xff000000) | ((ThreadId << 16) \& 0xff0000) |}
+\DoxyCodeLine{224                   (((Operands != \textcolor{keyword}{nullptr} ? Operands-\/>\mbox{\hyperlink{class_up_down_1_1operands__t_aa769b305fb95f01c74f1230386f6914c}{get\_NumOperands}}() : 0) << 8) \& 0xff00) | (EventLabel \& 0xff);}
+\DoxyCodeLine{225         UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Setting the event word = \%d, lane\_id = \%d, "{}}}
+\DoxyCodeLine{226                       \textcolor{stringliteral}{"{}thread\_id = \%d, num\_operands = \%d, ev\_word = \%X"{}},}
+\DoxyCodeLine{227                       EventLabel, LaneId, ThreadId, (Operands != \textcolor{keyword}{nullptr}) ? Operands-\/>\mbox{\hyperlink{class_up_down_1_1operands__t_aa769b305fb95f01c74f1230386f6914c}{get\_NumOperands}}() : 0, EventWord);}
+\DoxyCodeLine{228       \}}
+\DoxyCodeLine{229 }
+\DoxyCodeLine{235       word\_t \mbox{\hyperlink{class_up_down_1_1event__t_adc88794ca0c1dc5b269aae78df8c64ee}{get\_EventWord}}() \{ \textcolor{keywordflow}{return} EventWord; \}}
+\DoxyCodeLine{236 }
+\DoxyCodeLine{237       \mbox{\hyperlink{class_up_down_1_1operands__t}{operands\_t}}* get\_Operands() \{ \textcolor{keywordflow}{return} Operands; \}}
+\DoxyCodeLine{238 }
+\DoxyCodeLine{239       \textcolor{keywordtype}{void} set\_operands(operands\_t *ops) \{ Operands = ops; \}}
+\DoxyCodeLine{240       uint8\_t get\_UdId() \{ \textcolor{keywordflow}{return} UdId; \}}
+\DoxyCodeLine{241       uint8\_t get\_LaneId() \{ \textcolor{keywordflow}{return} LaneId; \}}
+\DoxyCodeLine{242       uint8\_t get\_ThreadId() \{ \textcolor{keywordflow}{return} ThreadId; \}}
+\DoxyCodeLine{243       uint8\_t get\_EventLabel() \{ \textcolor{keywordflow}{return} EventLabel; \}}
+\DoxyCodeLine{244       uint8\_t get\_NumOperands() \{ \textcolor{keywordflow}{return} (Operands != \textcolor{keyword}{nullptr}) ? Operands-\/>\mbox{\hyperlink{class_up_down_1_1operands__t_aa769b305fb95f01c74f1230386f6914c}{get\_NumOperands}}() : 0; \}}
+\DoxyCodeLine{245       ptr\_t get\_OperandsData() \{ \textcolor{keywordflow}{return} (Operands != \textcolor{keyword}{nullptr}) ? Operands-\/>\mbox{\hyperlink{class_up_down_1_1operands__t_a4f59ca5f7e3d814256818b7b74d791bc}{get\_Data}}() : \textcolor{keyword}{nullptr}; \}}
+\DoxyCodeLine{246     \};}
+\DoxyCodeLine{247 }
+\DoxyCodeLine{248 }
+\DoxyCodeLine{258     \textcolor{keyword}{class }\mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t}{UDRuntime\_t}} \{}
+\DoxyCodeLine{259       \textcolor{keyword}{private}:}
+\DoxyCodeLine{260 }
+\DoxyCodeLine{318         \textcolor{keyword}{struct }\mbox{\hyperlink{struct_up_down_1_1_u_d_runtime__t_1_1base__addr__t}{base\_addr\_t}} \{}
+\DoxyCodeLine{319           \textcolor{keyword}{volatile} ptr\_t eaddr; }
+\DoxyCodeLine{320           \textcolor{keyword}{volatile} ptr\_t oaddr; }
+\DoxyCodeLine{321           \textcolor{keyword}{volatile} ptr\_t saddr; }
+\DoxyCodeLine{322           \textcolor{keyword}{volatile} ptr\_t sbaddr;}
+\DoxyCodeLine{323           \textcolor{keyword}{volatile} ptr\_t exec;}
+\DoxyCodeLine{324           \textcolor{keyword}{volatile} ptr\_t locks;}
+\DoxyCodeLine{325         \};}
+\DoxyCodeLine{326 }
+\DoxyCodeLine{327         \textcolor{keyword}{struct }\mbox{\hyperlink{struct_up_down_1_1_u_d_runtime__t_1_1ud__abstract__machine__t}{ud\_abstract\_machine\_t}} \{}
+\DoxyCodeLine{328           uint64\_t Ubase = UBASE;}
+\DoxyCodeLine{329           uint64\_t MapBase = MAPBASE;}
+\DoxyCodeLine{330           uint64\_t SBase = SBASE;}
+\DoxyCodeLine{331           uint64\_t EBase = EBASE;}
+\DoxyCodeLine{332           uint64\_t OBase = OBASE;}
+\DoxyCodeLine{333           uint64\_t ExecBase = EXEC;}
+\DoxyCodeLine{334           uint64\_t StatBase = STATBASE;}
+\DoxyCodeLine{335           uint64\_t NumUDs = NUMUDS;}
+\DoxyCodeLine{336           uint64\_t NumLanes = NUMLANES;}
+\DoxyCodeLine{337           uint64\_t MemSize = MEMSIZE;}
+\DoxyCodeLine{338           uint64\_t LMBankSize = LMBANK\_SIZE;}
+\DoxyCodeLine{339           uint64\_t LMBankSize4b = LMBANK\_SIZE\_4B;}
+\DoxyCodeLine{340         \};}
+\DoxyCodeLine{341 }
+\DoxyCodeLine{346         \mbox{\hyperlink{struct_up_down_1_1_u_d_runtime__t_1_1base__addr__t}{base\_addr\_t}} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a84ed7807df12382d06ee8a09b172898f}{BaseAddrs}};}
+\DoxyCodeLine{347 }
+\DoxyCodeLine{352         \mbox{\hyperlink{struct_up_down_1_1_u_d_runtime__t_1_1ud__abstract__machine__t}{ud\_abstract\_machine\_t}} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a9d2fda8b78aaae929ee8f88790c42b34}{AbstractMachine}};}
+\DoxyCodeLine{353 }
+\DoxyCodeLine{361         \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a53609a9bdbc8caae702ea49684c0ea64}{calc\_addrmap}}();}
+\DoxyCodeLine{362 }
+\DoxyCodeLine{369         uint32\_t \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_adc78083498f2a3e1a8fcfc1dd4c9f45a}{change\_endian}}(uint32\_t num);}
+\DoxyCodeLine{370 }
+\DoxyCodeLine{379         uint64\_t \textcolor{keyword}{inline} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ab5c9257963b0f918ca36b689e3407cbd}{get\_aligned\_offset}}(uint8\_t ud\_id, uint8\_t lane\_num, uint32\_t offset = 0);}
+\DoxyCodeLine{380 }
+\DoxyCodeLine{381       \textcolor{keyword}{public}:}
+\DoxyCodeLine{382 }
+\DoxyCodeLine{383         \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t}{UDRuntime\_t}}() \{}
+\DoxyCodeLine{384           \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a53609a9bdbc8caae702ea49684c0ea64}{calc\_addrmap}}();}
+\DoxyCodeLine{385         \}}
+\DoxyCodeLine{386 }
+\DoxyCodeLine{397         \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_af58fb869d8558462617fa84bf83bb595}{send\_event}}(\mbox{\hyperlink{class_up_down_1_1event__t}{event\_t}} ev);}
+\DoxyCodeLine{398 }
+\DoxyCodeLine{404         \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_af61e9f01022957944d9c74daf365c0a4}{start\_exec}}(uint8\_t ud\_id, uint8\_t lane\_num);}
+\DoxyCodeLine{405 }
+\DoxyCodeLine{418         \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a93b3e5b12ee89770e304d59096ec3e0e}{t2ud\_memcpy}}(uint8\_t ud\_id, uint8\_t lane\_num, uint32\_t offset = 0, uint64\_t size = 1, ptr\_t data = \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{419 }
+\DoxyCodeLine{429         \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_acec41322cbbda9eca288e4b9dc55cb1c}{ud2t\_memcpy}}(uint8\_t ud\_id, uint8\_t lane\_num, uint32\_t offset = 0, uint64\_t size = 1, ptr\_t data = \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{430 }
+\DoxyCodeLine{440         \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a3329b5ef8325ef666b363a71524289e0}{sb\_t2ud\_memcpy}}(uint8\_t ud\_id, uint8\_t lane\_num, uint32\_t offset = 0, uint64\_t size = 1, ptr\_t data = \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{441 }
+\DoxyCodeLine{453         \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a82b70fbc2ca89f6bcd40c7b6a0a83c3c}{sb\_ud2t\_memcpy}}(uint8\_t ud\_id, uint8\_t lane\_num, uint32\_t offset = 0, uint64\_t size = 1, ptr\_t data = \textcolor{keyword}{nullptr});}
+\DoxyCodeLine{454 }
+\DoxyCodeLine{467         \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_aaf49c9966289724fd6496ff9d47782fc}{test\_addr}}(uint8\_t ud\_id, uint8\_t lane\_num, uint32\_t offset = 0, word\_t expected = 1);}
+\DoxyCodeLine{468 }
+\DoxyCodeLine{479         \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a937c2ca96d115ed63c54d0dafca8e7d3}{test\_wait\_addr}}(uint8\_t ud\_id, uint8\_t lane\_num, uint32\_t offset = 0, word\_t expected = 1);}
+\DoxyCodeLine{480 }
+\DoxyCodeLine{493         \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ab6599abbb6c5b1795955f2abe27dccf8}{test\_sb\_addr}}(uint8\_t ud\_id, uint8\_t lane\_num, uint32\_t offset = 0, word\_t expected = 1);}
+\DoxyCodeLine{494 }
+\DoxyCodeLine{505         \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a8a940e1d9b37e6a91cf25126858008c9}{test\_wait\_sb\_addr}}(uint8\_t ud\_id, uint8\_t lane\_num, uint32\_t offset = 0, word\_t expected = 1);}
+\DoxyCodeLine{506 }
+\DoxyCodeLine{507   \};}
+\DoxyCodeLine{508 }
+\DoxyCodeLine{509 }
+\DoxyCodeLine{510 \} \textcolor{comment}{// Name Space UpDown}}
+\DoxyCodeLine{511 }
+\DoxyCodeLine{512 }
+\DoxyCodeLine{513 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}
