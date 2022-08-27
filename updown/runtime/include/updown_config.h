@@ -33,6 +33,21 @@
  */
 #ifndef UPSTREAM_H
 #define UPSTREAM_H
+
+// TODO: Placeholder variables for changing memory mapping
+// These are not currently being used
+#define BASE_SPMEM_ADDR 0x0 // Base address for scratchpad memories
+#define BASE_CONTROL_ADDR                                                      \
+  0x0 // Base address for memory mapped control registers
+#define PER_LANE_SPMEM_CAPACITY                                                \
+  0x0 // Scratchpad address space capacity. Available memory may be smaller
+#define PER_LANE_CONTROL_CAPACITY                                              \
+  0x0 // Control signals address space capacity. Number of control registers may
+      // be smaller
+#define NUM_LANES 0x0 // Number of lanes per CU
+#define NUM_UDS 0x0   // Number of CUs
+
+// TODO: These values should disappear in the next version
 #define MAPBASE 0x80000000   // MapBase
 #define UBASE 0x200000000    // Upstream Base
 #define SBASE 0x0            // ScratchPad Base (Local)
@@ -42,7 +57,8 @@
 #define STATBASE 0x10300     // Status - Unused now
 #define NUMUDS 1             // Number of Up Downs
 #define NUMLANES 1           // NumLanes
-#define MEMSIZE 2UL<<32        // Top Memory Size
+#define MEMSIZE 2UL << 32    // Top Memory Size
+#define MAPSIZE 1UL << 32    // Mapped Memory size
 #define LMBANK_SIZE 65536    // LM Bank Size
 #define LMBANK_SIZE_4B 16384 // Event Queue (Local)
 #endif
