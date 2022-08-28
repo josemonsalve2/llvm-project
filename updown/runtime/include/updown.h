@@ -43,9 +43,16 @@
 
 namespace UpDown {
 
+// Depending of the word size we change the pointer type
+#if DEF_WORD_SIZE == 4
 typedef uint32_t word_t;
-typedef word_t *ptr_t;
+#elif DEF_WORD_SIZE == 8
+typedef uint64_t word_t;
+#else
+#error Unknown default word size
+#endif
 
+typedef word_t *ptr_t;
 static constexpr uint8_t ANY_THREAD = 0xFF;
 
 /**
@@ -55,12 +62,13 @@ static constexpr uint8_t ANY_THREAD = 0xFF;
  * data is an array of ptr_t, representing each word in the
  * operand buffer when copied.
  *
- * NumOperands is 8 bits long. Up to 256 operands are allowed
  *
  */
 class operands_t {
 private:
+  // Number of operands 8 bits long. Up to 256 operands are allowed
   uint8_t NumOperands;
+  // Pointer to the data to consider operands. Consecutive array of operands
   ptr_t Data;
 
 public:
@@ -139,8 +147,8 @@ public:
  * each of its parameters. It also contains a pointer to the operands
  * that is used when sending the event
  *
- * @todo the event word may not be needed the lane_id.
- *
+ * @todo UpDown ID is not being used
+ * @todo, event_t considers a 4 byte word size
  */
 class event_t {
 private:
@@ -220,15 +228,8 @@ public:
                    EventWord);
   }
 
-  /**
-   * @brief Get the event word object
-   *
-   * @return word_t with the event word
-   */
   word_t get_EventWord() { return EventWord; }
-
   operands_t *get_Operands() { return Operands; }
-
   void set_operands(operands_t *ops) { Operands = ops; }
   uint8_t get_UdId() { return UdId; }
   uint8_t get_LaneId() { return LaneId; }
@@ -243,6 +244,42 @@ public:
 };
 
 /**
+ * @brief Structure containing the machine configuration.
+ *
+ * This structure can be used to change the parameters of the runtime, during
+ * runtime construction.
+ */
+
+struct ud_machine_t {
+  // Offsets for addrs space
+  uint64_t MapMemBase = BASE_MAPPED_ADDR;         // Base address for memory map
+  uint64_t UDbase = BASE_SPMEM_ADDR;              // Base address for upstream
+  uint64_t SPMemBase = BASE_SPMEM_ADDR;           // ScratchPad Base address
+  uint64_t ControlBase = BASE_CTRL_ADDR;          // Base for control operands
+  uint64_t EventQueueOffset = EVENT_QUEUE_OFFSET; // Offset for Event Queues
+  uint64_t OperandQueueOffset =
+      OPERAND_QUEUE_OFFSET;                     // Offset for Operands Queues
+  uint64_t StartExecOffset = START_EXEC_OFFSET; // Offset for Start Exec signal
+  uint64_t LockOffset = LOCK_OFFSET;            // Offset for Lock signal
+
+  // Machine config and capacities
+  uint64_t CapNumUDs = NUM_UDS_CAPACITY;              // Max number of UpDowns
+  uint64_t CapNumLanes = NUM_LANES_CAPACITY;          // Max number of UpDowns
+  uint64_t CapSPmemPerLane = SPMEM_CAPACITY_PER_LANE; // Max bank size per lane
+  uint64_t CapControlPerLane =
+      CONTROL_CAPACITY_PER_LANE;     // Max Control Sigs and regs per lane
+  uint64_t NumUDs = DEF_NUM_UDS;     // Number of UpDowns
+  uint64_t NumLanes = DEF_NUM_LANES; // Number of lanes
+
+  // Sizes for memories
+  uint64_t MapMemSize = DEF_MAPPED_SIZE; // Mapped Memory size
+  uint64_t SPBankSize =
+      DEF_SPMEM_BANK_SIZE; // Local Momory (scratchpad) Bank Size
+  uint64_t SPBankSizeWords =
+      DEF_SPMEM_BANK_SIZE * DEF_WORD_SIZE; // LocalMemorySize in Words
+};
+
+/**
  * @brief Class containing the UpDown Runtime
  *
  * This class is the entry point of the UpDown runtime, it manages all
@@ -250,94 +287,146 @@ public:
  * and coordinates execution of code.
  *
  */
-
 class UDRuntime_t {
 private:
   /**
    * @brief Struct containing all the base addresses
    *
-   * @todo This should not be consecutive memory locations
-   *
    * Base addresses are locations in memory where the
    * top to updown communication happens.
    *
-   * maddr:  Mapped address. Shared mapped memory in DRAM
-   *         between updown and top. This is necessary due to
-   *         the lack of support for virtual memory in the updown.
-   * eaddr:  Event Queue Addresses. One address per lane.
-   *         writing to this address pushes a new event word
-   *         into the queue
-   * oaddr:  Operand Queue Addresses. One address per lane.
-   *         writing to this address pushes a new operand word
-   *         into the queue
-   * saddr:  Scartchpad memory address base. points to the
-   *         initial location of the scratchpad memory.
-   * sbaddr: StreamingBuffer memory address base. Points to the
-   *         initial location of the streaming buffer memory.
-   * exec:   Execute signals. Triggers event execution. Tells the
-   *         lane that it can begin executing an updown event.
-   *         One signal per lane.
-   * locks:  Lock for the updown operands queue. Since operands
-   *         must be inserted atomically into the operands queue,
-   *         this lock guarantees atomicity in such operation. Queue
-   *         is locked prior to inserting the operands, and unlocked
-   *         after finishing inserting the operands. One lock per lane
+   * ## Current Memory Structure
+   * The memory is organized in two: Scratchpad memory and
+   * Control mapped registers and queues
    *
-   * Current Memory Structure
+   * ### Scratchpad memory address space
    * \verbatim
-   *        MEMORY       SIZE
+   *        MEMORY                     SIZE
+   *   |--------------|  <-- Scratchpad Base Address
+   *   |              |
+   *   |   SPMEM UD0  |
+   *   |              |
+   *   |--------------|  <-- CapacityPerLane * CapacityNumLanes
+   *   |              |
+   *   |   SPMEM UD1  |
+   *   |              |
+   *   |--------------|  <-- 2 * CapacityPerLane * CapacityNumLanes
+   *   |      ...     |
    *   |--------------|
    *   |              |
-   *   |  SCRATCHPAD  |  NUMUDS * NUM_LANES * LMBANK_SIZE
+   *   |   SPMEM UDN  |
    *   |              |
+   *   |--------------|  <-- NumUDs * CapacityPerLane * CapacityNumLanes
+   * \endverbatim
+   *
+   * ### Scratchpad memory for 1 UD
+   * \verbatim
+   *        MEMORY                     SIZE
+   *   |--------------|  <-- Scratchpad Base Address
+   *   |              |
+   *   |    Lane 0    |
+   *   |              |
+   *   |* * * * * * * |  <-- SPmem BankSize
+   *   | * * * * * * *|    |
+   *   |* * * * * * * |    | For expansion purposes
+   *   | * * * * * * *|    |
+   *   |--------------|  <-- CapacityPerLane
+   *   |              |
+   *   |    Lane 1    |
+   *   |              |
+   *   |* * * * * * * |  <-- CapacityPerLane + SPmem BankSize
+   *   | * * * * * * *|    |
+   *   |* * * * * * * |    | For expansion purposes
+   *   | * * * * * * *|    |
+   *   |--------------|  <-- 2 * CapacityPerLane
+   *   |      ...     |
+   *   |--------------|  <-- (NumLanes-1)*CapacityPerLane
+   *   |              |
+   *   |    Lane N    |
+   *   |              |
+   *   |* * * * * * * |  <-- (NumLanes-1)*CapacityPerLane + SPmem BankSize
+   *   | * * * * * * *|    |
+   *   |* * * * * * * |    | For expansion purposes
+   *   | * * * * * * *|    |
+   *   |--------------|  <-- (NumLanes) * CapacityPerLane
+   *   | * * * * * * *|
+   *   |* * * * * * * |   -|
+   *   | * * * * * * *|    | For expansion purposes
+   *   |* * * * * * * |   -|
+   *   | * * * * * * *|
+   *   |--------------|  <-- CapacityPerLane * CapacityNumLanes
+   * \endverbatim
+   *
+   * ### Control signals memory address space
+   * \verbatim
+   *        MEMORY                     SIZE
+   *   |--------------|  <-- Control Base Address
+   *   |              |
+   *   |  CONTROL UD0 |
+   *   |              |
+   *   |--------------|  <-- CapacityControlPerLane * CapacityNumLanes
+   *   |              |
+   *   |  CONTROL UD1 |
+   *   |              |
+   *   |--------------|  <-- 2 * CapacityControlPerLane * CapacityNumLanes
+   *   |      ...     |
    *   |--------------|
    *   |              |
-   *   |   STREAMING  |  NUMUDS * NUM_LANES * LMBANK_SIZE
-   *   |    BUFFERS   |
+   *   |  CONTROL UD2 |
    *   |              |
-   *   |--------------|
-   *   |              |
-   *   |   EVENTS Q   |  NUMUDS * NUM_LANES
-   *   |              |
-   *   |--------------|
-   *   |              |
-   *   |  OPERANDS Q  |  NUMUDS * NUM_LANES
-   *   |              |
-   *   |--------------|
-   *   |              |
-   *   |  START EXEC  |  NUMUDS * NUM_LANES
-   *   |              |
-   *   |--------------|
-   *   |              |
-   *   |    LOCKS     |  NUMUDS * NUM_LANES
-   *   |              |
-   *   |--------------|
+   *   |--------------|  <-- NumUDs * CapacityControlPerLane * CapacityNumLanes
+   * \endverbatim
+   *
+   * ### Scratchpad memory for 1 UD
+   * \verbatim
+   *        MEMORY                     SIZE
+   *   |--------------|  <-- Control Base Address
+   *   |    Lane 0    |
+   *   |  Event Queue |
+   *   | Oprnds Queue |
+   *   |  Start Exec  |
+   *   |     Lock     |
+   *   |* * * * * * * |   -|
+   *   | * * * * * * *|    |
+   *   |* * * * * * * |    | For expansion purposes
+   *   | * * * * * * *|    |
+   *   |--------------|  <-- CapacityControlPerLane
+   *   |    Lane 1    |
+   *   |  Event Queue |
+   *   | Oprnds Queue |
+   *   |  Start Exec  |
+   *   |     Lock     |
+   *   |* * * * * * * |   -|
+   *   | * * * * * * *|    |
+   *   |* * * * * * * |    | For expansion purposes
+   *   | * * * * * * *|    |
+   *   |--------------|  <-- 2 * CapacityControlPerLane
+   *   |      ...     |
+   *   |--------------|  <-- (NumLanes-1) * CapacityControlPerLane
+   *   |    Lane N    |
+   *   |  Event Queue |
+   *   | Oprnds Queue |
+   *   |  Start Exec  |
+   *   |     Lock     |
+   *   |* * * * * * * |   -|
+   *   | * * * * * * *|    |
+   *   |* * * * * * * |    | For expansion purposes
+   *   | * * * * * * *|    |
+   *   |--------------|  <-- NumLanes * CapacityControlPerLane
+   *   | * * * * * * *|
+   *   |* * * * * * * |   -|
+   *   | * * * * * * *|    | For expansion purposes
+   *   |* * * * * * * |   -|
+   *   | * * * * * * *|
+   *   |--------------|  <-- CapacityControlPerLane * CapacityNumLanes
+   * \endverbatim
+   *
    * \endverbatim
    */
   struct base_addr_t {
-    volatile ptr_t maddr;
-    volatile ptr_t eaddr;
-    volatile ptr_t oaddr;
-    volatile ptr_t saddr;
-    volatile ptr_t sbaddr;
-    volatile ptr_t exec;
-    volatile ptr_t locks;
-  };
-
-  struct ud_machine_t {
-    uint64_t Ubase = UBASE;       // Base address for upstream
-    uint64_t MapBase = MAPBASE;   // Base address for memory map
-    uint64_t SBase = SBASE;       // ScratchPad Base address
-    uint64_t EBase = EBASE;       // Event Queue base address
-    uint64_t OBase = OBASE;       // Operand Buffer Base address
-    uint64_t ExecBase = EXEC;     // Exec Addr base address for execute signal
-    uint64_t StatBase = STATBASE; // Base address for status of execution
-    uint64_t NumUDs = NUMUDS;     // Number of Up Downs
-    uint64_t NumLanes = NUMLANES; // Number of lanes
-    uint64_t MemSize = MEMSIZE;   // Top Memory size
-    uint64_t MapSize = MAPSIZE;   // Top Memory size
-    uint64_t LMBankSize = LMBANK_SIZE; // Local Momory (scratchpad) Bank Size
-    uint64_t LMBankSize4b = LMBANK_SIZE_4B; // Event Queue Bank size
+    volatile ptr_t mmaddr;
+    volatile ptr_t spaddr;
+    volatile ptr_t ctrlAddr;
   };
 
   /**
@@ -373,8 +462,8 @@ private:
      */
     ud_mapped_memory_t(ud_machine_t &machine) {
       // Create the first segment
-      void *baseAddr = reinterpret_cast<void *>(machine.MapBase);
-      regions[baseAddr] = {machine.MapSize, true};
+      void *baseAddr = reinterpret_cast<void *>(machine.MapMemBase);
+      regions[baseAddr] = {machine.MapMemSize, true};
     }
 
     /**
@@ -509,6 +598,11 @@ public:
     MappedMemoryManager = new ud_mapped_memory_t(this->MachineConfig);
   }
 
+  UDRuntime_t(ud_machine_t machineConfig) : MachineConfig(machineConfig) {
+    calc_addrmap();
+    MappedMemoryManager = new ud_mapped_memory_t(this->MachineConfig);
+  }
+
   ~UDRuntime_t() { delete MappedMemoryManager; }
 
   /**
@@ -627,36 +721,6 @@ public:
                    uint64_t size = 1, ptr_t data = nullptr);
 
   /**
-   * @brief Copy data to the streaming buffers
-   *
-   * @param ud_id UpDown number
-   * @param lane_num lane streaming buffer
-   * @param offset offset within streaming buffer
-   * @param size_num_words the number of words to be copied to the lane's
-   * streamming buffer
-   * @param data pointer to the top data to be copied over to the lane's
-   * streamming buffer
-   */
-  void sb_t2ud_memcpy(uint8_t ud_id, uint8_t lane_num, uint32_t offset = 0,
-                      uint64_t size = 1, ptr_t data = nullptr);
-
-  /**
-   * @brief Copy data from the streaming buffers to the top
-   *
-   * TODO: This probably does not make sense
-   *
-   * @param ud_id UpDown number
-   * @param lane_num lane streaming buffer
-   * @param offset offset within streaming buffer
-   * @param size_num_words the number of words to be copied to the lane's
-   * streamming buffer
-   * @param data pointer to the top data to be copied over to the lane's
-   * streamming buffer
-   */
-  void sb_ud2t_memcpy(uint8_t ud_id, uint8_t lane_num, uint32_t offset = 0,
-                      uint64_t size = 1, ptr_t data = nullptr);
-
-  /**
    * @brief Test a memory location in the updwon bank for the expected value
    *
    * Reads the updown scratchpad memory bank, and check if the value is equal to
@@ -686,33 +750,56 @@ public:
                       word_t expected = 1);
 
   /**
-   * @brief Test a memory location in the updwon bank for the expected value
+   * @brief Helper function to dump current base addresses
    *
-   * Reads the updown scratchpad memory bank, and check if the value is equal to
-   * the expected value. Returns true if the values are equal
-   *
-   * @param ud_id UpDown number
-   * @param lane_num LaneID to check
-   * @param offset offset within the memory bank
-   * @param expected value that is expected in the memory bank
-   * @return word_t
    */
-  bool test_sb_addr(uint8_t ud_id, uint8_t lane_num, uint32_t offset = 0,
-                    word_t expected = 1);
+  void dumpBaseAddrs() {
+    printf("  mmaddr     = 0x%lX\n"
+           "  spaddr    = 0x%lX\n"
+           "  ctrlAddr  = 0x%lX\n",
+           reinterpret_cast<uint64_t>(BaseAddrs.mmaddr),
+           reinterpret_cast<uint64_t>(BaseAddrs.spaddr),
+           reinterpret_cast<uint64_t>(BaseAddrs.ctrlAddr));
+  }
 
   /**
-   * @brief Test a memory location in the updown bank for the expected value.
-   * Wait until it is the expected value
+   * @brief Helper function to dump current Machine Config
    *
-   * Spinwaiting on a location of the updown scratchpad memory bank until the
-   * value read is the expected value. Uses lane_test_memory.
-   *
-   * @param lane_num LaneID to check
-   * @param offset offset within the memory bank
-   * @param expected value that is expected in the memory bank
    */
-  void test_wait_sb_addr(uint8_t ud_id, uint8_t lane_num, uint32_t offset = 0,
-                         word_t expected = 1);
+  void dumpMachineConfig() {
+    printf("  MapMemBase          = 0x%lX\n"
+           "  UDbase              = 0x%lX\n"
+           "  SPMemBase           = 0x%lX\n"
+           "  ControlBase         = 0x%lX\n"
+           "  EventQueueOffset    = (0x%lX)%lu\n"
+           "  OperandQueueOffset  = (0x%lX)%lu\n"
+           "  StartExecOffset     = (0x%lX)%lu\n"
+           "  LockOffset          = (0x%lX)%lu\n"
+           "  CapNumUDs           = (0x%lX)%lu\n"
+           "  CapNumLanes         = (0x%lX)%lu\n"
+           "  CapSPmemPerLane     = (0x%lX)%lu\n"
+           "  CapControlPerLane   = (0x%lX)%lu\n"
+           "  NumUDs              = (0x%lX)%lu\n"
+           "  NumLanes            = (0x%lX)%lu\n"
+           "  MapMemSize          = (0x%lX)%lu\n"
+           "  SPBankSize          = (0x%lX)%lu\n"
+           "  SPBankSizeWords     = (0x%lX)%lu\n",
+           MachineConfig.MapMemBase, MachineConfig.UDbase,
+           MachineConfig.SPMemBase, MachineConfig.ControlBase,
+           MachineConfig.EventQueueOffset, MachineConfig.EventQueueOffset,
+           MachineConfig.OperandQueueOffset, MachineConfig.OperandQueueOffset,
+           MachineConfig.StartExecOffset, MachineConfig.StartExecOffset,
+           MachineConfig.LockOffset, MachineConfig.LockOffset,
+           MachineConfig.CapNumUDs, MachineConfig.CapNumUDs,
+           MachineConfig.CapNumLanes, MachineConfig.CapNumLanes,
+           MachineConfig.CapSPmemPerLane, MachineConfig.CapSPmemPerLane,
+           MachineConfig.CapControlPerLane, MachineConfig.CapControlPerLane,
+           MachineConfig.NumUDs, MachineConfig.NumUDs, MachineConfig.NumLanes,
+           MachineConfig.NumLanes, MachineConfig.MapMemSize,
+           MachineConfig.MapMemSize, MachineConfig.SPBankSize,
+           MachineConfig.SPBankSize, MachineConfig.SPBankSizeWords,
+           MachineConfig.SPBankSizeWords);
+  }
 };
 
 } // namespace UpDown

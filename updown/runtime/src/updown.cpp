@@ -6,35 +6,25 @@ namespace UpDown {
 // TODO: This should not be offset with the number of elements. Best to
 // determine a fixed memory location for each section
 void UDRuntime_t::calc_addrmap() {
-  BaseAddrs.maddr = (ptr_t)MachineConfig.MapBase;
-  uint64_t ubase = MachineConfig.MemSize;
-  BaseAddrs.saddr = (ptr_t)ubase;
-  BaseAddrs.sbaddr =
-      (ptr_t)(ubase + MachineConfig.NumUDs * MachineConfig.NumLanes *
-                          MachineConfig.LMBankSize);
-  BaseAddrs.eaddr =
-      (ptr_t)(ubase + 2 * MachineConfig.NumUDs * MachineConfig.NumLanes *
-                          MachineConfig.LMBankSize);
-  BaseAddrs.oaddr =
-      (ptr_t)(BaseAddrs.eaddr + MachineConfig.NumUDs * MachineConfig.NumLanes);
-  BaseAddrs.exec =
-      (ptr_t)(BaseAddrs.oaddr + MachineConfig.NumUDs * MachineConfig.NumLanes);
-  BaseAddrs.locks =
-      (ptr_t)(BaseAddrs.exec + MachineConfig.NumUDs * MachineConfig.NumLanes);
-
-  UPDOWN_INFOMSG("calc_addrmap: ubase:%lx\nsaddr:%lx\nsbaddr:%lx\n"
-                 "eaddr:%lx\noaddr:%lx\nexec:%lx\nstatus:%lx\n",
-                 ubase, (uint64_t)BaseAddrs.saddr, (uint64_t)BaseAddrs.sbaddr,
-                 (uint64_t)BaseAddrs.eaddr, (uint64_t)BaseAddrs.oaddr,
-                 (uint64_t)BaseAddrs.exec, (uint64_t)BaseAddrs.locks);
+  BaseAddrs.mmaddr = (ptr_t)MachineConfig.MapMemBase;
+  BaseAddrs.spaddr = (ptr_t)MachineConfig.SPMemBase;
+  BaseAddrs.ctrlAddr = (ptr_t)MachineConfig.ControlBase;
+  UPDOWN_INFOMSG(
+      "calc_addrmap: maddr: %lX spaddr: %lX ctrlAddr: %lX" reinterpret_cast<
+          uint64_t>(BaseAddrs.mmaddr),
+      reinterpret_cast<uint64_t>(BaseAddrs.spaddr),
+      reinterpret_cast<uint64_t>(BaseAddrs.ctrlAddr));
 }
 
 void UDRuntime_t::send_event(event_t ev) {
-  uint64_t offset = ev.get_UdId() * MachineConfig.NumLanes + ev.get_LaneId();
+  uint64_t offset = ev.get_UdId() * MachineConfig.CapNumLanes *
+                        MachineConfig.CapControlPerLane +
+                    ev.get_LaneId() * MachineConfig.CapControlPerLane;
   // Locking the lane's queues
-  *(BaseAddrs.locks + offset) = 1;
+  *(BaseAddrs.ctrlAddr + offset + MachineConfig.LockOffset) = 1;
   // Set the event Queue
-  *(BaseAddrs.eaddr + offset) = ev.get_EventWord();
+  *(BaseAddrs.ctrlAddr + offset + MachineConfig.EventQueueOffset) =
+      ev.get_EventWord();
   UPDOWN_INFOMSG("Sending Event:%u to [%u,%u,%u],", ev.get_EventLabel(),
                  ev.get_UdId(), ev.get_LaneId(), ev.get_ThreadId());
 
@@ -42,19 +32,23 @@ void UDRuntime_t::send_event(event_t ev) {
   // 1 in the for
   if (ev.get_NumOperands() != 0)
     for (uint8_t i = 0; i < ev.get_NumOperands() + 1; i++) {
-      *(BaseAddrs.oaddr + offset) = ev.get_OperandsData()[i];
+      *(BaseAddrs.ctrlAddr + offset + MachineConfig.OperandQueueOffset) =
+          ev.get_OperandsData()[i];
       UPDOWN_INFOMSG("OB[%u]:%u,", i, ev.get_OperandsData()[i]);
     }
-  *(BaseAddrs.locks + offset) = 0;
+  *(BaseAddrs.ctrlAddr + offset + MachineConfig.LockOffset) = 0;
 
   // Set the Operand Queue
 }
 
 void UDRuntime_t::start_exec(uint8_t ud_id, uint8_t lane_num) {
-  uint64_t offset = ud_id * MachineConfig.NumLanes * lane_num;
-  *(BaseAddrs.exec + offset) = 1;
-  UPDOWN_INFOMSG("Starting execution UD %u, Lane %u. Signal in %lX", ud_id,
-                 lane_num, (uint64_t)BaseAddrs.exec + offset);
+  uint64_t offset =
+      ud_id * MachineConfig.CapNumLanes * MachineConfig.CapControlPerLane +
+      lane_num * MachineConfig.CapControlPerLane;
+  *(BaseAddrs.ctrlAddr + offset + MachineConfig.StartExecOffset) = 1;
+  UPDOWN_INFOMSG(
+      "Starting execution UD %u, Lane %u. Signal in %lX", ud_id, lane_num,
+      (uint64_t)BaseAddrs.ctrlAddr + offset + MachineConfig.StartExecOffset);
 }
 
 uint64_t UDRuntime_t::get_lane_aligned_offset(uint8_t ud_id, uint8_t lane_num,
@@ -63,8 +57,9 @@ uint64_t UDRuntime_t::get_lane_aligned_offset(uint8_t ud_id, uint8_t lane_num,
   auto aligned_offset = offset - offset % alignment;
   UPDOWN_WARNING_IF(offset % alignment != 0, "Unaligned offset %u", offset);
   uint64_t returned_offset =
-      ud_id * MachineConfig.NumLanes * MachineConfig.LMBankSize4b + // UD offset
-      MachineConfig.LMBankSize4b * lane_num + // Lane offset
+      ud_id * MachineConfig.CapNumLanes *
+          MachineConfig.CapSPmemPerLane +    // UD offset
+      MachineConfig.CapNumLanes * lane_num + // Lane offset
       aligned_offset;
   return returned_offset;
 }
@@ -78,14 +73,14 @@ void UDRuntime_t::mm_free(void *ptr) {
 }
 
 void UDRuntime_t::mm2t_memcpy(uint64_t offset, ptr_t src, uint64_t size) {
-  ptr_t dst = BaseAddrs.maddr + offset;
+  ptr_t dst = BaseAddrs.mmaddr + offset;
   std::memcpy(src, dst, size);
   UPDOWN_INFOMSG("Copying %lu bytes from mapped memory (%lX) to top (%lX)",
                  size, (uint64_t)src, (uint64_t)dst);
 }
 
 void UDRuntime_t::t2mm_memcpy(uint64_t offset, ptr_t src, uint64_t size) {
-  ptr_t dst = BaseAddrs.maddr + offset;
+  ptr_t dst = BaseAddrs.mmaddr + offset;
   std::memcpy(src, dst, size);
   UPDOWN_INFOMSG("Copying %lu bytes from top (%lX) to mapped memory (%lX)",
                  size, (uint64_t)src, (uint64_t)dst);
@@ -94,62 +89,31 @@ void UDRuntime_t::t2mm_memcpy(uint64_t offset, ptr_t src, uint64_t size) {
 void UDRuntime_t::t2ud_memcpy(uint8_t ud_id, uint8_t lane_num, uint32_t offset,
                               uint64_t size, ptr_t data) {
   uint64_t apply_offset = get_lane_aligned_offset(ud_id, lane_num, offset);
-  std::memcpy(BaseAddrs.saddr + apply_offset, data, size);
+  std::memcpy(BaseAddrs.spaddr + apply_offset, data, size);
   UPDOWN_INFOMSG("Copying %lu bytes from Top to UD %u, Lane %u. Signal in %lX",
                  size, ud_id, lane_num,
-                 (uint64_t)BaseAddrs.saddr + apply_offset);
+                 (uint64_t)BaseAddrs.spaddr + apply_offset);
 }
 
 void UDRuntime_t::ud2t_memcpy(uint8_t ud_id, uint8_t lane_num, uint32_t offset,
                               uint64_t size, ptr_t data) {
   uint64_t apply_offset = get_lane_aligned_offset(ud_id, lane_num, offset);
-  std::memcpy(data, BaseAddrs.saddr + apply_offset, size);
+  std::memcpy(data, BaseAddrs.spaddr + apply_offset, size);
   UPDOWN_INFOMSG("Copying %lu bytes from UD %u, Lane %u to Top. Signal in %lX",
                  size, ud_id, lane_num,
-                 (uint64_t)BaseAddrs.saddr + apply_offset);
-}
-
-void UDRuntime_t::sb_t2ud_memcpy(uint8_t ud_id, uint8_t lane_num,
-                                 uint32_t offset, uint64_t size, ptr_t data) {
-  uint64_t apply_offset = get_lane_aligned_offset(ud_id, lane_num, offset);
-  std::memcpy(BaseAddrs.sbaddr + apply_offset, data, size);
-  UPDOWN_INFOMSG("Copying %lu bytes from Top to UD %u, Lane %u. Signal in %lX",
-                 size, ud_id, lane_num,
-                 (uint64_t)BaseAddrs.saddr + apply_offset);
-}
-
-void UDRuntime_t::sb_ud2t_memcpy(uint8_t ud_id, uint8_t lane_num,
-                                 uint32_t offset, uint64_t size, ptr_t data) {
-  uint64_t apply_offset = get_lane_aligned_offset(ud_id, lane_num, offset);
-  std::memcpy(data, BaseAddrs.sbaddr + apply_offset, size);
-  UPDOWN_INFOMSG("Copying %lu bytes from UD %u, Lane %u to Top. Signal in %lX",
-                 size, ud_id, lane_num,
-                 (uint64_t)BaseAddrs.saddr + apply_offset);
+                 (uint64_t)BaseAddrs.spaddr + apply_offset);
 }
 
 bool UDRuntime_t::test_addr(uint8_t ud_id, uint8_t lane_num, uint32_t offset,
                             word_t expected) {
   uint64_t apply_offset = get_lane_aligned_offset(ud_id, lane_num, offset);
-  return *(BaseAddrs.saddr + apply_offset) == expected;
+  return *(BaseAddrs.spaddr + apply_offset) == expected;
 }
 
 void UDRuntime_t::test_wait_addr(uint8_t ud_id, uint8_t lane_num,
                                  uint32_t offset, word_t expected) {
   uint64_t apply_offset = get_lane_aligned_offset(ud_id, lane_num, offset);
-  while (*(BaseAddrs.saddr + apply_offset) != expected)
-    ;
-}
-
-bool UDRuntime_t::test_sb_addr(uint8_t ud_id, uint8_t lane_num, uint32_t offset,
-                               word_t expected) {
-  uint64_t apply_offset = get_lane_aligned_offset(ud_id, lane_num, offset);
-  return *(BaseAddrs.sbaddr + apply_offset) == expected;
-}
-
-void UDRuntime_t::test_wait_sb_addr(uint8_t ud_id, uint8_t lane_num,
-                                    uint32_t offset, word_t expected) {
-  uint64_t apply_offset = get_lane_aligned_offset(ud_id, lane_num, offset);
-  while (*(BaseAddrs.sbaddr + apply_offset) != expected)
+  while (*(BaseAddrs.spaddr + apply_offset) != expected)
     ;
 }
 

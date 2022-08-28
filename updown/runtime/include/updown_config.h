@@ -34,31 +34,33 @@
 #ifndef UPSTREAM_H
 #define UPSTREAM_H
 
-// TODO: Placeholder variables for changing memory mapping
-// These are not currently being used
-#define BASE_SPMEM_ADDR 0x0 // Base address for scratchpad memories
-#define BASE_CONTROL_ADDR                                                      \
-  0x0 // Base address for memory mapped control registers
-#define PER_LANE_SPMEM_CAPACITY                                                \
-  0x0 // Scratchpad address space capacity. Available memory may be smaller
-#define PER_LANE_CONTROL_CAPACITY                                              \
-  0x0 // Control signals address space capacity. Number of control registers may
-      // be smaller
-#define NUM_LANES 0x0 // Number of lanes per CU
-#define NUM_UDS 0x0   // Number of CUs
+// DEFAULT VALUES
+#define DEF_NUM_LANES 0x1         // Number of lanes per CU
+#define DEF_NUM_UDS 0x1           // Number of CUs
+#define DEF_SPMEM_BANK_SIZE 65536 // Scratchpad Memory size per lane
+#define DEF_WORD_SIZE 4           // Wordsize
+#define DEF_MAPPED_SIZE 1UL << 32
 
-// TODO: These values should disappear in the next version
-#define MAPBASE 0x80000000   // MapBase
-#define UBASE 0x200000000    // Upstream Base
-#define SBASE 0x0            // ScratchPad Base (Local)
-#define EBASE 0x10000        // Event Queue
-#define OBASE 0x10100        // Operand Buffer Base
-#define EXEC 0x10200         // Exec Addr
-#define STATBASE 0x10300     // Status - Unused now
-#define NUMUDS 1             // Number of Up Downs
-#define NUMLANES 1           // NumLanes
-#define MEMSIZE 2UL << 32    // Top Memory Size
-#define MAPSIZE 1UL << 32    // Mapped Memory size
-#define LMBANK_SIZE 65536    // LM Bank Size
-#define LMBANK_SIZE_4B 16384 // Event Queue (Local)
+// Base address for scratchpad memories
+#define BASE_SPMEM_ADDR 0x200000000
+// Base address for memory mapped control registers
+#define BASE_CTRL_ADDR 0x600000000
+// Scratchpad address space maximum capacity
+#define SPMEM_CAPACITY_PER_LANE 1UL << 17
+// Control signals address space capacity. Number of control registers may
+#define CONTROL_CAPACITY_PER_LANE 1UL << 7
+// Number of lanes capacity
+#define NUM_LANES_CAPACITY 1UL << 7
+// Number of lanes capacity
+#define NUM_UDS_CAPACITY 1UL << 7
+
+// Base address mapped memory - This is due to simulation
+#define BASE_MAPPED_ADDR 0x80000000
+
+// CONTROL SIGNALES OFFSET
+#define EVENT_QUEUE_OFFSET 0x0
+#define OPERAND_QUEUE_OFFSET 0x4
+#define START_EXEC_OFFSET 0x8
+#define LOCK_OFFSET 0xC
+
 #endif
