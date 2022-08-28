@@ -34,6 +34,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <assert.h>
 
 #define __FILENAME__                                                           \
   (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
@@ -57,14 +58,18 @@
   {                                                                            \
     fprintf(stderr, "[UPDOWN_ERROR: %s:%i] " message "\n", __FILENAME__,       \
             __LINE__, ##__VA_ARGS__);                                          \
-    assert(0);                                                                 \
+    fflush(stderr);                                                            \
+    fflush(stdout);                                                            \
+    assert(0 && message);                                                      \
   }
 #define UPDOWN_ERROR_IF(condition, message, ...)                               \
   {                                                                            \
     if (condition) {                                                           \
       fprintf(stderr, "[UPDOWN_ERROR: %s:%i] " message "\n", __FILENAME__,     \
               __LINE__, ##__VA_ARGS__);                                        \
-      assert(0);                                                               \
+    fflush(stderr);                                                            \
+    fflush(stdout);                                                            \
+    assert(0 && message);                                                      \
     }                                                                          \
   }
 

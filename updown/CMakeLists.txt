@@ -45,28 +45,31 @@ endfunction(build_jinja)
 build_jinja()
 
 
+set(UPDOWN_INSTALL_DIR "updown")
+set(UPDOWN_HEADERS_INSTALL_PATH "${UPDOWN_INSTALL_DIR}/include")
+set(UPDOWN_LIB "${UPDOWN_INSTALL_DIR}/lib")
+set(UPDOWN_BIN "${UPDOWN_INSTALL_DIR}/bin")
+
+
+add_compile_definitions(BASE_PATH="${CMAKE_INSTALL_PREFIX}")
+
+if (UPDOWN_ENABLE_DEBUG)
+  add_compile_definitions(DEBUG_MODE=1)
+  set(UPDOWN_DEBUG True)
+else()
+  set(UPDOWN_DEBUG False)
+endif()
+
+include_directories(BEFORE
+    common/include)
+
 ## Building the python syntax plugin
 if(LLVM_ENABLE_PLUGINS)
-  set(UPDOWN_INSTALL_DIR "updown")
-  set(UPDOWN_HEADERS_INSTALL_PATH "${UPDOWN_INSTALL_DIR}/include")
-  set(UPDOWN_LIB "${UPDOWN_INSTALL_DIR}/lib")
-  set(UPDOWN_BIN "${UPDOWN_INSTALL_DIR}/bin")
-  
-
-  add_compile_definitions(BASE_PATH="${CMAKE_INSTALL_PREFIX}")
-
-  if (UPDOWN_ENABLE_DEBUG)
-    add_compile_definitions(DEBUG_MODE=1)
-    set(UPDOWN_DEBUG True)
-  else()
-    set(UPDOWN_DEBUG False)
-  endif()
   add_llvm_library(UpDownRecodePython MODULE pythonsyntax.cpp PLUGIN_TOOL clang)
   include_directories(BEFORE
     ${CMAKE_CURRENT_SOURCE_DIR}/../clang/include
     ${CMAKE_CURRENT_BINARY_DIR}/../../tools/clang/include
     Jinja2CppLight/src
-    common/include
   )
   set(LLVM_LINK_COMPONENTS
     Support

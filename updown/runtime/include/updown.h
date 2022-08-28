@@ -461,6 +461,8 @@ private:
      * @param machine information from the description of the current machine
      */
     ud_mapped_memory_t(ud_machine_t &machine) {
+      UPDOWN_INFOMSG("Initializing Mapped Memory Manager for %lu at %lX", 
+                      machine.MapMemSize, machine.MapMemBase);
       // Create the first segment
       void *baseAddr = reinterpret_cast<void *>(machine.MapMemBase);
       regions[baseAddr] = {machine.MapMemSize, true};
@@ -477,11 +479,13 @@ private:
      * @return void* pointer to the allocated memory
      */
     void *get_region(uint32_t size) {
+      UPDOWN_INFOMSG("Allocating new region of size %u", size); 
       // Iterate over the regions finding one that fits
       auto used_reg = regions.end();
       for (auto it = regions.begin(); it != regions.end(); ++it) {
         // Check if region is free and have enough size
-        if (it->second.free && it->second.size <= size) {
+        if (it->second.free && size <= it->second.size) {
+          UPDOWN_INFOMSG("Found a region at %lX", reinterpret_cast<uint64_t>(it->first)); 
           used_reg = it;
           break;
         }
@@ -500,8 +504,12 @@ private:
       if (new_size != 0) {
         void *new_reg = static_cast<char *>(used_reg->first) + size;
         regions[new_reg] = {new_size, true};
+        UPDOWN_INFOMSG("Creating a new region %lX with the remaining size %lu", 
+                        reinterpret_cast<uint64_t>(new_reg), new_size); 
       }
-
+      UPDOWN_INFOMSG("Returning region %lX = {%lu, %s}",
+                      reinterpret_cast<uint64_t>(used_reg->first), used_reg->second.size, 
+                      (used_reg->second.free)? "Free":"Used"); 
       // Return the new pointer
       return used_reg->first;
     }
@@ -517,12 +525,13 @@ private:
      *
      */
     void remove_region(void *ptr) {
+      UPDOWN_INFOMSG("Freeing the space at %lX", reinterpret_cast<uint64_t>(ptr)); 
       // Find location to free
       auto it = regions.find(ptr);
       if (it == regions.end() || it->second.free) {
         UPDOWN_ERROR("Trying to free pointer %lX that is not in the regions"
                      " or the region is free (double free?)",
-                     static_cast<uint64_t>(ptr));
+                     reinterpret_cast<uint64_t>(ptr));
         return;
       }
       // merge left if free
@@ -530,19 +539,34 @@ private:
         uint64_t size = it->second.size;
         it--;
         it->second.size += size;
+        UPDOWN_INFOMSG("Merging left %lX to %lX, adding %lu for a total of region with %lu", 
+                        reinterpret_cast<uint64_t>(it->first), reinterpret_cast<uint64_t>(std::next(it, 1)->first),
+                        size, it->second.size); 
+        UPDOWN_INFOMSG("Removing previous region at %lX", 
+                        reinterpret_cast<uint64_t>(it->first)); 
         regions.erase(std::next(it, 1));
+
       }
       // merge right if free
       auto nextIt = std::next(it, 1);
       if (nextIt != regions.end() && nextIt->second.free) {
         uint64_t size = nextIt->second.size;
         it->second.size += size;
+        UPDOWN_INFOMSG("Merging right %lX to %lX, adding %lu for a total of region with %lu", 
+                        reinterpret_cast<uint64_t>(it->first), reinterpret_cast<uint64_t>(nextIt->first),
+                        size, it->second.size); 
+        UPDOWN_INFOMSG("Removing previous region at %lX", 
+                        reinterpret_cast<uint64_t>(it->first)); 
         regions.erase(nextIt);
       }
 
       // Check if there were no merges
-      if (it->first == ptr)
+      if (it->first == ptr) {
+        UPDOWN_INFOMSG("No merges performed, just freeing %lX = {%lu, %s}", 
+                        reinterpret_cast<uint64_t>(it->first), (it->second.size),
+                        (it->second.free)? "Free":"Used"); 
         it->second.free = true;
+      }
     }
   };
 
@@ -594,11 +618,13 @@ private:
 
 public:
   UDRuntime_t() {
+    UPDOWN_INFOMSG("Initializing runtime"); 
     calc_addrmap();
     MappedMemoryManager = new ud_mapped_memory_t(this->MachineConfig);
   }
 
   UDRuntime_t(ud_machine_t machineConfig) : MachineConfig(machineConfig) {
+    UPDOWN_INFOMSG("Initializing runtime with custom machineConfig"); 
     calc_addrmap();
     MappedMemoryManager = new ud_mapped_memory_t(this->MachineConfig);
   }

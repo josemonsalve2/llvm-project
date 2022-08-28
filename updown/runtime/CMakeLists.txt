@@ -1,7 +1,7 @@
 
 
 
-  add_llvm_library(UpDownRuntime SHARED src/updown.cpp)
+  add_library(UpDownRuntime SHARED src/updown.cpp)
   include_directories(BEFORE
     include
   )

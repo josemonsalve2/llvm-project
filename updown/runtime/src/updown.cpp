@@ -10,8 +10,8 @@ void UDRuntime_t::calc_addrmap() {
   BaseAddrs.spaddr = (ptr_t)MachineConfig.SPMemBase;
   BaseAddrs.ctrlAddr = (ptr_t)MachineConfig.ControlBase;
   UPDOWN_INFOMSG(
-      "calc_addrmap: maddr: %lX spaddr: %lX ctrlAddr: %lX" reinterpret_cast<
-          uint64_t>(BaseAddrs.mmaddr),
+      "calc_addrmap: maddr: %lX spaddr: %lX ctrlAddr: %lX",
+      reinterpret_cast<uint64_t>(BaseAddrs.mmaddr),
       reinterpret_cast<uint64_t>(BaseAddrs.spaddr),
       reinterpret_cast<uint64_t>(BaseAddrs.ctrlAddr));
 }
@@ -65,10 +65,12 @@ uint64_t UDRuntime_t::get_lane_aligned_offset(uint8_t ud_id, uint8_t lane_num,
 }
 
 void *UDRuntime_t::mm_malloc(uint64_t size) {
+  UPDOWN_INFOMSG("Calling mm_malloc %u", size); 
   return MappedMemoryManager->get_region(size);
 }
 
 void UDRuntime_t::mm_free(void *ptr) {
+  UPDOWN_INFOMSG("Calling mm_free %lX", reinterpret_cast<uint64_t>(ptr)); 
   return MappedMemoryManager->remove_region(ptr);
 }
 
