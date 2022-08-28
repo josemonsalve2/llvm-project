@@ -478,7 +478,7 @@ private:
      * @param size size to be allocated
      * @return void* pointer to the allocated memory
      */
-    void *get_region(uint32_t size) {
+    void *get_region(uint64_t size) {
       UPDOWN_INFOMSG("Allocating new region of size %u", size); 
       // Iterate over the regions finding one that fits
       auto used_reg = regions.end();
