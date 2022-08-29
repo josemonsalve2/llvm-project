@@ -421,7 +421,6 @@ private:
    *   |--------------|  <-- CapacityControlPerLane * CapacityNumLanes
    * \endverbatim
    *
-   * \endverbatim
    */
   struct base_addr_t {
     volatile ptr_t mmaddr;
@@ -570,6 +569,8 @@ private:
     }
   };
 
+
+protected:
   /**
    * @brief container for all base addresses
    *
@@ -645,7 +646,8 @@ public:
 
   /**
    * @brief Signal lane to start execution
-   *
+   * 
+   * @param ud_id UpDown ID
    * @param lane_num lane to signal
    */
   void start_exec(uint8_t ud_id, uint8_t lane_num);

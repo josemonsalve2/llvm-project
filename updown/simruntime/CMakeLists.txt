@@ -1,0 +1,27 @@
+
+
+
+  add_library(UpDownSimRuntime SHARED src/simupdown.cpp)
+  include_directories(BEFORE
+    include
+  )
+
+  set(UPDOWN_RUNTIME_INSTALL_DIR "updown")
+
+  set_target_properties(UpDownSimRuntime PROPERTIES PUBLIC_HEADER 
+      "include/simupdown.h")
+
+  set(UPDOWN_RUNTIME_HEADERS_INSTALL_PATH "${UPDOWN_RUNTIME_INSTALL_DIR}/include")
+  set(UPDOWN_RUNTIME_LIB "${UPDOWN_RUNTIME_INSTALL_DIR}/lib")
+  set(UPDOWN_RUNTIME_BIN "${UPDOWN_RUNTIME_INSTALL_DIR}/bin")
+
+  INSTALL(TARGETS UpDownSimRuntime
+      LIBRARY DESTINATION ${UPDOWN_RUNTIME_LIB}
+      ARCHIVE DESTINATION ${UPDOWN_RUNTIME_LIB}
+      RUNTIME DESTINATION ${UPDOWN_RUNTIME_BIN}
+      INCLUDES DESTINATION ${UPDOWN_RUNTIME_HEADERS_INSTALL_PATH}
+      PUBLIC_HEADER DESTINATION ${UPDOWN_RUNTIME_HEADERS_INSTALL_PATH}
+  )
+
+  add_subdirectory(tests)
+  target_link_libraries(UpDownSimRuntime PUBLIC UpDownRuntime)

@@ -61,7 +61,8 @@ else()
 endif()
 
 include_directories(BEFORE
-    common/include)
+    common/include
+    runtime/include)
 
 ## Building the python syntax plugin
 if(LLVM_ENABLE_PLUGINS)
@@ -100,3 +101,4 @@ endif()
 ## Building runtime system
 
 add_subdirectory(runtime)
+add_subdirectory(simruntime)

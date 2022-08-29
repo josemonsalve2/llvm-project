@@ -57,10 +57,10 @@
 // Base address mapped memory - This is due to simulation
 #define BASE_MAPPED_ADDR 0x80000000
 
-// CONTROL SIGNALES OFFSET
+// CONTROL SIGNALES OFFSET IN WORDS
 #define EVENT_QUEUE_OFFSET 0x0
-#define OPERAND_QUEUE_OFFSET 0x4
-#define START_EXEC_OFFSET 0x8
-#define LOCK_OFFSET 0xC
+#define OPERAND_QUEUE_OFFSET 0x1
+#define START_EXEC_OFFSET 0x2
+#define LOCK_OFFSET 0x3
 
 #endif
