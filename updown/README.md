@@ -2,7 +2,7 @@
 
 This repository contains software for UpDown using LLVM. 
 
-## Building
+## Building LLVM
 
 To enable the project it is necessary to add "updown" to the list of `-DLLVM_ENABLE_PROJECTS=`. See the following example. The important option is the last line
 
@@ -28,11 +28,26 @@ cmake -G Ninja                     \
 -DLLVM_ENABLE_PROJECTS="clang;updown"
 ```
 
+## Building runtime only
+
+```
+mkdir build_standalone && cd build
+cmake -G Ninja               \
+../llvm-project-csp/updown/  \
+-DUPDOWNRT_ENABLE_TESTS=ON   \
+-DUPDOWN_ENABLE_DEBUG=ON
+```
+
+The `-DUPDOWN_ENABLE_DEBUG` flag is used to enable debbuging messages 
+in the runtime system. Feel free to remove it. 
+
 ## Current content
 
 | Name | Description|
 |-----------|---------|
 | PythonSytanx Plugin | Plugin that allows to embed python code that describe a Codelet in the UpDown |
+| UpDown Runtime | Top runtime for the UpDown infrastructure |
+| Simulated UpDown Runtime | Wrapper class that uses the updown runtime, but simulates the UpDown hardware (Under development) |
 
 ### Python Syntax
 
