@@ -1,0 +1,86 @@
+\hypertarget{simupdown_8h_source}{}\doxysection{simupdown.\+h}
+\label{simupdown_8h_source}\index{/Users/josemonsalvediaz/Documents/Tmp/llvm-\/project/updown/simruntime/include/simupdown.h@{/Users/josemonsalvediaz/Documents/Tmp/llvm-\/project/updown/simruntime/include/simupdown.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{comment}{/*}}
+\DoxyCodeLine{2 \textcolor{comment}{ * Copyright (c) 2021 University of Chicago and Argonne National Laboratory}}
+\DoxyCodeLine{3 \textcolor{comment}{ * All rights reserved.}}
+\DoxyCodeLine{4 \textcolor{comment}{ *}}
+\DoxyCodeLine{5 \textcolor{comment}{ * Redistribution and use in source and binary forms, with or without}}
+\DoxyCodeLine{6 \textcolor{comment}{ * modification, are permitted provided that the following conditions are}}
+\DoxyCodeLine{7 \textcolor{comment}{ * met: redistributions of source code must retain the above copyright}}
+\DoxyCodeLine{8 \textcolor{comment}{ * notice, this list of conditions and the following disclaimer;}}
+\DoxyCodeLine{9 \textcolor{comment}{ * redistributions in binary form must reproduce the above copyright}}
+\DoxyCodeLine{10 \textcolor{comment}{ * notice, this list of conditions and the following disclaimer in the}}
+\DoxyCodeLine{11 \textcolor{comment}{ * documentation and/or other materials provided with the distribution;}}
+\DoxyCodeLine{12 \textcolor{comment}{ * neither the name of the copyright holders nor the names of its}}
+\DoxyCodeLine{13 \textcolor{comment}{ * contributors may be used to endorse or promote products derived from}}
+\DoxyCodeLine{14 \textcolor{comment}{ * this software without specific prior written permission.}}
+\DoxyCodeLine{15 \textcolor{comment}{ *}}
+\DoxyCodeLine{16 \textcolor{comment}{ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS}}
+\DoxyCodeLine{17 \textcolor{comment}{ * "{}AS IS"{} AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT}}
+\DoxyCodeLine{18 \textcolor{comment}{ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR}}
+\DoxyCodeLine{19 \textcolor{comment}{ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT}}
+\DoxyCodeLine{20 \textcolor{comment}{ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,}}
+\DoxyCodeLine{21 \textcolor{comment}{ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT}}
+\DoxyCodeLine{22 \textcolor{comment}{ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,}}
+\DoxyCodeLine{23 \textcolor{comment}{ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY}}
+\DoxyCodeLine{24 \textcolor{comment}{ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT}}
+\DoxyCodeLine{25 \textcolor{comment}{ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE}}
+\DoxyCodeLine{26 \textcolor{comment}{ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.}}
+\DoxyCodeLine{27 \textcolor{comment}{ *}}
+\DoxyCodeLine{28 \textcolor{comment}{ * Author -\/ Jose M Monsalve Diaz}}
+\DoxyCodeLine{29 \textcolor{comment}{ *}}
+\DoxyCodeLine{30 \textcolor{comment}{ */}}
+\DoxyCodeLine{31 }
+\DoxyCodeLine{32 \textcolor{preprocessor}{\#ifndef UPDOWNSIM\_H}}
+\DoxyCodeLine{33 \textcolor{preprocessor}{\#define UPDOWNSIM\_H}}
+\DoxyCodeLine{34 \textcolor{preprocessor}{\#include <cstdint>}}
+\DoxyCodeLine{35 \textcolor{preprocessor}{\#include <cstdio>}}
+\DoxyCodeLine{36 \textcolor{preprocessor}{\#include <cstdlib>}}
+\DoxyCodeLine{37 \textcolor{preprocessor}{\#include <cstring>}}
+\DoxyCodeLine{38 \textcolor{preprocessor}{\#include <map>}}
+\DoxyCodeLine{39 \textcolor{preprocessor}{\#include <utility>}}
+\DoxyCodeLine{40 }
+\DoxyCodeLine{41 \textcolor{preprocessor}{\#include "{}debug.h"{}}}
+\DoxyCodeLine{42 \textcolor{preprocessor}{\#include "{}updown.h"{}}}
+\DoxyCodeLine{43 }
+\DoxyCodeLine{44 \textcolor{keyword}{namespace }UpDown \{}
+\DoxyCodeLine{45 }
+\DoxyCodeLine{59 \textcolor{keyword}{class }\mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t}{SimUDRuntime\_t}} : \textcolor{keyword}{public} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t}{UDRuntime\_t}} \{}
+\DoxyCodeLine{60 \textcolor{keyword}{private}:}
+\DoxyCodeLine{61   uint8\_t *MappedMemory;}
+\DoxyCodeLine{62   uint8\_t *ScratchpadMemory;}
+\DoxyCodeLine{63   uint8\_t *ControlMemory;}
+\DoxyCodeLine{64 }
+\DoxyCodeLine{65 \textcolor{keyword}{public}:}
+\DoxyCodeLine{78   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a7113c0fad105b40a81231139332c0061}{initMemoryArrays}}();}
+\DoxyCodeLine{79 }
+\DoxyCodeLine{87   \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a1af458c531ea3297c7991facbed758fa}{SimUDRuntime\_t}}() : \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t}{UDRuntime\_t}}() \{}
+\DoxyCodeLine{88     UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Initializing Simulated Runtime with defautl params"{}});}
+\DoxyCodeLine{89     \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a7113c0fad105b40a81231139332c0061}{initMemoryArrays}}();}
+\DoxyCodeLine{90     \textcolor{comment}{// Recalculate address map}}
+\DoxyCodeLine{91     \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a53609a9bdbc8caae702ea49684c0ea64}{calc\_addrmap}}();}
+\DoxyCodeLine{92   \}}
+\DoxyCodeLine{93 }
+\DoxyCodeLine{104   \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_adc38b9beb3dcfc1abd60e11869894a97}{SimUDRuntime\_t}}(\mbox{\hyperlink{struct_up_down_1_1ud__machine__t}{ud\_machine\_t}} machineConfig) : \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t}{UDRuntime\_t}}(machineConfig) \{}
+\DoxyCodeLine{105     UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Initializing runtime with custom machineConfig"{}});}
+\DoxyCodeLine{106     \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a7113c0fad105b40a81231139332c0061}{initMemoryArrays}}();}
+\DoxyCodeLine{107     \textcolor{comment}{// Recalculate address map}}
+\DoxyCodeLine{108     \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a53609a9bdbc8caae702ea49684c0ea64}{calc\_addrmap}}();}
+\DoxyCodeLine{109   \}}
+\DoxyCodeLine{110 }
+\DoxyCodeLine{111   \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t}{\string~SimUDRuntime\_t}}() \{}
+\DoxyCodeLine{112     \textcolor{keyword}{delete} MappedMemory;}
+\DoxyCodeLine{113     \textcolor{keyword}{delete} ScratchpadMemory;}
+\DoxyCodeLine{114     \textcolor{keyword}{delete} ControlMemory;}
+\DoxyCodeLine{115   \}}
+\DoxyCodeLine{116 }
+\DoxyCodeLine{125   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a4d07ad90b3cd6de2522c7e37ecdaf133}{start\_exec}}(uint8\_t ud\_id, uint8\_t lane\_num);}
+\DoxyCodeLine{126 \};}
+\DoxyCodeLine{127 }
+\DoxyCodeLine{128 \} \textcolor{comment}{// namespace UpDown}}
+\DoxyCodeLine{129 }
+\DoxyCodeLine{130 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

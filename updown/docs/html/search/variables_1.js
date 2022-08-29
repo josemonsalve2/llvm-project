@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['baseaddrs_0',['BaseAddrs',['../class_up_down_1_1_u_d_runtime__t.html#a84ed7807df12382d06ee8a09b172898f',1,'UpDown::UDRuntime_t']]]
+  ['machineconfig_0',['MachineConfig',['../class_up_down_1_1_u_d_runtime__t.html#ac550f02506c21c5e48b6648c2e8c3dd6',1,'UpDown::UDRuntime_t']]]
 ];

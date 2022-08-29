@@ -19,8 +19,9 @@ Contains information of an event in the Up\+Down.
 \begin{DoxyCompactList}\small\item\em Construct a new \mbox{\hyperlink{class_up_down_1_1event__t}{event\+\_\+t}} object. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{class_up_down_1_1event__t_a82bb035d6e694deee44a89eab676911a}{set\+\_\+event}} (uint8\+\_\+t e\+\_\+label, uint8\+\_\+t udid, uint8\+\_\+t lid=0, uint8\+\_\+t tid=ANY\+\_\+\+THREAD, \mbox{\hyperlink{class_up_down_1_1operands__t}{operands\+\_\+t}} $\ast$operands=nullptr)
 \begin{DoxyCompactList}\small\item\em Set the event word object with new values. \end{DoxyCompactList}\item 
-word\+\_\+t \mbox{\hyperlink{class_up_down_1_1event__t_adc88794ca0c1dc5b269aae78df8c64ee}{get\+\_\+\+Event\+Word}} ()
-\begin{DoxyCompactList}\small\item\em Get the event word object. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_up_down_1_1event__t_adc88794ca0c1dc5b269aae78df8c64ee}\label{class_up_down_1_1event__t_adc88794ca0c1dc5b269aae78df8c64ee}} 
+word\+\_\+t {\bfseries get\+\_\+\+Event\+Word} ()
+\item 
 \mbox{\Hypertarget{class_up_down_1_1event__t_a00d3a9196502424e96ab7a4b69831b9a}\label{class_up_down_1_1event__t_a00d3a9196502424e96ab7a4b69831b9a}} 
 \mbox{\hyperlink{class_up_down_1_1operands__t}{operands\+\_\+t}} $\ast$ {\bfseries get\+\_\+\+Operands} ()
 \item 
@@ -74,7 +75,9 @@ Contains information of an event in the Up\+Down.
 This class constructs the information of the event word based on each of its parameters. It also contains a pointer to the operands that is used when sending the event
 
 \begin{DoxyRefDesc}{Todo}
-\item[\mbox{\hyperlink{todo__todo000001}{Todo}}]the event word may not be needed the lane\+\_\+id. \end{DoxyRefDesc}
+\item[\mbox{\hyperlink{todo__todo000001}{Todo}}]Up\+Down ID is not being used 
+
+, \mbox{\hyperlink{class_up_down_1_1event__t}{event\+\_\+t}} considers a 4 byte word size \end{DoxyRefDesc}
 
 
 \doxysubsection{Constructor \& Destructor Documentation}
@@ -108,23 +111,6 @@ References \mbox{\hyperlink{class_up_down_1_1operands__t_aa769b305fb95f01c74f123
 
 
 \doxysubsection{Member Function Documentation}
-\mbox{\Hypertarget{class_up_down_1_1event__t_adc88794ca0c1dc5b269aae78df8c64ee}\label{class_up_down_1_1event__t_adc88794ca0c1dc5b269aae78df8c64ee}} 
-\index{UpDown::event\_t@{UpDown::event\_t}!get\_EventWord@{get\_EventWord}}
-\index{get\_EventWord@{get\_EventWord}!UpDown::event\_t@{UpDown::event\_t}}
-\doxysubsubsection{\texorpdfstring{get\_EventWord()}{get\_EventWord()}}
-{\footnotesize\ttfamily word\+\_\+t Up\+Down\+::event\+\_\+t\+::get\+\_\+\+Event\+Word (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
-
-
-
-Get the event word object. 
-
-\begin{DoxyReturn}{Returns}
-word\+\_\+t with the event word 
-\end{DoxyReturn}
-
-
-Referenced by \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_af58fb869d8558462617fa84bf83bb595}{Up\+Down\+::\+UDRuntime\+\_\+t\+::send\+\_\+event()}}.
-
 \mbox{\Hypertarget{class_up_down_1_1event__t_a82bb035d6e694deee44a89eab676911a}\label{class_up_down_1_1event__t_a82bb035d6e694deee44a89eab676911a}} 
 \index{UpDown::event\_t@{UpDown::event\_t}!set\_event@{set\_event}}
 \index{set\_event@{set\_event}!UpDown::event\_t@{UpDown::event\_t}}

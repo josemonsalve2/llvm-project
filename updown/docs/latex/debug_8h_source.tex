@@ -38,65 +38,70 @@
 \DoxyCodeLine{34 \textcolor{preprocessor}{\#include <stdio.h>}}
 \DoxyCodeLine{35 \textcolor{preprocessor}{\#include <stdlib.h>}}
 \DoxyCodeLine{36 \textcolor{preprocessor}{\#include <string.h>}}
-\DoxyCodeLine{37 }
-\DoxyCodeLine{38 \textcolor{preprocessor}{\#define \_\_FILENAME\_\_                                                           \(\backslash\)}}
-\DoxyCodeLine{39 \textcolor{preprocessor}{  (strrchr(\_\_FILE\_\_, '/') ? strrchr(\_\_FILE\_\_, '/') + 1 : \_\_FILE\_\_)}}
-\DoxyCodeLine{40 }
-\DoxyCodeLine{41 \textcolor{comment}{// Macro for output of information, warning and error messages}}
-\DoxyCodeLine{42 \textcolor{preprocessor}{\#ifdef DEBUG\_MODE}}
-\DoxyCodeLine{43 \textcolor{preprocessor}{\#define UPDOWN\_WARNING(message, ...)                                           \(\backslash\)}}
-\DoxyCodeLine{44 \textcolor{preprocessor}{  \{                                                                            \(\backslash\)}}
-\DoxyCodeLine{45 \textcolor{preprocessor}{    printf("{}[UPDOWN\_WARNING: \%s:\%i] "{}} message "{}\(\backslash\)n"{}, \_\_FILENAME\_\_, \_\_LINE\_\_,    \(\backslash\)}
-\DoxyCodeLine{46            \#\#\_\_VA\_ARGS\_\_);                                                     \(\backslash\)}
-\DoxyCodeLine{47   \}}
-\DoxyCodeLine{48 \textcolor{preprocessor}{\#define UPDOWN\_WARNING\_IF(condition, message, ...)                             \(\backslash\)}}
-\DoxyCodeLine{49 \textcolor{preprocessor}{  \{                                                                            \(\backslash\)}}
-\DoxyCodeLine{50 \textcolor{preprocessor}{    if (condition) \{                                                           \(\backslash\)}}
-\DoxyCodeLine{51 \textcolor{preprocessor}{      printf("{}[UPDOWN\_WARNING: \%s:\%i] "{}} message "{}\(\backslash\)n"{}, \_\_FILENAME\_\_, \_\_LINE\_\_,  \(\backslash\)}
-\DoxyCodeLine{52              \#\#\_\_VA\_ARGS\_\_);                                                   \(\backslash\)}
-\DoxyCodeLine{53     \}                                                                          \(\backslash\)}
-\DoxyCodeLine{54   \}}
-\DoxyCodeLine{55 }
-\DoxyCodeLine{56 \textcolor{preprocessor}{\#define UPDOWN\_ERROR(message, ...)                                             \(\backslash\)}}
-\DoxyCodeLine{57 \textcolor{preprocessor}{  \{                                                                            \(\backslash\)}}
-\DoxyCodeLine{58 \textcolor{preprocessor}{    fprintf(stderr, "{}[UPDOWN\_ERROR: \%s:\%i] "{}} message "{}\(\backslash\)n"{}, \_\_FILENAME\_\_,       \(\backslash\)}
-\DoxyCodeLine{59             \_\_LINE\_\_, \#\#\_\_VA\_ARGS\_\_);                                          \(\backslash\)}
-\DoxyCodeLine{60     assert(0);                                                                 \(\backslash\)}
-\DoxyCodeLine{61   \}}
-\DoxyCodeLine{62 \textcolor{preprocessor}{\#define UPDOWN\_ERROR\_IF(condition, message, ...)                               \(\backslash\)}}
-\DoxyCodeLine{63 \textcolor{preprocessor}{  \{                                                                            \(\backslash\)}}
-\DoxyCodeLine{64 \textcolor{preprocessor}{    if (condition) \{                                                           \(\backslash\)}}
-\DoxyCodeLine{65 \textcolor{preprocessor}{      fprintf(stderr, "{}[UPDOWN\_ERROR: \%s:\%i] "{}} message "{}\(\backslash\)n"{}, \_\_FILENAME\_\_,     \(\backslash\)}
-\DoxyCodeLine{66               \_\_LINE\_\_, \#\#\_\_VA\_ARGS\_\_);                                        \(\backslash\)}
-\DoxyCodeLine{67       assert(0);                                                               \(\backslash\)}
-\DoxyCodeLine{68     \}                                                                          \(\backslash\)}
-\DoxyCodeLine{69   \}}
-\DoxyCodeLine{70 }
-\DoxyCodeLine{71 \textcolor{preprocessor}{\#define UPDOWN\_INFOMSG(message, ...)                                           \(\backslash\)}}
-\DoxyCodeLine{72 \textcolor{preprocessor}{  \{                                                                            \(\backslash\)}}
-\DoxyCodeLine{73 \textcolor{preprocessor}{    printf("{}[UPDOWN\_INFO: \%s:\%i] "{}} message "{}\(\backslash\)n"{}, \_\_FILENAME\_\_, \_\_LINE\_\_,       \(\backslash\)}
-\DoxyCodeLine{74            \#\#\_\_VA\_ARGS\_\_);                                                     \(\backslash\)}
-\DoxyCodeLine{75   \}}
-\DoxyCodeLine{76 \textcolor{preprocessor}{\#define UPDOWN\_INFOMSG\_IF(condition, message, ...)                             \(\backslash\)}}
+\DoxyCodeLine{37 \textcolor{preprocessor}{\#include <assert.h>}}
+\DoxyCodeLine{38 }
+\DoxyCodeLine{39 \textcolor{preprocessor}{\#define \_\_FILENAME\_\_                                                           \(\backslash\)}}
+\DoxyCodeLine{40 \textcolor{preprocessor}{  (strrchr(\_\_FILE\_\_, '/') ? strrchr(\_\_FILE\_\_, '/') + 1 : \_\_FILE\_\_)}}
+\DoxyCodeLine{41 }
+\DoxyCodeLine{42 \textcolor{comment}{// Macro for output of information, warning and error messages}}
+\DoxyCodeLine{43 \textcolor{preprocessor}{\#ifdef DEBUG\_MODE}}
+\DoxyCodeLine{44 \textcolor{preprocessor}{\#define UPDOWN\_WARNING(message, ...)                                           \(\backslash\)}}
+\DoxyCodeLine{45 \textcolor{preprocessor}{  \{                                                                            \(\backslash\)}}
+\DoxyCodeLine{46 \textcolor{preprocessor}{    printf("{}[UPDOWN\_WARNING: \%s:\%i] "{}} message "{}\(\backslash\)n"{}, \_\_FILENAME\_\_, \_\_LINE\_\_,    \(\backslash\)}
+\DoxyCodeLine{47            \#\#\_\_VA\_ARGS\_\_);                                                     \(\backslash\)}
+\DoxyCodeLine{48   \}}
+\DoxyCodeLine{49 \textcolor{preprocessor}{\#define UPDOWN\_WARNING\_IF(condition, message, ...)                             \(\backslash\)}}
+\DoxyCodeLine{50 \textcolor{preprocessor}{  \{                                                                            \(\backslash\)}}
+\DoxyCodeLine{51 \textcolor{preprocessor}{    if (condition) \{                                                           \(\backslash\)}}
+\DoxyCodeLine{52 \textcolor{preprocessor}{      printf("{}[UPDOWN\_WARNING: \%s:\%i] "{}} message "{}\(\backslash\)n"{}, \_\_FILENAME\_\_, \_\_LINE\_\_,  \(\backslash\)}
+\DoxyCodeLine{53              \#\#\_\_VA\_ARGS\_\_);                                                   \(\backslash\)}
+\DoxyCodeLine{54     \}                                                                          \(\backslash\)}
+\DoxyCodeLine{55   \}}
+\DoxyCodeLine{56 }
+\DoxyCodeLine{57 \textcolor{preprocessor}{\#define UPDOWN\_ERROR(message, ...)                                             \(\backslash\)}}
+\DoxyCodeLine{58 \textcolor{preprocessor}{  \{                                                                            \(\backslash\)}}
+\DoxyCodeLine{59 \textcolor{preprocessor}{    fprintf(stderr, "{}[UPDOWN\_ERROR: \%s:\%i] "{}} message "{}\(\backslash\)n"{}, \_\_FILENAME\_\_,       \(\backslash\)}
+\DoxyCodeLine{60             \_\_LINE\_\_, \#\#\_\_VA\_ARGS\_\_);                                          \(\backslash\)}
+\DoxyCodeLine{61     fflush(stderr);                                                            \(\backslash\)}
+\DoxyCodeLine{62     fflush(stdout);                                                            \(\backslash\)}
+\DoxyCodeLine{63     assert(0 \&\& message);                                                      \(\backslash\)}
+\DoxyCodeLine{64   \}}
+\DoxyCodeLine{65 \textcolor{preprocessor}{\#define UPDOWN\_ERROR\_IF(condition, message, ...)                               \(\backslash\)}}
+\DoxyCodeLine{66 \textcolor{preprocessor}{  \{                                                                            \(\backslash\)}}
+\DoxyCodeLine{67 \textcolor{preprocessor}{    if (condition) \{                                                           \(\backslash\)}}
+\DoxyCodeLine{68 \textcolor{preprocessor}{      fprintf(stderr, "{}[UPDOWN\_ERROR: \%s:\%i] "{}} message "{}\(\backslash\)n"{}, \_\_FILENAME\_\_,     \(\backslash\)}
+\DoxyCodeLine{69               \_\_LINE\_\_, \#\#\_\_VA\_ARGS\_\_);                                        \(\backslash\)}
+\DoxyCodeLine{70     fflush(stderr);                                                            \(\backslash\)}
+\DoxyCodeLine{71     fflush(stdout);                                                            \(\backslash\)}
+\DoxyCodeLine{72     assert(0 \&\& message);                                                      \(\backslash\)}
+\DoxyCodeLine{73     \}                                                                          \(\backslash\)}
+\DoxyCodeLine{74   \}}
+\DoxyCodeLine{75 }
+\DoxyCodeLine{76 \textcolor{preprocessor}{\#define UPDOWN\_INFOMSG(message, ...)                                           \(\backslash\)}}
 \DoxyCodeLine{77 \textcolor{preprocessor}{  \{                                                                            \(\backslash\)}}
-\DoxyCodeLine{78 \textcolor{preprocessor}{    if (condition) \{                                                           \(\backslash\)}}
-\DoxyCodeLine{79 \textcolor{preprocessor}{      printf("{}[UPDOWN\_INFO: \%s:\%i] "{}} message "{}\(\backslash\)n"{}, \_\_FILENAME\_\_, \_\_LINE\_\_,     \(\backslash\)}
-\DoxyCodeLine{80              \#\#\_\_VA\_ARGS\_\_);                                                   \(\backslash\)}
-\DoxyCodeLine{81     \}                                                                          \(\backslash\)}
-\DoxyCodeLine{82   \}}
-\DoxyCodeLine{83 \textcolor{preprocessor}{\#else}}
-\DoxyCodeLine{84 \textcolor{preprocessor}{\#define UPDOWN\_WARNING(message, ...)                                           \(\backslash\)}}
-\DoxyCodeLine{85 \textcolor{preprocessor}{  \{\}}}
-\DoxyCodeLine{86 \textcolor{preprocessor}{\#define UPDOWN\_WARNING\_IF(message, ...)                                        \(\backslash\)}}
-\DoxyCodeLine{87 \textcolor{preprocessor}{  \{\}}}
-\DoxyCodeLine{88 \textcolor{preprocessor}{\#define UPDOWN\_ERROR(message, ...)                                             \(\backslash\)}}
-\DoxyCodeLine{89 \textcolor{preprocessor}{  \{\}}}
-\DoxyCodeLine{90 \textcolor{preprocessor}{\#define UPDOWN\_ERROR\_IF(message, ...)                                          \(\backslash\)}}
-\DoxyCodeLine{91 \textcolor{preprocessor}{  \{\}}}
-\DoxyCodeLine{92 \textcolor{preprocessor}{\#define UPDOWN\_INFOMSG(message, ...)                                           \(\backslash\)}}
-\DoxyCodeLine{93 \textcolor{preprocessor}{  \{\}}}
-\DoxyCodeLine{94 \textcolor{preprocessor}{\#define UPDOWN\_INFOMSG\_IF(message, ...)                                        \(\backslash\)}}
-\DoxyCodeLine{95 \textcolor{preprocessor}{  \{\}}}
-\DoxyCodeLine{96 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// END IF VERBOSE\_MODE}}
+\DoxyCodeLine{78 \textcolor{preprocessor}{    printf("{}[UPDOWN\_INFO: \%s:\%i] "{}} message "{}\(\backslash\)n"{}, \_\_FILENAME\_\_, \_\_LINE\_\_,       \(\backslash\)}
+\DoxyCodeLine{79            \#\#\_\_VA\_ARGS\_\_);                                                     \(\backslash\)}
+\DoxyCodeLine{80   \}}
+\DoxyCodeLine{81 \textcolor{preprocessor}{\#define UPDOWN\_INFOMSG\_IF(condition, message, ...)                             \(\backslash\)}}
+\DoxyCodeLine{82 \textcolor{preprocessor}{  \{                                                                            \(\backslash\)}}
+\DoxyCodeLine{83 \textcolor{preprocessor}{    if (condition) \{                                                           \(\backslash\)}}
+\DoxyCodeLine{84 \textcolor{preprocessor}{      printf("{}[UPDOWN\_INFO: \%s:\%i] "{}} message "{}\(\backslash\)n"{}, \_\_FILENAME\_\_, \_\_LINE\_\_,     \(\backslash\)}
+\DoxyCodeLine{85              \#\#\_\_VA\_ARGS\_\_);                                                   \(\backslash\)}
+\DoxyCodeLine{86     \}                                                                          \(\backslash\)}
+\DoxyCodeLine{87   \}}
+\DoxyCodeLine{88 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{89 \textcolor{preprocessor}{\#define UPDOWN\_WARNING(message, ...)                                           \(\backslash\)}}
+\DoxyCodeLine{90 \textcolor{preprocessor}{  \{\}}}
+\DoxyCodeLine{91 \textcolor{preprocessor}{\#define UPDOWN\_WARNING\_IF(message, ...)                                        \(\backslash\)}}
+\DoxyCodeLine{92 \textcolor{preprocessor}{  \{\}}}
+\DoxyCodeLine{93 \textcolor{preprocessor}{\#define UPDOWN\_ERROR(message, ...)                                             \(\backslash\)}}
+\DoxyCodeLine{94 \textcolor{preprocessor}{  \{\}}}
+\DoxyCodeLine{95 \textcolor{preprocessor}{\#define UPDOWN\_ERROR\_IF(message, ...)                                          \(\backslash\)}}
+\DoxyCodeLine{96 \textcolor{preprocessor}{  \{\}}}
+\DoxyCodeLine{97 \textcolor{preprocessor}{\#define UPDOWN\_INFOMSG(message, ...)                                           \(\backslash\)}}
+\DoxyCodeLine{98 \textcolor{preprocessor}{  \{\}}}
+\DoxyCodeLine{99 \textcolor{preprocessor}{\#define UPDOWN\_INFOMSG\_IF(message, ...)                                        \(\backslash\)}}
+\DoxyCodeLine{100 \textcolor{preprocessor}{  \{\}}}
+\DoxyCodeLine{101 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// END IF VERBOSE\_MODE}}
 
 \end{DoxyCode}

@@ -37,18 +37,36 @@
 \DoxyCodeLine{33 \textcolor{comment}{ */}}
 \DoxyCodeLine{34 \textcolor{preprocessor}{\#ifndef UPSTREAM\_H}}
 \DoxyCodeLine{35 \textcolor{preprocessor}{\#define UPSTREAM\_H}}
-\DoxyCodeLine{36 \textcolor{preprocessor}{\#define MAPBASE 0x80000000   }\textcolor{comment}{// MapBase}}
-\DoxyCodeLine{37 \textcolor{preprocessor}{\#define UBASE 0x200000000    }\textcolor{comment}{// Upstream Base}}
-\DoxyCodeLine{38 \textcolor{preprocessor}{\#define SBASE 0x0            }\textcolor{comment}{// ScratchPad Base (Local)}}
-\DoxyCodeLine{39 \textcolor{preprocessor}{\#define EBASE 0x10000        }\textcolor{comment}{// Event Queue}}
-\DoxyCodeLine{40 \textcolor{preprocessor}{\#define OBASE 0x10100        }\textcolor{comment}{// Operand Buffer Base}}
-\DoxyCodeLine{41 \textcolor{preprocessor}{\#define EXEC 0x10200         }\textcolor{comment}{// Exec Addr}}
-\DoxyCodeLine{42 \textcolor{preprocessor}{\#define STATBASE 0x10300     }\textcolor{comment}{// Status -\/ Unused now}}
-\DoxyCodeLine{43 \textcolor{preprocessor}{\#define NUMUDS 1             }\textcolor{comment}{// Number of Up Downs}}
-\DoxyCodeLine{44 \textcolor{preprocessor}{\#define NUMLANES 1           }\textcolor{comment}{// NumLanes}}
-\DoxyCodeLine{45 \textcolor{preprocessor}{\#define MEMSIZE 2UL<<32        }\textcolor{comment}{// Top Memory Size}}
-\DoxyCodeLine{46 \textcolor{preprocessor}{\#define LMBANK\_SIZE 65536    }\textcolor{comment}{// LM Bank Size}}
-\DoxyCodeLine{47 \textcolor{preprocessor}{\#define LMBANK\_SIZE\_4B 16384 }\textcolor{comment}{// Event Queue (Local)}}
-\DoxyCodeLine{48 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{36 }
+\DoxyCodeLine{37 \textcolor{comment}{// DEFAULT VALUES}}
+\DoxyCodeLine{38 \textcolor{preprocessor}{\#define DEF\_NUM\_LANES 0x1         }\textcolor{comment}{// Number of lanes per CU}}
+\DoxyCodeLine{39 \textcolor{preprocessor}{\#define DEF\_NUM\_UDS 0x1           }\textcolor{comment}{// Number of CUs}}
+\DoxyCodeLine{40 \textcolor{preprocessor}{\#define DEF\_SPMEM\_BANK\_SIZE 65536 }\textcolor{comment}{// Scratchpad Memory size per lane}}
+\DoxyCodeLine{41 \textcolor{preprocessor}{\#define DEF\_WORD\_SIZE 4           }\textcolor{comment}{// Wordsize}}
+\DoxyCodeLine{42 \textcolor{preprocessor}{\#define DEF\_MAPPED\_SIZE 1UL << 32}}
+\DoxyCodeLine{43 }
+\DoxyCodeLine{44 \textcolor{comment}{// Base address for scratchpad memories}}
+\DoxyCodeLine{45 \textcolor{preprocessor}{\#define BASE\_SPMEM\_ADDR 0x200000000}}
+\DoxyCodeLine{46 \textcolor{comment}{// Base address for memory mapped control registers}}
+\DoxyCodeLine{47 \textcolor{preprocessor}{\#define BASE\_CTRL\_ADDR 0x600000000}}
+\DoxyCodeLine{48 \textcolor{comment}{// Scratchpad address space maximum capacity}}
+\DoxyCodeLine{49 \textcolor{preprocessor}{\#define SPMEM\_CAPACITY\_PER\_LANE 1UL << 17}}
+\DoxyCodeLine{50 \textcolor{comment}{// Control signals address space capacity. Number of control registers may}}
+\DoxyCodeLine{51 \textcolor{preprocessor}{\#define CONTROL\_CAPACITY\_PER\_LANE 1UL << 7}}
+\DoxyCodeLine{52 \textcolor{comment}{// Number of lanes capacity}}
+\DoxyCodeLine{53 \textcolor{preprocessor}{\#define NUM\_LANES\_CAPACITY 1UL << 7}}
+\DoxyCodeLine{54 \textcolor{comment}{// Number of lanes capacity}}
+\DoxyCodeLine{55 \textcolor{preprocessor}{\#define NUM\_UDS\_CAPACITY 1UL << 7}}
+\DoxyCodeLine{56 }
+\DoxyCodeLine{57 \textcolor{comment}{// Base address mapped memory -\/ This is due to simulation}}
+\DoxyCodeLine{58 \textcolor{preprocessor}{\#define BASE\_MAPPED\_ADDR 0x80000000}}
+\DoxyCodeLine{59 }
+\DoxyCodeLine{60 \textcolor{comment}{// CONTROL SIGNALES OFFSET IN WORDS}}
+\DoxyCodeLine{61 \textcolor{preprocessor}{\#define EVENT\_QUEUE\_OFFSET 0x0}}
+\DoxyCodeLine{62 \textcolor{preprocessor}{\#define OPERAND\_QUEUE\_OFFSET 0x1}}
+\DoxyCodeLine{63 \textcolor{preprocessor}{\#define START\_EXEC\_OFFSET 0x2}}
+\DoxyCodeLine{64 \textcolor{preprocessor}{\#define LOCK\_OFFSET 0x3}}
+\DoxyCodeLine{65 }
+\DoxyCodeLine{66 \textcolor{preprocessor}{\#endif}}
 
 \end{DoxyCode}

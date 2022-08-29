@@ -2,11 +2,24 @@
 \begin{DoxyRefList}
 \item[Class \mbox{\hyperlink{class_up_down_1_1event__t}{Up\+Down\+::event\+\_\+t}} ]\label{todo__todo000001}%
 \Hypertarget{todo__todo000001}%
-the event word may not be needed the lane\+\_\+id.  
+Up\+Down ID is not being used 
+
+
+
+, \mbox{\hyperlink{class_up_down_1_1event__t}{event\+\_\+t}} considers a 4 byte word size  
 \item[Member \mbox{\hyperlink{class_up_down_1_1operands__t_aef9a024a90d4073d82d1195cf82fa660}{Up\+Down\+::operands\+\_\+t\+::operands\+\_\+t}} (uint8\+\_\+t num, ptr\+\_\+t oper=nullptr, word\+\_\+t cont=0)]\label{todo__todo000002}%
 \Hypertarget{todo__todo000002}%
 This should avoid using memcpy  
-\item[Class \mbox{\hyperlink{struct_up_down_1_1_u_d_runtime__t_1_1base__addr__t}{Up\+Down\+::UDRuntime\+\_\+t\+::base\+\_\+addr\+\_\+t}} ]\label{todo__todo000003}%
+\item[Member \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a7113c0fad105b40a81231139332c0061}{Up\+Down\+::Sim\+UDRuntime\+\_\+t\+::init\+Memory\+Arrays}} ()]\label{todo__todo000005}%
+\Hypertarget{todo__todo000005}%
+We are allocating the whole address space. We could behave more like a driver and translate it to the actual available memory. This means. It should not allocate the reserved space for expansion.  
+\item[Member \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a4d07ad90b3cd6de2522c7e37ecdaf133}{Up\+Down\+::Sim\+UDRuntime\+\_\+t\+::start\+\_\+exec}} (uint8\+\_\+t ud\+\_\+id, uint8\+\_\+t lane\+\_\+num)]\label{todo__todo000006}%
+\Hypertarget{todo__todo000006}%
+we should start the UD Emulator here 
+\item[Member \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_aa02ee38bf2166f297f40176c88485c1a}{Up\+Down\+::UDRuntime\+\_\+t\+::mm\+\_\+free}} (void $\ast$ptr)]\label{todo__todo000004}%
+\Hypertarget{todo__todo000004}%
+\+: This should be thread safe? 
+\item[Member \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a3f6d1895e3d1ad7fc40b918154a027ad}{Up\+Down\+::UDRuntime\+\_\+t\+::mm\+\_\+malloc}} (uint64\+\_\+t size)]\label{todo__todo000003}%
 \Hypertarget{todo__todo000003}%
-This should not be consecutive memory locations
+\+: This should be thread safe?
 \end{DoxyRefList}

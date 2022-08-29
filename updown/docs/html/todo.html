@@ -88,11 +88,20 @@ $(document).ready(function(){initNavTree('todo.html',''); initResizable(); });
 <div class="contents">
 <div class="textblock"><dl class="reflist">
 <dt>Class <a class="el" href="class_up_down_1_1event__t.html">UpDown::event_t</a>  </dt>
-<dd><a class="anchor" id="_todo000001"></a>the event word may not be needed the lane_id.  </dd>
+<dd><p class="startdd"><a class="anchor" id="_todo000001"></a>UpDown ID is not being used </p>
+<p class="interdd"></p>
+<p class="enddd">, <a class="el" href="class_up_down_1_1event__t.html" title="Contains information of an event in the UpDown.">event_t</a> considers a 4 byte word size  </p>
+</dd>
 <dt>Member <a class="el" href="class_up_down_1_1operands__t.html#aef9a024a90d4073d82d1195cf82fa660">UpDown::operands_t::operands_t</a>  (uint8_t num, ptr_t oper=nullptr, word_t cont=0)</dt>
 <dd><a class="anchor" id="_todo000002"></a>This should avoid using memcpy  </dd>
-<dt>Class <a class="el" href="struct_up_down_1_1_u_d_runtime__t_1_1base__addr__t.html">UpDown::UDRuntime_t::base_addr_t</a>  </dt>
-<dd><a class="anchor" id="_todo000003"></a>This should not be consecutive memory locations</dd>
+<dt>Member <a class="el" href="class_up_down_1_1_sim_u_d_runtime__t.html#a7113c0fad105b40a81231139332c0061">UpDown::SimUDRuntime_t::initMemoryArrays</a>  ()</dt>
+<dd><a class="anchor" id="_todo000005"></a>We are allocating the whole address space. We could behave more like a driver and translate it to the actual available memory. This means. It should not allocate the reserved space for expansion.  </dd>
+<dt>Member <a class="el" href="class_up_down_1_1_sim_u_d_runtime__t.html#a4d07ad90b3cd6de2522c7e37ecdaf133">UpDown::SimUDRuntime_t::start_exec</a>  (uint8_t ud_id, uint8_t lane_num)</dt>
+<dd><a class="anchor" id="_todo000006"></a>we should start the UD Emulator here </dd>
+<dt>Member <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#aa02ee38bf2166f297f40176c88485c1a">UpDown::UDRuntime_t::mm_free</a>  (void *ptr)</dt>
+<dd><a class="anchor" id="_todo000004"></a>: This should be thread safe? </dd>
+<dt>Member <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a3f6d1895e3d1ad7fc40b918154a027ad">UpDown::UDRuntime_t::mm_malloc</a>  (uint64_t size)</dt>
+<dd><a class="anchor" id="_todo000003"></a>: This should be thread safe?</dd>
 </dl>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->

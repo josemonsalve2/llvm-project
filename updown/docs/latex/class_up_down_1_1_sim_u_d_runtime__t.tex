@@ -1,0 +1,142 @@
+\hypertarget{class_up_down_1_1_sim_u_d_runtime__t}{}\doxysection{Up\+Down\+::Sim\+UDRuntime\+\_\+t Class Reference}
+\label{class_up_down_1_1_sim_u_d_runtime__t}\index{UpDown::SimUDRuntime\_t@{UpDown::SimUDRuntime\_t}}
+
+
+Wrapper class that allows simulation of runtime calls.  
+
+
+
+
+{\ttfamily \#include $<$simupdown.\+h$>$}
+
+Inheritance diagram for Up\+Down\+::Sim\+UDRuntime\+\_\+t\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_up_down_1_1_sim_u_d_runtime__t}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a7113c0fad105b40a81231139332c0061}{init\+Memory\+Arrays}} ()
+\begin{DoxyCompactList}\small\item\em Allocate memory for the simulation of the updown. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a1af458c531ea3297c7991facbed758fa}{Sim\+UDRuntime\+\_\+t}} ()
+\begin{DoxyCompactList}\small\item\em Construct a new \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t}{Sim\+UDRuntime\+\_\+t}} object. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_adc38b9beb3dcfc1abd60e11869894a97}{Sim\+UDRuntime\+\_\+t}} (\mbox{\hyperlink{struct_up_down_1_1ud__machine__t}{ud\+\_\+machine\+\_\+t}} machine\+Config)
+\begin{DoxyCompactList}\small\item\em Construct a new udruntime t object. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a4d07ad90b3cd6de2522c7e37ecdaf133}{start\+\_\+exec}} (uint8\+\_\+t ud\+\_\+id, uint8\+\_\+t lane\+\_\+num)
+\begin{DoxyCompactList}\small\item\em Start\+\_\+execution simulator. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_up_down_1_1_sim_u_d_runtime__t_ac5695332065439e720acec84ebcd8932}\label{class_up_down_1_1_sim_u_d_runtime__t_ac5695332065439e720acec84ebcd8932}} 
+uint8\+\_\+t $\ast$ {\bfseries Mapped\+Memory}
+\item 
+\mbox{\Hypertarget{class_up_down_1_1_sim_u_d_runtime__t_afd86a86a56eb7d5d8bb3ba6bca6861b6}\label{class_up_down_1_1_sim_u_d_runtime__t_afd86a86a56eb7d5d8bb3ba6bca6861b6}} 
+uint8\+\_\+t $\ast$ {\bfseries Scratchpad\+Memory}
+\item 
+\mbox{\Hypertarget{class_up_down_1_1_sim_u_d_runtime__t_a98801989caf662cc2561a5b8f398d7af}\label{class_up_down_1_1_sim_u_d_runtime__t_a98801989caf662cc2561a5b8f398d7af}} 
+uint8\+\_\+t $\ast$ {\bfseries Control\+Memory}
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+Wrapper class that allows simulation of runtime calls. 
+
+This class inherits from \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t}{UDRuntime\+\_\+t}}, and it overwrites the methods such that they can be simulated using a memory region.
+
+This class does not use polymorphism. It just oversubscribes the methods, wrapping the original implementation of the runtime 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_up_down_1_1_sim_u_d_runtime__t_a1af458c531ea3297c7991facbed758fa}\label{class_up_down_1_1_sim_u_d_runtime__t_a1af458c531ea3297c7991facbed758fa}} 
+\index{UpDown::SimUDRuntime\_t@{UpDown::SimUDRuntime\_t}!SimUDRuntime\_t@{SimUDRuntime\_t}}
+\index{SimUDRuntime\_t@{SimUDRuntime\_t}!UpDown::SimUDRuntime\_t@{UpDown::SimUDRuntime\_t}}
+\doxysubsubsection{\texorpdfstring{SimUDRuntime\_t()}{SimUDRuntime\_t()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::\+Sim\+UDRuntime\+\_\+t (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Construct a new \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t}{Sim\+UDRuntime\+\_\+t}} object. 
+
+This constructor calls \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a7113c0fad105b40a81231139332c0061}{init\+Memory\+Arrays()}} to set the simulated memory regions. 
+
+References \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a53609a9bdbc8caae702ea49684c0ea64}{Up\+Down\+::\+UDRuntime\+\_\+t\+::calc\+\_\+addrmap()}}, and \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a7113c0fad105b40a81231139332c0061}{init\+Memory\+Arrays()}}.
+
+\mbox{\Hypertarget{class_up_down_1_1_sim_u_d_runtime__t_adc38b9beb3dcfc1abd60e11869894a97}\label{class_up_down_1_1_sim_u_d_runtime__t_adc38b9beb3dcfc1abd60e11869894a97}} 
+\index{UpDown::SimUDRuntime\_t@{UpDown::SimUDRuntime\_t}!SimUDRuntime\_t@{SimUDRuntime\_t}}
+\index{SimUDRuntime\_t@{SimUDRuntime\_t}!UpDown::SimUDRuntime\_t@{UpDown::SimUDRuntime\_t}}
+\doxysubsubsection{\texorpdfstring{SimUDRuntime\_t()}{SimUDRuntime\_t()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::\+Sim\+UDRuntime\+\_\+t (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_up_down_1_1ud__machine__t}{ud\+\_\+machine\+\_\+t}}}]{machine\+Config }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Construct a new udruntime t object. 
+
+This constructor calls \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a7113c0fad105b40a81231139332c0061}{init\+Memory\+Arrays()}} to set the simulated memory regions. The pointers of ud\+\_\+machine\+\_\+t.\+Mapped\+Mem\+Base, ud\+\_\+machine\+\_\+t.\+UDbase ud\+\_\+machine\+\_\+t.\+SPMem\+Base and ud\+\_\+machine\+\_\+t.\+Control\+Base will be ignored and overwritten.
+
+
+\begin{DoxyParams}{Parameters}
+{\em machine\+Config} & Machine configuration \\
+\hline
+\end{DoxyParams}
+
+
+References \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a53609a9bdbc8caae702ea49684c0ea64}{Up\+Down\+::\+UDRuntime\+\_\+t\+::calc\+\_\+addrmap()}}, and \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a7113c0fad105b40a81231139332c0061}{init\+Memory\+Arrays()}}.
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_up_down_1_1_sim_u_d_runtime__t_a7113c0fad105b40a81231139332c0061}\label{class_up_down_1_1_sim_u_d_runtime__t_a7113c0fad105b40a81231139332c0061}} 
+\index{UpDown::SimUDRuntime\_t@{UpDown::SimUDRuntime\_t}!initMemoryArrays@{initMemoryArrays}}
+\index{initMemoryArrays@{initMemoryArrays}!UpDown::SimUDRuntime\_t@{UpDown::SimUDRuntime\_t}}
+\doxysubsubsection{\texorpdfstring{initMemoryArrays()}{initMemoryArrays()}}
+{\footnotesize\ttfamily void Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::init\+Memory\+Arrays (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Allocate memory for the simulation of the updown. 
+
+This function allocates the Mapped\+Memory, the Scratchpad memory and the Control Memory, used for the simulation. Then it changes the Machine\+Config object to use these pointers instead of the default ones for these three memory regions.
+
+\begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000005}{Todo}}]We are allocating the whole address space. We could behave more like a driver and translate it to the actual available memory. This means. It should not allocate the reserved space for expansion. \end{DoxyRefDesc}
+
+
+References \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{Up\+Down\+::\+UDRuntime\+\_\+t\+::\+Machine\+Config}}.
+
+
+
+Referenced by \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a1af458c531ea3297c7991facbed758fa}{Sim\+UDRuntime\+\_\+t()}}.
+
+\mbox{\Hypertarget{class_up_down_1_1_sim_u_d_runtime__t_a4d07ad90b3cd6de2522c7e37ecdaf133}\label{class_up_down_1_1_sim_u_d_runtime__t_a4d07ad90b3cd6de2522c7e37ecdaf133}} 
+\index{UpDown::SimUDRuntime\_t@{UpDown::SimUDRuntime\_t}!start\_exec@{start\_exec}}
+\index{start\_exec@{start\_exec}!UpDown::SimUDRuntime\_t@{UpDown::SimUDRuntime\_t}}
+\doxysubsubsection{\texorpdfstring{start\_exec()}{start\_exec()}}
+{\footnotesize\ttfamily void Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::start\+\_\+exec (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{ud\+\_\+id,  }\item[{uint8\+\_\+t}]{lane\+\_\+num }\end{DoxyParamCaption})}
+
+
+
+Start\+\_\+execution simulator. 
+
+\begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000006}{Todo}}]we should start the UD Emulator here\end{DoxyRefDesc}
+
+
+
+\begin{DoxyParams}{Parameters}
+{\em ud\+\_\+id} & \\
+\hline
+{\em lane\+\_\+num} & \\
+\hline
+\end{DoxyParams}
+
+
+References \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_af61e9f01022957944d9c74daf365c0a4}{Up\+Down\+::\+UDRuntime\+\_\+t\+::start\+\_\+exec()}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/josemonsalvediaz/\+Documents/\+Tmp/llvm-\/project/updown/simruntime/include/simupdown.\+h\item 
+/\+Users/josemonsalvediaz/\+Documents/\+Tmp/llvm-\/project/updown/simruntime/src/simupdown.\+cpp\end{DoxyCompactItemize}

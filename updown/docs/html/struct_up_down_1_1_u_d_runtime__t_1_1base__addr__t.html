@@ -95,65 +95,137 @@ $(document).ready(function(){initNavTree('struct_up_down_1_1_u_d_runtime__t_1_1b
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a349c4b32eff34c9705ab5ffd24692f97"><td class="memItemLeft" align="right" valign="top"><a id="a349c4b32eff34c9705ab5ffd24692f97" name="a349c4b32eff34c9705ab5ffd24692f97"></a>
-volatile ptr_t&#160;</td><td class="memItemRight" valign="bottom"><b>eaddr</b></td></tr>
-<tr class="separator:a349c4b32eff34c9705ab5ffd24692f97"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a903013ea204f3644688de6fbbbdf458f"><td class="memItemLeft" align="right" valign="top"><a id="a903013ea204f3644688de6fbbbdf458f" name="a903013ea204f3644688de6fbbbdf458f"></a>
-volatile ptr_t&#160;</td><td class="memItemRight" valign="bottom"><b>oaddr</b></td></tr>
-<tr class="separator:a903013ea204f3644688de6fbbbdf458f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afed23ed7d00ae09102c74bac63174118"><td class="memItemLeft" align="right" valign="top"><a id="afed23ed7d00ae09102c74bac63174118" name="afed23ed7d00ae09102c74bac63174118"></a>
-volatile ptr_t&#160;</td><td class="memItemRight" valign="bottom"><b>saddr</b></td></tr>
-<tr class="separator:afed23ed7d00ae09102c74bac63174118"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad1988aa21a8ecab6ae2cf25c927ac2f7"><td class="memItemLeft" align="right" valign="top"><a id="ad1988aa21a8ecab6ae2cf25c927ac2f7" name="ad1988aa21a8ecab6ae2cf25c927ac2f7"></a>
-volatile ptr_t&#160;</td><td class="memItemRight" valign="bottom"><b>sbaddr</b></td></tr>
-<tr class="separator:ad1988aa21a8ecab6ae2cf25c927ac2f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb4912b286796b942a0aca5ba8af3828"><td class="memItemLeft" align="right" valign="top"><a id="aeb4912b286796b942a0aca5ba8af3828" name="aeb4912b286796b942a0aca5ba8af3828"></a>
-volatile ptr_t&#160;</td><td class="memItemRight" valign="bottom"><b>exec</b></td></tr>
-<tr class="separator:aeb4912b286796b942a0aca5ba8af3828"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aae6db4b6e8fab0b7f6c5b5aeaa0a737e"><td class="memItemLeft" align="right" valign="top"><a id="aae6db4b6e8fab0b7f6c5b5aeaa0a737e" name="aae6db4b6e8fab0b7f6c5b5aeaa0a737e"></a>
-volatile ptr_t&#160;</td><td class="memItemRight" valign="bottom"><b>locks</b></td></tr>
-<tr class="separator:aae6db4b6e8fab0b7f6c5b5aeaa0a737e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94a9064647a84bd3720462ad04549ff5"><td class="memItemLeft" align="right" valign="top"><a id="a94a9064647a84bd3720462ad04549ff5" name="a94a9064647a84bd3720462ad04549ff5"></a>
+volatile ptr_t&#160;</td><td class="memItemRight" valign="bottom"><b>mmaddr</b></td></tr>
+<tr class="separator:a94a9064647a84bd3720462ad04549ff5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72f00e51c9fc72c4b93b25a8eb54a383"><td class="memItemLeft" align="right" valign="top"><a id="a72f00e51c9fc72c4b93b25a8eb54a383" name="a72f00e51c9fc72c4b93b25a8eb54a383"></a>
+volatile ptr_t&#160;</td><td class="memItemRight" valign="bottom"><b>spaddr</b></td></tr>
+<tr class="separator:a72f00e51c9fc72c4b93b25a8eb54a383"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52db53ae8c0f3ffd1ab148040f0dc9a9"><td class="memItemLeft" align="right" valign="top"><a id="a52db53ae8c0f3ffd1ab148040f0dc9a9" name="a52db53ae8c0f3ffd1ab148040f0dc9a9"></a>
+volatile ptr_t&#160;</td><td class="memItemRight" valign="bottom"><b>ctrlAddr</b></td></tr>
+<tr class="separator:a52db53ae8c0f3ffd1ab148040f0dc9a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Struct containing all the base addresses. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000003">Todo:</a></b></dt><dd>This should not be consecutive memory locations</dd></dl>
 <p >Base addresses are locations in memory where the top to updown communication happens.</p>
-<p >eaddr: Event Queue Addresses. One address per lane. writing to this address pushes a new event word into the queue oaddr: Operand Queue Addresses. One address per lane. writing to this address pushes a new operand word into the queue saddr: Scartchpad memory address base. points to the initial location of the scratchpad memory. sbaddr: StreamingBuffer memory address base. Points to the initial location of the streaming buffer memory. exec: Execute signals. Triggers event execution. Tells the lane that it can begin executing an updown event. One signal per lane. locks: Lock for the updown operands queue. Since operands must be inserted atomically into the operands queue, this lock guarantees atomicity in such operation. Queue is locked prior to inserting the operands, and unlocked after finishing inserting the operands. One lock per lane</p>
-<p >Current Memory Structure </p><pre class="fragment">   MEMORY       SIZE
-</pre><p> |-----------&mdash;| | | | SCRATCHPAD | NUMUDS * NUM_LANES * LMBANK_SIZE </p><table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadNone"></th></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"></td></tr>
-</table>
-<p>| STREAMING | NUMUDS * NUM_LANES * LMBANK_SIZE </p><table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadNone">BUFFERS    </th></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">-----------&mdash;    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"></td></tr>
-</table>
-<p>| EVENTS Q | NUMUDS * NUM_LANES </p><table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadNone"></th></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"></td></tr>
-</table>
-<p>| OPERANDS Q | NUMUDS * NUM_LANES </p><table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadNone"></th></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"></td></tr>
-</table>
-<p>| START EXEC | NUMUDS * NUM_LANES </p><table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadNone"></th></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"></td></tr>
-</table>
-<p>| LOCKS | NUMUDS * NUM_LANES | | |-----------&mdash;| </p>
-</div><hr/>The documentation for this struct was generated from the following file:<ul>
+<h2><a class="anchor" id="autotoc_md4"></a>
+Current Memory Structure</h2>
+<p >The memory is organized in two: Scratchpad memory and Control mapped registers and queues</p>
+<h3><a class="anchor" id="autotoc_md5"></a>
+Scratchpad memory address space</h3>
+<pre class="fragment">*        MEMORY                     SIZE
+*   |--------------|  &lt;-- Scratchpad Base Address
+*   |              |
+*   |   SPMEM UD0  |
+*   |              |
+*   |--------------|  &lt;-- CapacityPerLane * CapacityNumLanes
+*   |              |
+*   |   SPMEM UD1  |
+*   |              |
+*   |--------------|  &lt;-- 2 * CapacityPerLane * CapacityNumLanes
+*   |      ...     |
+*   |--------------|
+*   |              |
+*   |   SPMEM UDN  |
+*   |              |
+*   |--------------|  &lt;-- NumUDs * CapacityPerLane * CapacityNumLanes
+* </pre><h3><a class="anchor" id="autotoc_md6"></a>
+Scratchpad memory for 1 UD</h3>
+<pre class="fragment">*        MEMORY                     SIZE
+*   |--------------|  &lt;-- Scratchpad Base Address
+*   |              |
+*   |    Lane 0    |
+*   |              |
+*   |* * * * * * * |  &lt;-- SPmem BankSize
+*   | * * * * * * *|    |
+*   |* * * * * * * |    | For expansion purposes
+*   | * * * * * * *|    |
+*   |--------------|  &lt;-- CapacityPerLane
+*   |              |
+*   |    Lane 1    |
+*   |              |
+*   |* * * * * * * |  &lt;-- CapacityPerLane + SPmem BankSize
+*   | * * * * * * *|    |
+*   |* * * * * * * |    | For expansion purposes
+*   | * * * * * * *|    |
+*   |--------------|  &lt;-- 2 * CapacityPerLane
+*   |      ...     |
+*   |--------------|  &lt;-- (NumLanes-1)*CapacityPerLane
+*   |              |
+*   |    Lane N    |
+*   |              |
+*   |* * * * * * * |  &lt;-- (NumLanes-1)*CapacityPerLane + SPmem BankSize
+*   | * * * * * * *|    |
+*   |* * * * * * * |    | For expansion purposes
+*   | * * * * * * *|    |
+*   |--------------|  &lt;-- (NumLanes) * CapacityPerLane
+*   | * * * * * * *|
+*   |* * * * * * * |   -|
+*   | * * * * * * *|    | For expansion purposes
+*   |* * * * * * * |   -|
+*   | * * * * * * *|
+*   |--------------|  &lt;-- CapacityPerLane * CapacityNumLanes
+* </pre><h3><a class="anchor" id="autotoc_md7"></a>
+Control signals memory address space</h3>
+<pre class="fragment">*        MEMORY                     SIZE
+*   |--------------|  &lt;-- Control Base Address
+*   |              |
+*   |  CONTROL UD0 |
+*   |              |
+*   |--------------|  &lt;-- CapacityControlPerLane * CapacityNumLanes
+*   |              |
+*   |  CONTROL UD1 |
+*   |              |
+*   |--------------|  &lt;-- 2 * CapacityControlPerLane * CapacityNumLanes
+*   |      ...     |
+*   |--------------|
+*   |              |
+*   |  CONTROL UD2 |
+*   |              |
+*   |--------------|  &lt;-- NumUDs * CapacityControlPerLane * CapacityNumLanes
+* </pre><h3><a class="anchor" id="autotoc_md8"></a>
+Scratchpad memory for 1 UD</h3>
+<pre class="fragment">*        MEMORY                     SIZE
+*   |--------------|  &lt;-- Control Base Address
+*   |    Lane 0    |
+*   |  Event Queue |
+*   | Oprnds Queue |
+*   |  Start Exec  |
+*   |     Lock     |
+*   |* * * * * * * |   -|
+*   | * * * * * * *|    |
+*   |* * * * * * * |    | For expansion purposes
+*   | * * * * * * *|    |
+*   |--------------|  &lt;-- CapacityControlPerLane
+*   |    Lane 1    |
+*   |  Event Queue |
+*   | Oprnds Queue |
+*   |  Start Exec  |
+*   |     Lock     |
+*   |* * * * * * * |   -|
+*   | * * * * * * *|    |
+*   |* * * * * * * |    | For expansion purposes
+*   | * * * * * * *|    |
+*   |--------------|  &lt;-- 2 * CapacityControlPerLane
+*   |      ...     |
+*   |--------------|  &lt;-- (NumLanes-1) * CapacityControlPerLane
+*   |    Lane N    |
+*   |  Event Queue |
+*   | Oprnds Queue |
+*   |  Start Exec  |
+*   |     Lock     |
+*   |* * * * * * * |   -|
+*   | * * * * * * *|    |
+*   |* * * * * * * |    | For expansion purposes
+*   | * * * * * * *|    |
+*   |--------------|  &lt;-- NumLanes * CapacityControlPerLane
+*   | * * * * * * *|
+*   |* * * * * * * |   -|
+*   | * * * * * * *|    | For expansion purposes
+*   |* * * * * * * |   -|
+*   | * * * * * * *|
+*   |--------------|  &lt;-- CapacityControlPerLane * CapacityNumLanes
+* </pre> </div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>/Users/josemonsalvediaz/Documents/Tmp/llvm-project/updown/runtime/include/<a class="el" href="updown_8h_source.html">updown.h</a></li>
 </ul>
 </div><!-- contents -->

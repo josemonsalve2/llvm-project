@@ -108,8 +108,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a82bb035d6e694deee44a89eab676911a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_up_down_1_1event__t.html#a82bb035d6e694deee44a89eab676911a">set_event</a> (uint8_t e_label, uint8_t udid, uint8_t lid=0, uint8_t tid=ANY_THREAD, <a class="el" href="class_up_down_1_1operands__t.html">operands_t</a> *operands=nullptr)</td></tr>
 <tr class="memdesc:a82bb035d6e694deee44a89eab676911a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the event word object with new values.  <a href="class_up_down_1_1event__t.html#a82bb035d6e694deee44a89eab676911a">More...</a><br /></td></tr>
 <tr class="separator:a82bb035d6e694deee44a89eab676911a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adc88794ca0c1dc5b269aae78df8c64ee"><td class="memItemLeft" align="right" valign="top">word_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_up_down_1_1event__t.html#adc88794ca0c1dc5b269aae78df8c64ee">get_EventWord</a> ()</td></tr>
-<tr class="memdesc:adc88794ca0c1dc5b269aae78df8c64ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the event word object.  <a href="class_up_down_1_1event__t.html#adc88794ca0c1dc5b269aae78df8c64ee">More...</a><br /></td></tr>
+<tr class="memitem:adc88794ca0c1dc5b269aae78df8c64ee"><td class="memItemLeft" align="right" valign="top"><a id="adc88794ca0c1dc5b269aae78df8c64ee" name="adc88794ca0c1dc5b269aae78df8c64ee"></a>
+word_t&#160;</td><td class="memItemRight" valign="bottom"><b>get_EventWord</b> ()</td></tr>
 <tr class="separator:adc88794ca0c1dc5b269aae78df8c64ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a00d3a9196502424e96ab7a4b69831b9a"><td class="memItemLeft" align="right" valign="top"><a id="a00d3a9196502424e96ab7a4b69831b9a" name="a00d3a9196502424e96ab7a4b69831b9a"></a>
 <a class="el" href="class_up_down_1_1operands__t.html">operands_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>get_Operands</b> ()</td></tr>
@@ -160,7 +160,9 @@ word_t&#160;</td><td class="memItemRight" valign="bottom"><b>EventWord</b></td><
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Contains information of an event in the UpDown. </p>
 <p >This class constructs the information of the event word based on each of its parameters. It also contains a pointer to the operands that is used when sending the event</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000001">Todo:</a></b></dt><dd>the event word may not be needed the lane_id. </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000001">Todo:</a></b></dt><dd><p class="startdd">UpDown ID is not being used </p>
+<p class="enddd">, <a class="el" href="class_up_down_1_1event__t.html" title="Contains information of an event in the UpDown.">event_t</a> considers a 4 byte word size </p>
+</dd></dl>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a1136178568e8e060cd5878d5a06157cf" name="a1136178568e8e060cd5878d5a06157cf"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1136178568e8e060cd5878d5a06157cf">&#9670;&nbsp;</a></span>event_t()</h2>
@@ -231,36 +233,6 @@ word_t&#160;</td><td class="memItemRight" valign="bottom"><b>EventWord</b></td><
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="adc88794ca0c1dc5b269aae78df8c64ee" name="adc88794ca0c1dc5b269aae78df8c64ee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adc88794ca0c1dc5b269aae78df8c64ee">&#9670;&nbsp;</a></span>get_EventWord()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">word_t UpDown::event_t::get_EventWord </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Get the event word object. </p>
-<dl class="section return"><dt>Returns</dt><dd>word_t with the event word </dd></dl>
-
-<p class="reference">Referenced by <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#af58fb869d8558462617fa84bf83bb595">UpDown::UDRuntime_t::send_event()</a>.</p>
-
-</div>
-</div>
 <a id="a82bb035d6e694deee44a89eab676911a" name="a82bb035d6e694deee44a89eab676911a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a82bb035d6e694deee44a89eab676911a">&#9670;&nbsp;</a></span>set_event()</h2>
 

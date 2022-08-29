@@ -1,0 +1,105 @@
+\hypertarget{class_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t}{}\doxysection{Up\+Down\+::UDRuntime\+\_\+t\+::ud\+\_\+mapped\+\_\+memory\+\_\+t Class Reference}
+\label{class_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t}\index{UpDown::UDRuntime\_t::ud\_mapped\_memory\_t@{UpDown::UDRuntime\_t::ud\_mapped\_memory\_t}}
+
+
+This is a class to manage the mapped memory.  
+
+
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t_1_1mem__region__t}{mem\+\_\+region\+\_\+t}}
+\begin{DoxyCompactList}\small\item\em A region in memory. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t_a929c8ff3f9a0c45dfec467c86a4124d8}{ud\+\_\+mapped\+\_\+memory\+\_\+t}} (\mbox{\hyperlink{struct_up_down_1_1ud__machine__t}{ud\+\_\+machine\+\_\+t}} \&machine)
+\begin{DoxyCompactList}\small\item\em Construct a new \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t}{ud\+\_\+mapped\+\_\+memory\+\_\+t}} object. \end{DoxyCompactList}\item 
+void $\ast$ \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t_a9a299c4ef46734c99eb39f00052e1ca6}{get\+\_\+region}} (uint64\+\_\+t size)
+\begin{DoxyCompactList}\small\item\em Get a new region in memory. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t_adc9c872b795c000490acf4f5e350aa35}{remove\+\_\+region}} (void $\ast$ptr)
+\begin{DoxyCompactList}\small\item\em Remove a region. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t_a3bcd65ec1453a70138374696dfacb4d2}\label{class_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t_a3bcd65ec1453a70138374696dfacb4d2}} 
+std\+::map$<$ void $\ast$, \mbox{\hyperlink{struct_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t_1_1mem__region__t}{mem\+\_\+region\+\_\+t}} $>$ {\bfseries regions}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This is a class to manage the mapped memory. 
+
+This class cosiders memory allocation and deallocation it contains all the information needed to do this. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t_a929c8ff3f9a0c45dfec467c86a4124d8}\label{class_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t_a929c8ff3f9a0c45dfec467c86a4124d8}} 
+\index{UpDown::UDRuntime\_t::ud\_mapped\_memory\_t@{UpDown::UDRuntime\_t::ud\_mapped\_memory\_t}!ud\_mapped\_memory\_t@{ud\_mapped\_memory\_t}}
+\index{ud\_mapped\_memory\_t@{ud\_mapped\_memory\_t}!UpDown::UDRuntime\_t::ud\_mapped\_memory\_t@{UpDown::UDRuntime\_t::ud\_mapped\_memory\_t}}
+\doxysubsubsection{\texorpdfstring{ud\_mapped\_memory\_t()}{ud\_mapped\_memory\_t()}}
+{\footnotesize\ttfamily Up\+Down\+::\+UDRuntime\+\_\+t\+::ud\+\_\+mapped\+\_\+memory\+\_\+t\+::ud\+\_\+mapped\+\_\+memory\+\_\+t (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_up_down_1_1ud__machine__t}{ud\+\_\+machine\+\_\+t}} \&}]{machine }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Construct a new \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t}{ud\+\_\+mapped\+\_\+memory\+\_\+t}} object. 
+
+Initializes the regions with a single region that is free and contains all the elements
+
+
+\begin{DoxyParams}{Parameters}
+{\em machine} & information from the description of the current machine \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t_a9a299c4ef46734c99eb39f00052e1ca6}\label{class_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t_a9a299c4ef46734c99eb39f00052e1ca6}} 
+\index{UpDown::UDRuntime\_t::ud\_mapped\_memory\_t@{UpDown::UDRuntime\_t::ud\_mapped\_memory\_t}!get\_region@{get\_region}}
+\index{get\_region@{get\_region}!UpDown::UDRuntime\_t::ud\_mapped\_memory\_t@{UpDown::UDRuntime\_t::ud\_mapped\_memory\_t}}
+\doxysubsubsection{\texorpdfstring{get\_region()}{get\_region()}}
+{\footnotesize\ttfamily void $\ast$ Up\+Down\+::\+UDRuntime\+\_\+t\+::ud\+\_\+mapped\+\_\+memory\+\_\+t\+::get\+\_\+region (\begin{DoxyParamCaption}\item[{uint64\+\_\+t}]{size }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get a new region in memory. 
+
+This is equivalent to malloc, it finds a free region that can allocate the current size, and, if there is free space left, it creates a new region with the remaining free space.
+
+
+\begin{DoxyParams}{Parameters}
+{\em size} & size to be allocated \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void$\ast$ pointer to the allocated memory 
+\end{DoxyReturn}
+
+
+Referenced by \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a3f6d1895e3d1ad7fc40b918154a027ad}{Up\+Down\+::\+UDRuntime\+\_\+t\+::mm\+\_\+malloc()}}.
+
+\mbox{\Hypertarget{class_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t_adc9c872b795c000490acf4f5e350aa35}\label{class_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t_adc9c872b795c000490acf4f5e350aa35}} 
+\index{UpDown::UDRuntime\_t::ud\_mapped\_memory\_t@{UpDown::UDRuntime\_t::ud\_mapped\_memory\_t}!remove\_region@{remove\_region}}
+\index{remove\_region@{remove\_region}!UpDown::UDRuntime\_t::ud\_mapped\_memory\_t@{UpDown::UDRuntime\_t::ud\_mapped\_memory\_t}}
+\doxysubsubsection{\texorpdfstring{remove\_region()}{remove\_region()}}
+{\footnotesize\ttfamily void Up\+Down\+::\+UDRuntime\+\_\+t\+::ud\+\_\+mapped\+\_\+memory\+\_\+t\+::remove\+\_\+region (\begin{DoxyParamCaption}\item[{void $\ast$}]{ptr }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Remove a region. 
+
+This is equivalent to free. It removes a region from the map and extends the region before or after this one if they are free. Otherwise it creates a new free region
+
+
+\begin{DoxyParams}{Parameters}
+{\em ptr} & Pointer to be free. It must be a pointer in the regions map \\
+\hline
+\end{DoxyParams}
+
+
+Referenced by \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_aa02ee38bf2166f297f40176c88485c1a}{Up\+Down\+::\+UDRuntime\+\_\+t\+::mm\+\_\+free()}}.
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/josemonsalvediaz/\+Documents/\+Tmp/llvm-\/project/updown/runtime/include/updown.\+h\end{DoxyCompactItemize}
