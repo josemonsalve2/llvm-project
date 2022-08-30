@@ -23,12 +23,12 @@ void SimUDRuntime_t::initMemoryArrays() {
 
   // Changing the base locations for the simulated memory regions
   this->MachineConfig.MapMemBase = reinterpret_cast<uint64_t>(MappedMemory);
-  UPDOWN_INFOMSG("MapMemBase changed to 0x%lX", MappedMemory);
+  UPDOWN_INFOMSG("MapMemBase changed to 0x%lX", this->MachineConfig.MapMemBase);
   this->MachineConfig.UDbase = reinterpret_cast<uint64_t>(ScratchpadMemory);
   this->MachineConfig.SPMemBase = reinterpret_cast<uint64_t>(ScratchpadMemory);
-  UPDOWN_INFOMSG("SPMemBase and UDbase changed to 0x%lX", ScratchpadMemory);
+  UPDOWN_INFOMSG("SPMemBase and UDbase changed to 0x%lX", this->MachineConfig.SPMemBase);
   this->MachineConfig.ControlBase = reinterpret_cast<uint64_t>(ControlMemory);
-  UPDOWN_INFOMSG("ControlBase changed to 0x%lX", ControlMemory);
+  UPDOWN_INFOMSG("ControlBase changed to 0x%lX", this->MachineConfig.ControlBase);
 }
 
 void SimUDRuntime_t::start_exec(uint8_t ud_id, uint8_t lane_num) {

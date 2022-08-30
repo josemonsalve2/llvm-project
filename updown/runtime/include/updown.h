@@ -179,11 +179,11 @@ public:
   /**
    * @brief Construct a new event_t object
    *
-   * @param e_label
-   * @param udid
-   * @param lid
-   * @param tid
-   * @param operands
+   * @param e_label Event label ID
+   * @param udid Up Down ID
+   * @param lid Lane ID
+   * @param tid Thread ID
+   * @param operands Pointer to operands. Must be pre-initialized
    */
   event_t(uint8_t e_label, uint8_t udid, uint8_t lid = 0,
           uint8_t tid = ANY_THREAD, operands_t *operands = nullptr)
@@ -474,11 +474,11 @@ private:
      * can allocate the current size, and, if there is free space
      * left, it creates a new region with the remaining free space.
      *
-     * @param size size to be allocated
+     * @param size size to be allocated in bytes.
      * @return void* pointer to the allocated memory
      */
     void *get_region(uint64_t size) {
-      UPDOWN_INFOMSG("Allocating new region of size %u", size); 
+      UPDOWN_INFOMSG("Allocating new region of size %lu bytes", size); 
       // Iterate over the regions finding one that fits
       auto used_reg = regions.end();
       for (auto it = regions.begin(); it != regions.end(); ++it) {
@@ -609,9 +609,9 @@ protected:
   /**
    * @brief Get the aligned offset object
    *
-   * @param ud_id
-   * @param lane_num
-   * @param offset
+   * @param ud_id UpDown ID
+   * @param lane_num Lane ID
+   * @param offset Offset in bytes
    * @return uint64_t
    */
   uint64_t inline get_lane_aligned_offset(uint8_t ud_id, uint8_t lane_num,
@@ -663,7 +663,7 @@ public:
    *
    * @todo: This should be thread safe?
    *
-   * @param size size in words
+   * @param size size in bytes
    * @return void * Pointer to the location.
    */
 
@@ -680,8 +680,7 @@ public:
    *
    * @todo: This should be thread safe?
    *
-   * @param size size in words
-   * @return void * Pointer to the location.
+   * @param ptr pointer to deallocate
    */
 
   void mm_free(void *ptr);
@@ -724,29 +723,27 @@ public:
    * This function sends data to the bank associated with the lane_num
    * The address is calculated based on the offset.
    *
+   * @param data pointer to the top data to be copied over to the lane
+   * @param size The number of words to be copied to the scratchpad
+   * memory
    * @param ud_id UpDown number
    * @param lane_num lane bank
-   * @param offset offset within bank
-   * @param size_num_words The number of words to be copied to the scratchpad
-   * memory
-   * @param data pointer to the top data to be copied over to the lane
+   * @param offset offset within bank in bytes
    */
-  void t2ud_memcpy(uint8_t ud_id, uint8_t lane_num, uint32_t offset = 0,
-                   uint64_t size = 1, ptr_t data = nullptr);
+  void t2ud_memcpy(ptr_t data, uint64_t size, uint8_t ud_id, uint8_t lane_num, uint32_t offset);
 
   /**
    * @brief Copy data from the scratchpad memory to the top
    *
-   * @param ud_id UpDown number
-   * @param lane_num lane bank
-   * @param offset offset within bank
-   * @param size_num_words The number of words to be copied from the scratchpad
-   * memory
    * @param data pointer to the top data to be contain values from the
    * scratchpad memory
+   * @param size The number of words to be copied from the scratchpad
+   * memory
+   * @param ud_id UpDown number
+   * @param lane_num lane bank
+   * @param offset offset within bank in bytes
    */
-  void ud2t_memcpy(uint8_t ud_id, uint8_t lane_num, uint32_t offset = 0,
-                   uint64_t size = 1, ptr_t data = nullptr);
+  void ud2t_memcpy(ptr_t data, uint64_t size, uint8_t ud_id, uint8_t lane_num, uint32_t offset);
 
   /**
    * @brief Test a memory location in the updwon bank for the expected value
@@ -756,11 +753,11 @@ public:
    *
    * @param ud_id UpDown number
    * @param lane_num LaneID to check
-   * @param offset offset within the memory bank
+   * @param offset offset within the memory bank in bytes
    * @param expected value that is expected in the memory bank
    * @return word_t
    */
-  bool test_addr(uint8_t ud_id, uint8_t lane_num, uint32_t offset = 0,
+  bool test_addr(uint8_t ud_id, uint8_t lane_num, uint32_t offset,
                  word_t expected = 1);
 
   /**
@@ -771,10 +768,10 @@ public:
    * value read is the expected value. Uses lane_test_memory.
    *
    * @param lane_num LaneID to check
-   * @param offset offset within the memory bank
+   * @param offset offset within the memory bank in bytes
    * @param expected value that is expected in the memory bank
    */
-  void test_wait_addr(uint8_t ud_id, uint8_t lane_num, uint32_t offset = 0,
+  void test_wait_addr(uint8_t ud_id, uint8_t lane_num, uint32_t offset,
                       word_t expected = 1);
 
   /**
