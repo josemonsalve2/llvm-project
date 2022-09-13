@@ -44,9 +44,6 @@ private:
 
   bool requiresFullRuntime() const { return RequiresFullRuntime; }
 
-  /// Get barrier to synchronize all threads in a block.
-  void syncCTAThreads(CodeGenFunction &CGF);
-
   /// Helper for target directive initialization.
   void emitKernelInit(CodeGenFunction &CGF, EntryFunctionState &EST,
                       bool IsSPMD);
@@ -72,19 +69,6 @@ private:
                           uint64_t Size, int32_t Flags,
                           llvm::GlobalValue::LinkageTypes Linkage) override;
 
-  /// Emit outlined function specialized for the Fork-Join
-  /// programming model for applicable target directives on the NVPTX device.
-  /// \param D Directive to emit.
-  /// \param ParentName Name of the function that encloses the target region.
-  /// \param OutlinedFn Outlined function value to be defined by this call.
-  /// \param OutlinedFnID Outlined function ID value to be defined by this call.
-  /// \param IsOffloadEntry True if the outlined function is an offload entry.
-  /// An outlined function may not be an entry if, e.g. the if clause always
-  /// evaluates to false.
-  void emitNonSPMDKernel(const OMPExecutableDirective &D, StringRef ParentName,
-                         llvm::Function *&OutlinedFn,
-                         llvm::Constant *&OutlinedFnID, bool IsOffloadEntry,
-                         const RegionCodeGenTy &CodeGen);
 
   /// Emit outlined function specialized for the Single Program
   /// Multiple Data programming model for applicable target directives on the
@@ -118,37 +102,6 @@ private:
                                   bool IsOffloadEntry,
                                   const RegionCodeGenTy &CodeGen) override;
 
-  /// Emits code for parallel or serial call of the \a OutlinedFn with
-  /// variables captured in a record which address is stored in \a
-  /// CapturedStruct.
-  /// This call is for the Non-SPMD Execution Mode.
-  /// \param OutlinedFn Outlined function to be run in parallel threads. Type of
-  /// this function is void(*)(kmp_int32 *, kmp_int32, struct context_vars*).
-  /// \param CapturedVars A pointer to the record with the references to
-  /// variables used in \a OutlinedFn function.
-  /// \param IfCond Condition in the associated 'if' clause, if it was
-  /// specified, nullptr otherwise.
-  void emitNonSPMDParallelCall(CodeGenFunction &CGF, SourceLocation Loc,
-                               llvm::Value *OutlinedFn,
-                               ArrayRef<llvm::Value *> CapturedVars,
-                               const Expr *IfCond);
-
-  /// Emits code for parallel or serial call of the \a OutlinedFn with
-  /// variables captured in a record which address is stored in \a
-  /// CapturedStruct.
-  /// This call is for a parallel directive within an SPMD target directive.
-  /// \param OutlinedFn Outlined function to be run in parallel threads. Type of
-  /// this function is void(*)(kmp_int32 *, kmp_int32, struct context_vars*).
-  /// \param CapturedVars A pointer to the record with the references to
-  /// variables used in \a OutlinedFn function.
-  /// \param IfCond Condition in the associated 'if' clause, if it was
-  /// specified, nullptr otherwise.
-  ///
-  void emitSPMDParallelCall(CodeGenFunction &CGF, SourceLocation Loc,
-                            llvm::Function *OutlinedFn,
-                            ArrayRef<llvm::Value *> CapturedVars,
-                            const Expr *IfCond);
-
 protected:
   /// Get the function name of an outlined region.
   //  The name can be customized depending on the target.
@@ -170,19 +123,6 @@ protected:
 public:
   explicit CGOpenMPRuntimeColossus(CodeGenModule &CGM);
   void clear() override;
-
-  /// Declare generalized virtual functions which need to be defined
-  /// by all specializations of OpenMPGPURuntime Targets like AMDGCN
-  /// and NVPTX.
-
-  /// Get the GPU warp size.
-  llvm::Value *getGPUWarpSize(CodeGenFunction &CGF);
-
-  /// Get the id of the current thread on the GPU.
-  llvm::Value *getGPUThreadID(CodeGenFunction &CGF);
-
-  /// Get the maximum number of threads in a block of the GPU.
-  llvm::Value *getGPUNumThreads(CodeGenFunction &CGF);
 
   /// Emit call to void __kmpc_push_proc_bind(ident_t *loc, kmp_int32
   /// global_tid, int proc_bind) to generate code for 'proc_bind' clause.
