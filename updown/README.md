@@ -31,15 +31,39 @@ cmake -G Ninja                     \
 ## Building runtime only
 
 ```
-mkdir build_standalone && cd build
+mkdir build_standalone && cd build_standalone
 cmake -G Ninja               \
-../llvm/updown/  \
+../llvm/updown/              \
 -DUPDOWNRT_ENABLE_TESTS=ON   \
--DUPDOWN_ENABLE_DEBUG=ON
+-DUPDOWN_ENABLE_DEBUG=ON     \
+-DCMAKE_INSTALL_PREFIX=../install #Change to path to install
 ```
 
 The `-DUPDOWN_ENABLE_DEBUG` flag is used to enable debbuging messages 
 in the runtime system. Feel free to remove it. 
+
+The `-DCMAKE_INSTALL_PREFIX=` determins the installation prefix. 
+
+### Example code
+
+Using the following code:
+
+```
+#include "updown.h"
+
+
+int main() {
+        UpDown::UDRuntime_t myRt();
+
+        return 0;
+}
+```
+
+You can build it with the following command
+
+```
+g++ -static main.cc -Iinstall/updown/include/ install/updown/lib/libUpDownRuntimeStatic.a 
+```
 
 ## Current content
 
