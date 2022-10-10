@@ -96,6 +96,8 @@ if(LLVM_ENABLE_PLUGINS)
   )
 
   install(FILES templates/python.jinja DESTINATION templates)
+else()
+  install(FILES common/include/debug.h DESTINATION ${UPDOWN_HEADERS_INSTALL_PATH})
 endif()
 
 ## Building runtime system

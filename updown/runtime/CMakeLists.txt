@@ -2,6 +2,8 @@
 
 
   add_library(UpDownRuntime SHARED src/updown.cpp)
+  add_library(UpDownRuntimeStatic SHARED src/updown.cpp)
+
   include_directories(BEFORE
     include
   )
@@ -21,6 +23,10 @@
       RUNTIME DESTINATION ${UPDOWN_RUNTIME_BIN}
       INCLUDES DESTINATION ${UPDOWN_RUNTIME_HEADERS_INSTALL_PATH}
       PUBLIC_HEADER DESTINATION ${UPDOWN_RUNTIME_HEADERS_INSTALL_PATH}
+  )
+
+  INSTALL(TARGETS UpDownRuntimeStatic
+      LIBRARY DESTINATION ${UPDOWN_RUNTIME_LIB}
   )
 
   add_subdirectory(tests)
