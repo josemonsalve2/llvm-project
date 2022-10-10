@@ -1,0 +1,98 @@
+This repository contains software for Up\+Down using LLVM.\hypertarget{md___users_josemonsalvediaz__documents__project38_llvm_updown__r_e_a_d_m_e_autotoc_md1}{}\doxysection{Building LLVM}\label{md___users_josemonsalvediaz__documents__project38_llvm_updown__r_e_a_d_m_e_autotoc_md1}
+To enable the project it is necessary to add \char`\"{}updown\char`\"{} to the list of {\ttfamily -\/DLLVM\+\_\+\+ENABLE\+\_\+\+PROJECTS=}. See the following example. The important option is the last line
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git clone https://www.github.com/josemonsalve2/llvm-\/project}
+\DoxyCodeLine{git checkout updown-\/recode}
+\DoxyCodeLine{mkdir build \&\& cd build}
+\DoxyCodeLine{cmake -\/G Ninja                     \(\backslash\)}
+\DoxyCodeLine{../llvm/llvm/              \(\backslash\)}
+\DoxyCodeLine{-\/DCMAKE\_BUILD\_TYPE=Release         \(\backslash\)}
+\DoxyCodeLine{-\/DCMAKE\_INSTALL\_PREFIX=../install  \(\backslash\)}
+\DoxyCodeLine{-\/DCMAKE\_C\_COMPILER=gcc             \(\backslash\)}
+\DoxyCodeLine{-\/DCMAKE\_CXX\_COMPILER=g++           \(\backslash\)}
+\DoxyCodeLine{-\/DLLVM\_APPEND\_VC\_REV=OFF           \(\backslash\)}
+\DoxyCodeLine{-\/DLLVM\_ENABLE\_ASSERTIONS=ON        \(\backslash\)}
+\DoxyCodeLine{-\/DBUILD\_SHARED\_LIBS=ON             \(\backslash\)}
+\DoxyCodeLine{-\/DLLVM\_OPTIMIZED\_TABLEGEN=ON       \(\backslash\)}
+\DoxyCodeLine{-\/DLLVM\_CCACHE\_BUILD=ON             \(\backslash\)}
+\DoxyCodeLine{-\/DCLANG\_ENABLE\_STATIC\_ANALYZER=ON  \(\backslash\)}
+\DoxyCodeLine{-\/DCLANG\_BUILD\_EXAMPLES=ON          \(\backslash\)}
+\DoxyCodeLine{-\/DLLVM\_ENABLE\_PLUGINS=ON           \(\backslash\)}
+\DoxyCodeLine{-\/DCLANG\_PLUGIN\_SUPPORT=ON          \(\backslash\)}
+\DoxyCodeLine{-\/DLLVM\_ENABLE\_PROJECTS="{}clang;updown"{}}
+
+\end{DoxyCode}
+\hypertarget{md___users_josemonsalvediaz__documents__project38_llvm_updown__r_e_a_d_m_e_autotoc_md2}{}\doxysection{Building runtime only}\label{md___users_josemonsalvediaz__documents__project38_llvm_updown__r_e_a_d_m_e_autotoc_md2}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{mkdir build\_standalone \&\& cd build\_standalone}
+\DoxyCodeLine{cmake -\/G Ninja               \(\backslash\)}
+\DoxyCodeLine{../llvm/updown/              \(\backslash\)}
+\DoxyCodeLine{-\/DUPDOWNRT\_ENABLE\_TESTS=ON   \(\backslash\)}
+\DoxyCodeLine{-\/DUPDOWN\_ENABLE\_DEBUG=ON     \(\backslash\)}
+\DoxyCodeLine{-\/DCMAKE\_INSTALL\_PREFIX=../install \#Change to path to install}
+
+\end{DoxyCode}
+
+
+The {\ttfamily -\/DUPDOWN\+\_\+\+ENABLE\+\_\+\+DEBUG} flag is used to enable debbuging messages in the runtime system. Feel free to remove it.
+
+The {\ttfamily -\/DCMAKE\+\_\+\+INSTALL\+\_\+\+PREFIX=} determins the installation prefix.\hypertarget{md___users_josemonsalvediaz__documents__project38_llvm_updown__r_e_a_d_m_e_autotoc_md3}{}\doxysubsection{Example code}\label{md___users_josemonsalvediaz__documents__project38_llvm_updown__r_e_a_d_m_e_autotoc_md3}
+Using the following code\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\#include "{}updown.h"{}}
+\DoxyCodeLine{}
+\DoxyCodeLine{}
+\DoxyCodeLine{int main() \{}
+\DoxyCodeLine{        UpDown::UDRuntime\_t myRt();}
+\DoxyCodeLine{}
+\DoxyCodeLine{        return 0;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+You can build it with the following command
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{g++ -\/static main.cc -\/Iinstall/updown/include/ install/updown/lib/libUpDownRuntimeStatic.a }
+
+\end{DoxyCode}
+\hypertarget{md___users_josemonsalvediaz__documents__project38_llvm_updown__r_e_a_d_m_e_autotoc_md4}{}\doxysection{Current content}\label{md___users_josemonsalvediaz__documents__project38_llvm_updown__r_e_a_d_m_e_autotoc_md4}
+\tabulinesep=1mm
+\begin{longtabu}spread 0pt [c]{*{2}{|X[-1]}|}
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Name   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-2}
+\endfirsthead
+\hline
+\endfoot
+\hline
+\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Name   }&\PBS\centering \cellcolor{\tableheadbgcolor}\textbf{ Description    }\\\cline{1-2}
+\endhead
+Python\+Sytanx Plugin   &Plugin that allows to embed python code that describe a Codelet in the Up\+Down    \\\cline{1-2}
+Up\+Down Runtime   &Top runtime for the Up\+Down infrastructure    \\\cline{1-2}
+Simulated Up\+Down Runtime   &Wrapper class that uses the updown runtime, but simulates the Up\+Down hardware (Under development)   \\\cline{1-2}
+\end{longtabu}
+\hypertarget{md___users_josemonsalvediaz__documents__project38_llvm_updown__r_e_a_d_m_e_autotoc_md5}{}\doxysubsection{Python Syntax}\label{md___users_josemonsalvediaz__documents__project38_llvm_updown__r_e_a_d_m_e_autotoc_md5}
+The updown syntax plugin allows to inline python code that describes a Codelet into C++. It translates this Code to a single python file that can be used to call the emulator. On the C++ world syntax will be changed to use the updown runtime.
+
+Example code\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{[[clang::syntax(UpDownPython)]] void f() \{}
+\DoxyCodeLine{    All this will be moved to python. Use python code}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{int main() \{}
+\DoxyCodeLine{    f();}
+\DoxyCodeLine{    return 0;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ 

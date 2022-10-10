@@ -25,10 +25,13 @@
 var NAVTREE =
 [
   [ "UpDown Runtime", "index.html", [
-    [ "UpDown recode project", "md___users_josemonsalvediaz__documents__tmp_llvm_project_updown__r_e_a_d_m_e.html", [
-      [ "Building", "md___users_josemonsalvediaz__documents__tmp_llvm_project_updown__r_e_a_d_m_e.html#autotoc_md1", null ],
-      [ "Current content", "md___users_josemonsalvediaz__documents__tmp_llvm_project_updown__r_e_a_d_m_e.html#autotoc_md2", [
-        [ "Python Syntax", "md___users_josemonsalvediaz__documents__tmp_llvm_project_updown__r_e_a_d_m_e.html#autotoc_md3", null ]
+    [ "UpDown recode project", "md___users_josemonsalvediaz__documents__project38_llvm_updown__r_e_a_d_m_e.html", [
+      [ "Building LLVM", "md___users_josemonsalvediaz__documents__project38_llvm_updown__r_e_a_d_m_e.html#autotoc_md1", null ],
+      [ "Building runtime only", "md___users_josemonsalvediaz__documents__project38_llvm_updown__r_e_a_d_m_e.html#autotoc_md2", [
+        [ "Example code", "md___users_josemonsalvediaz__documents__project38_llvm_updown__r_e_a_d_m_e.html#autotoc_md3", null ]
+      ] ],
+      [ "Current content", "md___users_josemonsalvediaz__documents__project38_llvm_updown__r_e_a_d_m_e.html#autotoc_md4", [
+        [ "Python Syntax", "md___users_josemonsalvediaz__documents__project38_llvm_updown__r_e_a_d_m_e.html#autotoc_md5", null ]
       ] ]
     ] ],
     [ "Todo List", "todo.html", null ],

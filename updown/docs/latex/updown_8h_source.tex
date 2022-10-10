@@ -1,5 +1,5 @@
 \hypertarget{updown_8h_source}{}\doxysection{updown.\+h}
-\label{updown_8h_source}\index{/Users/josemonsalvediaz/Documents/Tmp/llvm-\/project/updown/runtime/include/updown.h@{/Users/josemonsalvediaz/Documents/Tmp/llvm-\/project/updown/runtime/include/updown.h}}
+\label{updown_8h_source}\index{/Users/josemonsalvediaz/Documents/Project38/llvm/updown/runtime/include/updown.h@{/Users/josemonsalvediaz/Documents/Project38/llvm/updown/runtime/include/updown.h}}
 
 \begin{DoxyCode}{0}
 \DoxyCodeLine{1 \textcolor{comment}{/*}}
@@ -230,7 +230,7 @@
 \DoxyCodeLine{468     \}}
 \DoxyCodeLine{469 }
 \DoxyCodeLine{480     \textcolor{keywordtype}{void} *\mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t_a9a299c4ef46734c99eb39f00052e1ca6}{get\_region}}(uint64\_t size) \{}
-\DoxyCodeLine{481       UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Allocating new region of size \%u"{}}, size); }
+\DoxyCodeLine{481       UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Allocating new region of size \%lu bytes"{}}, size); }
 \DoxyCodeLine{482       \textcolor{comment}{// Iterate over the regions finding one that fits}}
 \DoxyCodeLine{483       \textcolor{keyword}{auto} used\_reg = regions.end();}
 \DoxyCodeLine{484       \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} it = regions.begin(); it != regions.end(); ++it) \{}
@@ -347,71 +347,69 @@
 \DoxyCodeLine{654 }
 \DoxyCodeLine{670   \textcolor{keywordtype}{void} *\mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a3f6d1895e3d1ad7fc40b918154a027ad}{mm\_malloc}}(uint64\_t size);}
 \DoxyCodeLine{671 }
-\DoxyCodeLine{687   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_aa02ee38bf2166f297f40176c88485c1a}{mm\_free}}(\textcolor{keywordtype}{void} *ptr);}
-\DoxyCodeLine{688 }
-\DoxyCodeLine{703   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_afc78cfc10527725c84302dbe3e2f7e07}{t2mm\_memcpy}}(uint64\_t offset, ptr\_t src, uint64\_t size = 1);}
-\DoxyCodeLine{704 }
-\DoxyCodeLine{719   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a27b3b73d185c6590aff7cf9c514a5430}{mm2t\_memcpy}}(uint64\_t offset, ptr\_t dst, uint64\_t size = 1);}
-\DoxyCodeLine{720 }
-\DoxyCodeLine{734   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a93b3e5b12ee89770e304d59096ec3e0e}{t2ud\_memcpy}}(uint8\_t ud\_id, uint8\_t lane\_num, uint32\_t offset = 0,}
-\DoxyCodeLine{735                    uint64\_t size = 1, ptr\_t data = \textcolor{keyword}{nullptr});}
-\DoxyCodeLine{736 }
-\DoxyCodeLine{748   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_acec41322cbbda9eca288e4b9dc55cb1c}{ud2t\_memcpy}}(uint8\_t ud\_id, uint8\_t lane\_num, uint32\_t offset = 0,}
-\DoxyCodeLine{749                    uint64\_t size = 1, ptr\_t data = \textcolor{keyword}{nullptr});}
-\DoxyCodeLine{750 }
-\DoxyCodeLine{763   \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_aaf49c9966289724fd6496ff9d47782fc}{test\_addr}}(uint8\_t ud\_id, uint8\_t lane\_num, uint32\_t offset = 0,}
-\DoxyCodeLine{764                  word\_t expected = 1);}
-\DoxyCodeLine{765 }
-\DoxyCodeLine{777   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a937c2ca96d115ed63c54d0dafca8e7d3}{test\_wait\_addr}}(uint8\_t ud\_id, uint8\_t lane\_num, uint32\_t offset = 0,}
-\DoxyCodeLine{778                       word\_t expected = 1);}
-\DoxyCodeLine{779 }
-\DoxyCodeLine{784   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a206a9273dbdc8141741e7cd6b065a1fd}{dumpBaseAddrs}}() \{}
-\DoxyCodeLine{785     printf(\textcolor{stringliteral}{"{}  mmaddr     = 0x\%lX\(\backslash\)n"{}}}
-\DoxyCodeLine{786            \textcolor{stringliteral}{"{}  spaddr    = 0x\%lX\(\backslash\)n"{}}}
-\DoxyCodeLine{787            \textcolor{stringliteral}{"{}  ctrlAddr  = 0x\%lX\(\backslash\)n"{}},}
-\DoxyCodeLine{788            \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(\mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a84ed7807df12382d06ee8a09b172898f}{BaseAddrs}}.mmaddr),}
-\DoxyCodeLine{789            \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(\mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a84ed7807df12382d06ee8a09b172898f}{BaseAddrs}}.spaddr),}
-\DoxyCodeLine{790            \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(\mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a84ed7807df12382d06ee8a09b172898f}{BaseAddrs}}.ctrlAddr));}
-\DoxyCodeLine{791   \}}
-\DoxyCodeLine{792 }
-\DoxyCodeLine{797   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a79ecb1814ceba28e24c404af732e073c}{dumpMachineConfig}}() \{}
-\DoxyCodeLine{798     printf(\textcolor{stringliteral}{"{}  MapMemBase          = 0x\%lX\(\backslash\)n"{}}}
-\DoxyCodeLine{799            \textcolor{stringliteral}{"{}  UDbase              = 0x\%lX\(\backslash\)n"{}}}
-\DoxyCodeLine{800            \textcolor{stringliteral}{"{}  SPMemBase           = 0x\%lX\(\backslash\)n"{}}}
-\DoxyCodeLine{801            \textcolor{stringliteral}{"{}  ControlBase         = 0x\%lX\(\backslash\)n"{}}}
-\DoxyCodeLine{802            \textcolor{stringliteral}{"{}  EventQueueOffset    = (0x\%lX)\%lu\(\backslash\)n"{}}}
-\DoxyCodeLine{803            \textcolor{stringliteral}{"{}  OperandQueueOffset  = (0x\%lX)\%lu\(\backslash\)n"{}}}
-\DoxyCodeLine{804            \textcolor{stringliteral}{"{}  StartExecOffset     = (0x\%lX)\%lu\(\backslash\)n"{}}}
-\DoxyCodeLine{805            \textcolor{stringliteral}{"{}  LockOffset          = (0x\%lX)\%lu\(\backslash\)n"{}}}
-\DoxyCodeLine{806            \textcolor{stringliteral}{"{}  CapNumUDs           = (0x\%lX)\%lu\(\backslash\)n"{}}}
-\DoxyCodeLine{807            \textcolor{stringliteral}{"{}  CapNumLanes         = (0x\%lX)\%lu\(\backslash\)n"{}}}
-\DoxyCodeLine{808            \textcolor{stringliteral}{"{}  CapSPmemPerLane     = (0x\%lX)\%lu\(\backslash\)n"{}}}
-\DoxyCodeLine{809            \textcolor{stringliteral}{"{}  CapControlPerLane   = (0x\%lX)\%lu\(\backslash\)n"{}}}
-\DoxyCodeLine{810            \textcolor{stringliteral}{"{}  NumUDs              = (0x\%lX)\%lu\(\backslash\)n"{}}}
-\DoxyCodeLine{811            \textcolor{stringliteral}{"{}  NumLanes            = (0x\%lX)\%lu\(\backslash\)n"{}}}
-\DoxyCodeLine{812            \textcolor{stringliteral}{"{}  MapMemSize          = (0x\%lX)\%lu\(\backslash\)n"{}}}
-\DoxyCodeLine{813            \textcolor{stringliteral}{"{}  SPBankSize          = (0x\%lX)\%lu\(\backslash\)n"{}}}
-\DoxyCodeLine{814            \textcolor{stringliteral}{"{}  SPBankSizeWords     = (0x\%lX)\%lu\(\backslash\)n"{}},}
-\DoxyCodeLine{815            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.MapMemBase, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.UDbase,}
-\DoxyCodeLine{816            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.SPMemBase, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.ControlBase,}
-\DoxyCodeLine{817            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.EventQueueOffset, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.EventQueueOffset,}
-\DoxyCodeLine{818            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.OperandQueueOffset, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.OperandQueueOffset,}
-\DoxyCodeLine{819            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.StartExecOffset, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.StartExecOffset,}
-\DoxyCodeLine{820            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.LockOffset, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.LockOffset,}
-\DoxyCodeLine{821            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.CapNumUDs, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.CapNumUDs,}
-\DoxyCodeLine{822            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.CapNumLanes, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.CapNumLanes,}
-\DoxyCodeLine{823            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.CapSPmemPerLane, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.CapSPmemPerLane,}
-\DoxyCodeLine{824            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.CapControlPerLane, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.CapControlPerLane,}
-\DoxyCodeLine{825            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.NumUDs, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.NumUDs, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.NumLanes,}
-\DoxyCodeLine{826            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.NumLanes, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.MapMemSize,}
-\DoxyCodeLine{827            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.MapMemSize, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.SPBankSize,}
-\DoxyCodeLine{828            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.SPBankSize, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.SPBankSizeWords,}
-\DoxyCodeLine{829            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.SPBankSizeWords);}
-\DoxyCodeLine{830   \}}
-\DoxyCodeLine{831 \};}
-\DoxyCodeLine{832 }
-\DoxyCodeLine{833 \} \textcolor{comment}{// namespace UpDown}}
-\DoxyCodeLine{834 }
-\DoxyCodeLine{835 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{686   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_aa02ee38bf2166f297f40176c88485c1a}{mm\_free}}(\textcolor{keywordtype}{void} *ptr);}
+\DoxyCodeLine{687 }
+\DoxyCodeLine{702   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_afc78cfc10527725c84302dbe3e2f7e07}{t2mm\_memcpy}}(uint64\_t offset, ptr\_t src, uint64\_t size = 1);}
+\DoxyCodeLine{703 }
+\DoxyCodeLine{718   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a27b3b73d185c6590aff7cf9c514a5430}{mm2t\_memcpy}}(uint64\_t offset, ptr\_t dst, uint64\_t size = 1);}
+\DoxyCodeLine{719 }
+\DoxyCodeLine{733   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a5085f1a2175bd89c266a85f4f551130b}{t2ud\_memcpy}}(ptr\_t data, uint64\_t size, uint8\_t ud\_id, uint8\_t lane\_num, uint32\_t offset);}
+\DoxyCodeLine{734 }
+\DoxyCodeLine{746   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a52e14f5cd03e1c7c79697ce15f47abb5}{ud2t\_memcpy}}(ptr\_t data, uint64\_t size, uint8\_t ud\_id, uint8\_t lane\_num, uint32\_t offset);}
+\DoxyCodeLine{747 }
+\DoxyCodeLine{760   \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ab96599b352e42e823c692ecc4d3ee689}{test\_addr}}(uint8\_t ud\_id, uint8\_t lane\_num, uint32\_t offset,}
+\DoxyCodeLine{761                  word\_t expected = 1);}
+\DoxyCodeLine{762 }
+\DoxyCodeLine{774   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a7e41c8dae74b2b76e74c8a3d20324d15}{test\_wait\_addr}}(uint8\_t ud\_id, uint8\_t lane\_num, uint32\_t offset,}
+\DoxyCodeLine{775                       word\_t expected = 1);}
+\DoxyCodeLine{776 }
+\DoxyCodeLine{781   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a206a9273dbdc8141741e7cd6b065a1fd}{dumpBaseAddrs}}() \{}
+\DoxyCodeLine{782     printf(\textcolor{stringliteral}{"{}  mmaddr     = 0x\%lX\(\backslash\)n"{}}}
+\DoxyCodeLine{783            \textcolor{stringliteral}{"{}  spaddr    = 0x\%lX\(\backslash\)n"{}}}
+\DoxyCodeLine{784            \textcolor{stringliteral}{"{}  ctrlAddr  = 0x\%lX\(\backslash\)n"{}},}
+\DoxyCodeLine{785            \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(\mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a84ed7807df12382d06ee8a09b172898f}{BaseAddrs}}.mmaddr),}
+\DoxyCodeLine{786            \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(\mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a84ed7807df12382d06ee8a09b172898f}{BaseAddrs}}.spaddr),}
+\DoxyCodeLine{787            \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(\mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a84ed7807df12382d06ee8a09b172898f}{BaseAddrs}}.ctrlAddr));}
+\DoxyCodeLine{788   \}}
+\DoxyCodeLine{789 }
+\DoxyCodeLine{794   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a79ecb1814ceba28e24c404af732e073c}{dumpMachineConfig}}() \{}
+\DoxyCodeLine{795     printf(\textcolor{stringliteral}{"{}  MapMemBase          = 0x\%lX\(\backslash\)n"{}}}
+\DoxyCodeLine{796            \textcolor{stringliteral}{"{}  UDbase              = 0x\%lX\(\backslash\)n"{}}}
+\DoxyCodeLine{797            \textcolor{stringliteral}{"{}  SPMemBase           = 0x\%lX\(\backslash\)n"{}}}
+\DoxyCodeLine{798            \textcolor{stringliteral}{"{}  ControlBase         = 0x\%lX\(\backslash\)n"{}}}
+\DoxyCodeLine{799            \textcolor{stringliteral}{"{}  EventQueueOffset    = (0x\%lX)\%lu\(\backslash\)n"{}}}
+\DoxyCodeLine{800            \textcolor{stringliteral}{"{}  OperandQueueOffset  = (0x\%lX)\%lu\(\backslash\)n"{}}}
+\DoxyCodeLine{801            \textcolor{stringliteral}{"{}  StartExecOffset     = (0x\%lX)\%lu\(\backslash\)n"{}}}
+\DoxyCodeLine{802            \textcolor{stringliteral}{"{}  LockOffset          = (0x\%lX)\%lu\(\backslash\)n"{}}}
+\DoxyCodeLine{803            \textcolor{stringliteral}{"{}  CapNumUDs           = (0x\%lX)\%lu\(\backslash\)n"{}}}
+\DoxyCodeLine{804            \textcolor{stringliteral}{"{}  CapNumLanes         = (0x\%lX)\%lu\(\backslash\)n"{}}}
+\DoxyCodeLine{805            \textcolor{stringliteral}{"{}  CapSPmemPerLane     = (0x\%lX)\%lu\(\backslash\)n"{}}}
+\DoxyCodeLine{806            \textcolor{stringliteral}{"{}  CapControlPerLane   = (0x\%lX)\%lu\(\backslash\)n"{}}}
+\DoxyCodeLine{807            \textcolor{stringliteral}{"{}  NumUDs              = (0x\%lX)\%lu\(\backslash\)n"{}}}
+\DoxyCodeLine{808            \textcolor{stringliteral}{"{}  NumLanes            = (0x\%lX)\%lu\(\backslash\)n"{}}}
+\DoxyCodeLine{809            \textcolor{stringliteral}{"{}  MapMemSize          = (0x\%lX)\%lu\(\backslash\)n"{}}}
+\DoxyCodeLine{810            \textcolor{stringliteral}{"{}  SPBankSize          = (0x\%lX)\%lu\(\backslash\)n"{}}}
+\DoxyCodeLine{811            \textcolor{stringliteral}{"{}  SPBankSizeWords     = (0x\%lX)\%lu\(\backslash\)n"{}},}
+\DoxyCodeLine{812            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.MapMemBase, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.UDbase,}
+\DoxyCodeLine{813            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.SPMemBase, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.ControlBase,}
+\DoxyCodeLine{814            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.EventQueueOffset, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.EventQueueOffset,}
+\DoxyCodeLine{815            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.OperandQueueOffset, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.OperandQueueOffset,}
+\DoxyCodeLine{816            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.StartExecOffset, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.StartExecOffset,}
+\DoxyCodeLine{817            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.LockOffset, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.LockOffset,}
+\DoxyCodeLine{818            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.CapNumUDs, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.CapNumUDs,}
+\DoxyCodeLine{819            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.CapNumLanes, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.CapNumLanes,}
+\DoxyCodeLine{820            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.CapSPmemPerLane, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.CapSPmemPerLane,}
+\DoxyCodeLine{821            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.CapControlPerLane, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.CapControlPerLane,}
+\DoxyCodeLine{822            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.NumUDs, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.NumUDs, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.NumLanes,}
+\DoxyCodeLine{823            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.NumLanes, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.MapMemSize,}
+\DoxyCodeLine{824            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.MapMemSize, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.SPBankSize,}
+\DoxyCodeLine{825            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.SPBankSize, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.SPBankSizeWords,}
+\DoxyCodeLine{826            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.SPBankSizeWords);}
+\DoxyCodeLine{827   \}}
+\DoxyCodeLine{828 \};}
+\DoxyCodeLine{829 }
+\DoxyCodeLine{830 \} \textcolor{comment}{// namespace UpDown}}
+\DoxyCodeLine{831 }
+\DoxyCodeLine{832 \textcolor{preprocessor}{\#endif}}
 
 \end{DoxyCode}
