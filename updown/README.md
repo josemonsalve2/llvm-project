@@ -11,7 +11,7 @@ git clone https://www.github.com/josemonsalve2/llvm-project
 git checkout updown-recode
 mkdir build && cd build
 cmake -G Ninja                     \
-../llvm-project/llvm/              \
+../llvm/llvm/              \
 -DCMAKE_BUILD_TYPE=Release         \
 -DCMAKE_INSTALL_PREFIX=../install  \
 -DCMAKE_C_COMPILER=gcc             \
@@ -33,7 +33,7 @@ cmake -G Ninja                     \
 ```
 mkdir build_standalone && cd build
 cmake -G Ninja               \
-../llvm-project-csp/updown/  \
+../llvm/updown/  \
 -DUPDOWNRT_ENABLE_TESTS=ON   \
 -DUPDOWN_ENABLE_DEBUG=ON
 ```
