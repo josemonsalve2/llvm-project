@@ -1,3 +1,9 @@
+cmake_minimum_required(VERSION 3.13.4)
+
+if ("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
+  set(UPDOWN_STANDALONE_BUILD TRUE)
+  project(UpDown C CXX)
+endif()
 
 ## Function needed for building support for jinja templates
 function (build_jinja)
