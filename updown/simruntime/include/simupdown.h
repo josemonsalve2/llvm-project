@@ -40,6 +40,15 @@
 
 #include "debug.h"
 #include "updown.h"
+#include "upstream_pyintf.hh"
+
+#ifndef UPDOWN_INSTALL_DIR
+#define UPDOWN_INSTALL_DIR "."
+#endif
+
+#ifndef UPDOWN_SOURCE_DIR
+#define UPDOWN_SOURCE_DIR "."
+#endif
 
 namespace UpDown {
 
@@ -52,17 +61,29 @@ namespace UpDown {
  * This class does not use polymorphism. It just oversubscribes the
  * methods, wrapping the original implementation of the runtime
  *
-
+ * @todo This does not emulate multiple UPDs
  *
  */
 
 class SimUDRuntime_t : public UDRuntime_t {
 private:
+  const std::string LogFileName = "Perf.log";
   uint8_t *MappedMemory;
   uint8_t *ScratchpadMemory;
   uint8_t *ControlMemory;
 
-public:
+  std::string programFile;
+  std::string programName;
+  std::string simulationDir;
+  Upstream_PyIntf *upstream_pyintf;
+  /// When python is not enabled, we bypass all the calls to the python
+  /// interface. This restricts simulation to only memory operations
+  bool python_enabled;
+
+  /// Contains a mapped memory to the file system that is used to communicate
+  /// with the emulator.
+  uint32_t **sendmap;
+
   /**
    * @brief Allocate memory for the simulation of the updown
    *
@@ -78,21 +99,91 @@ public:
   void initMemoryArrays();
 
   /**
+   * @brief Initialize interface with python emulator
+   *
+   * This function handles initialization of the interface with python
+   * EFA emulator. The emulator is in charge of UpDown behavior.
+   *
+   * @todo when increasing the number of lanes to multiple UpDowns, this
+   * function must be re-implemented
+   */
+  void initPythonInterface();
+
+  /**
+   * @brief Get offset in local memory
+   *
+   * This functions assumes that physical memory in the emulator side is
+   * contiguous and it does not have space for expansion. This is, instead
+   * of using the Scratchpad Capacity that is explained in
+   * UDRuntime_t::base_addr_t, it uses the actual size of the Scratchpad Memory.
+   *
+   * ### Scratchpad physical memory for 1 UD
+   * \verbatim
+   *        MEMORY                     SIZE
+   *   |--------------|  <-- Scratchpad Base Address
+   *   |              |
+   *   |    Lane 0    |
+   *   |              |
+   *   |--------------|  <-- SPmem BankSize
+   *   |              |
+   *   |    Lane 1    |
+   *   |              |
+   *   |--------------|  <-- 2 * SPmem BankSize
+   *   |      ...     |
+   *   |--------------|  <-- (NumLanes-1) * SPmem BankSize
+   *   |              |
+   *   |    Lane N    |
+   *   |              |
+   *   |--------------|  <-- (NumLanes) * SPmem BankSize
+   * \endverbatim
+   *
+   * @param ud_id UpDown ID
+   * @param lane_num Lane ID
+   * @param offset Offset in bytes
+   * @return uint64_t
+   */
+  uint64_t inline get_lane_local_memory(uint8_t ud_id, uint8_t lane_num,
+                                        uint32_t offset = 0);
+
+public:
+  /**
    * @brief Construct a new SimUDRuntime_t object
    *
    * This constructor calls initMemoryArrays() to set the simulated memory
-   * regions.
+   * regions. Python will be disabled. Only simulating memory interactions.
    *
    */
-  SimUDRuntime_t() : UDRuntime_t() {
-    UPDOWN_INFOMSG("Initializing Simulated Runtime with defautl params");
+  SimUDRuntime_t() : UDRuntime_t(), python_enabled(false), sendmap(nullptr) {
+    UPDOWN_INFOMSG("Initializing Simulated Runtime with default params");
+    UPDOWN_WARNING("No python program. Python will be disabled, only "
+                   "simulating memory interactions");
     initMemoryArrays();
     // Recalculate address map
     calc_addrmap();
   }
 
   /**
-   * @brief Construct a new udruntime t object
+   * @brief Construct a new SimUDRuntime_t object
+   *
+   * This constructor calls initMemoryArrays() to set the simulated memory
+   * regions. The pointers of ud_machine_t.MappedMemBase, ud_machine_t.UDbase
+   * ud_machine_t.SPMemBase and ud_machine_t.ControlBase will be ignored and
+   * overwritten in order to simulate the runtime.
+   *
+   * @param machineConfig Machine configuration
+   */
+  SimUDRuntime_t(ud_machine_t machineConfig)
+      : UDRuntime_t(machineConfig), python_enabled(false), sendmap(nullptr) {
+    UPDOWN_INFOMSG("Initializing runtime with custom machineConfig");
+    UPDOWN_WARNING("No python program. Python will be disabled, only "
+                   "simulating memory interactions");
+    initMemoryArrays();
+    // Recalculate address map
+    calc_addrmap();
+  }
+
+  /**
+   * @brief Construct a new SimUDRuntime_t object
    *
    * This constructor calls initMemoryArrays() to set the simulated memory
    * regions. The pointers of ud_machine_t.MappedMemBase, ud_machine_t.UDbase
@@ -101,28 +192,120 @@ public:
    *
    * @param machineConfig Machine configuration
    */
-  SimUDRuntime_t(ud_machine_t machineConfig) : UDRuntime_t(machineConfig) {
+  SimUDRuntime_t(std::string programFile,
+                 std::string programName, std::string simulationDir)
+      : UDRuntime_t(), programFile(programFile),
+        programName(programName), simulationDir(simulationDir),
+        python_enabled(true), sendmap(nullptr) {
     UPDOWN_INFOMSG("Initializing runtime with custom machineConfig");
     initMemoryArrays();
+    UPDOWN_INFOMSG("Running file %s Program %s Dir %s", programFile.c_str(),
+                   programName.c_str(), simulationDir.c_str());
+    initPythonInterface();
     // Recalculate address map
     calc_addrmap();
   }
+
+  /**
+   * @brief Construct a new SimUDRuntime_t object
+   *
+   * This constructor calls initMemoryArrays() to set the simulated memory
+   * regions. The pointers of ud_machine_t.MappedMemBase, ud_machine_t.UDbase
+   * ud_machine_t.SPMemBase and ud_machine_t.ControlBase will be ignored and
+   * overwritten.
+   *
+   * @param machineConfig Machine configuration
+   */
+  SimUDRuntime_t(ud_machine_t machineConfig, std::string programFile,
+                 std::string programName, std::string simulationDir)
+      : UDRuntime_t(machineConfig), programFile(programFile),
+        programName(programName), simulationDir(simulationDir),
+        python_enabled(true), sendmap(nullptr) {
+    UPDOWN_INFOMSG("Initializing runtime with custom machineConfig");
+    initMemoryArrays();
+    UPDOWN_INFOMSG("Running file %s Program %s Dir %s", programFile.c_str(),
+                   programName.c_str(), simulationDir.c_str());
+    initPythonInterface();
+    // Recalculate address map
+    calc_addrmap();
+  }
+
+  /**
+   * @brief Wrapper function for send_event
+   *
+   * Calls the emulator and calls the UDRuntime_t::send_event() function
+   */
+  void send_event(event_t ev);
+
+  /**
+   * @brief Wrapper function for start_exec
+   *
+   * Calls the emulator and calls the UDRuntime_t::start_exec() function
+   */
+  void start_exec(uint8_t ud_id, uint8_t lane_num);
+
+  /**
+   * @brief Wrapper function for t2ud_memcpy
+   *
+   * Calls the emulator and calls the UDRuntime_t::t2ud_memcpy() function
+   *
+   * @todo The physical memory is contiguous, therefore the calculation of this
+   * offset is different to the address space in the virtual memory. Is there
+   * a way to express this? The runtime is doing some heavy lifting here that
+   * is translating things to physical memory
+   */
+  void t2ud_memcpy(ptr_t data, uint64_t size, uint8_t ud_id, uint8_t lane_num,
+                   uint32_t offset);
+
+  /**
+   * @brief Wrapper function for ud2t_memcpy
+   *
+   * Calls the emulator and calls the UDRuntime_t::ud2t_memcpy() function
+   *
+   * This function copies from the emulator directly into the scratchpad memory
+   * and then calls the real runtime function. This allows to keep the logic of
+   * the real runtime even though we are simulating the hardware
+   *
+   * @todo The physical memory is contiguous, therefore the calculation of this
+   * offset is different to the address space in the virtual memory. Is there
+   * a way to express this? The runtime is doing some heavy lifting here that
+   * is translating things to physical memory
+   */
+  void ud2t_memcpy(ptr_t data, uint64_t size, uint8_t ud_id, uint8_t lane_num,
+                   uint32_t offset);
+
+  /**
+   * @brief Wrapper function for test_addr
+   *
+   * Calls the emulator and calls the UDRuntime_t::test_addr() function
+   *
+   * @todo The physical memory is contiguous, therefore the calculation of this
+   * offset is different to the address space in the virtual memory. Is there
+   * a way to express this? The runtime is doing some heavy lifting here that
+   * is translating things to physical memory
+   */
+  bool test_addr(uint8_t ud_id, uint8_t lane_num, uint32_t offset,
+                 word_t expected = 1);
+
+  /**
+   * @brief Wrapper function for test_wait_addr
+   *
+   * Calls the emulator and calls the UDRuntime_t::test_wait_addr() function
+   *
+   * @todo The physical memory is contiguous, therefore the calculation of this
+   * offset is different to the address space in the virtual memory. Is there
+   * a way to express this? The runtime is doing some heavy lifting here that
+   * is translating things to physical memory
+   */
+  void test_wait_addr(uint8_t ud_id, uint8_t lane_num, uint32_t offset,
+                      word_t expected = 1);
 
   ~SimUDRuntime_t() {
     delete MappedMemory;
     delete ScratchpadMemory;
     delete ControlMemory;
+    delete sendmap;
   }
-
-  /**
-   * @brief Start_execution simulator
-   *
-   * @todo we should start the UD Emulator here
-   *
-   * @param ud_id
-   * @param lane_num
-   */
-  void start_exec(uint8_t ud_id, uint8_t lane_num);
 };
 
 } // namespace UpDown

@@ -68,7 +68,8 @@ endif()
 
 include_directories(BEFORE
     common/include
-    runtime/include)
+    runtime/include
+    simruntime/include)
 
 ## Building the python syntax plugin
 if(LLVM_ENABLE_PLUGINS)
