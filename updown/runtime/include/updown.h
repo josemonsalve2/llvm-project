@@ -117,11 +117,25 @@ public:
                            (NumOperands + 1))) { // TODO: Avoid this malloc
 
     Data[0] = cont; // Fake continuation
-
-    // TODO: This should be a memcpy?
-    for (uint8_t i = 1; i < NumOperands + 1; i++)
-      Data[i] = oper[i - 1];
+    std::memcpy(Data+1,oper, get_NumOperands());
   }
+
+
+  /**
+   * @brief Construct a new operands_t opbejct,
+   *
+   * @param num Number of operaqnds
+   * @param cont Continuation event
+   *
+   * @todo This should avoid using memcpy
+   */
+  operands_t(uint8_t num, word_t cont = 0)
+      : NumOperands(num),
+        Data((ptr_t)malloc(sizeof(word_t) *
+                           (NumOperands + 1))) { // TODO: Avoid this malloc
+      Data[0] = cont;
+  }
+
 
   /**
    * @brief Get the pointer to Data
@@ -129,6 +143,58 @@ public:
    * @return ptr_t pointer to data
    */
   ptr_t get_Data() { return Data; }
+
+  /**
+   * @brief Set an operand
+   * 
+   * @param op operand number
+   * @param val value for the operand
+   */
+  inline void set_operand(uint32_t op, word_t val) {
+    Data[op+1] = val;
+  }
+
+  /**
+   * @brief Set multiple operands at once
+   * 
+   * @param op_begin Start operand inclusive
+   * @param op_end End operand inclusive
+   * @param val pointer to the value to be copied
+   * 
+   * Example:
+   * ```
+   * // Mapping a struct to different operands
+   * // Assume no padding
+   * 
+   * struct A {
+   *  word_t v1; // 4 bytes
+   *  word_t v2; // 4 bytes
+   *  int * ptr; // 8 bytes
+   * };
+   * 
+   * // Assuming word_t is 4 bytes, 
+   * // size of A should be 16 bytes, using
+   * // 4 elements in the operand buffer
+   * int anInt;
+   * A myStr = {1, 2, &anInt};
+   * rt.set_operands(0,4, &myStr);
+   * 
+   * // the struct will be copied bit a bit, each
+   * // operand in a different location.
+   * 
+   */
+  inline void set_operands(uint32_t op_begin, uint32_t op_end, ptr_t val) {
+    std::memcpy(Data+op_begin+1, val, op_end - op_begin);
+  }
+
+  /**
+   * @brief Set the Continuation
+   * 
+   * @param cont 
+   */
+  inline void set_cont(word_t cont) {
+    Data[0] = cont;
+  }
 
   /**
    * @brief Get the NumOperands
@@ -377,7 +443,7 @@ private:
    *   |--------------|  <-- NumUDs * CapacityControlPerLane * CapacityNumLanes
    * \endverbatim
    *
-   * ### Scratchpad memory for 1 UD
+   * ### Control signals memory address space for 1 UD
    * \verbatim
    *        MEMORY                     SIZE
    *   |--------------|  <-- Control Base Address
@@ -614,7 +680,7 @@ protected:
    * @param offset Offset in bytes
    * @return uint64_t
    */
-  uint64_t inline get_lane_aligned_offset(uint8_t ud_id, uint8_t lane_num,
+  inline uint64_t get_lane_aligned_offset(uint8_t ud_id, uint8_t lane_num,
                                           uint32_t offset = 0);
 
 public:
