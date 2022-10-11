@@ -3,6 +3,7 @@ if (UPDOWNRT_ENABLE_TESTS)
     set(UPDOWNSIMRT_TESTS_SRC 
         simrt_send_event.cpp
         simrt_pyEmu_memcpy.cpp
+        simrt_pyEmu_sendevent.cpp
         simrt_memcpy.cpp
     )
 

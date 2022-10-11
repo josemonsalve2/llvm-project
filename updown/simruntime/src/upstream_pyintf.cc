@@ -54,6 +54,7 @@ void Upstream_PyIntf::addSystemPaths() {
   UPDOWN_INFOMSG("Adding system paths: %s",
                  "\"./emulator:" UPDOWN_INSTALL_DIR
                  "/emulator:" UPDOWN_SOURCE_DIR "/emulator\"");
+  PyRun_SimpleString("import sys\nsys.path.append(\".\")\n");
   PyRun_SimpleString("import sys\nsys.path.append(\"./emulator\")\n");
   PyRun_SimpleString("import sys\nsys.path.append(\"" UPDOWN_SOURCE_DIR
                      "/emulator \")\n");
