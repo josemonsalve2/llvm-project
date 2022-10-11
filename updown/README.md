@@ -53,7 +53,7 @@ Using the following code:
 
 
 int main() {
-        UpDown::UDRuntime_t myRt();
+        UpDown::UDRuntime_t myRt;
 
         return 0;
 }
@@ -62,7 +62,7 @@ int main() {
 You can build it with the following command
 
 ```
-g++ -static main.cc -Iinstall/updown/include/ install/updown/lib/libUpDownRuntimeStatic.a 
+g++ -static main.cc -Iinstall/updown/include/ install/updown/lib/libUpDownRuntimeStatic.a -o main.exe
 ```
 
 ## Current content
