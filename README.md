@@ -3,10 +3,12 @@ This repository contains the LLVM infrastructure that corresponds
 to the UpDown recode engine. The UpDown recode project, located in the
 `updown` folder, contains the runtime, simulated runtime and projects. 
 
-For more details access the `updown` folder. 
+For more details access the [updown](updown) folder. Or check the [updown docs](updown/docs/html/).
 
 ================================
-Below is the original README.md
+
+Below is the original LLVM README.md
+
 ================================
 
 # The LLVM Compiler Infrastructure
