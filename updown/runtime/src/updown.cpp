@@ -88,14 +88,14 @@ void UDRuntime_t::mm_free(void *ptr) {
 void UDRuntime_t::mm2t_memcpy(uint64_t offset, ptr_t src, uint64_t size) {
   ptr_t dst = BaseAddrs.mmaddr + offset;
   std::memcpy(src, dst, size);
-  UPDOWN_INFOMSG("Copying %lu bytes from mapped memory (%lX) to top (%lX)",
+  UPDOWN_INFOMSG("Copying %lu words from mapped memory (%lX) to top (%lX)",
                  size, reinterpret_cast<uint64_t>(src), reinterpret_cast<uint64_t>(dst));
 }
 
 void UDRuntime_t::t2mm_memcpy(uint64_t offset, ptr_t src, uint64_t size) {
   ptr_t dst = BaseAddrs.mmaddr + offset;
   std::memcpy(src, dst, size);
-  UPDOWN_INFOMSG("Copying %lu bytes from top (%lX) to mapped memory (%lX)",
+  UPDOWN_INFOMSG("Copying %lu words from top (%lX) to mapped memory (%lX)",
                  size, reinterpret_cast<uint64_t>(src), reinterpret_cast<uint64_t>(dst));
 }
 
@@ -103,7 +103,7 @@ void UDRuntime_t::t2ud_memcpy(ptr_t data, uint64_t size,  uint8_t ud_id, uint8_t
   uint64_t apply_offset = get_lane_aligned_offset(ud_id, lane_num, offset);
   apply_offset /= sizeof(word_t);
   std::memcpy(BaseAddrs.spaddr + apply_offset, data, size);
-  UPDOWN_INFOMSG("Copying %lu bytes from Top to UD %u, Lane %u, offset %u. Signal in 0x%lX",
+  UPDOWN_INFOMSG("Copying %lu words from Top to UD %u, Lane %u, offset %u. Signal in 0x%lX",
                  size, ud_id, lane_num, offset,
                  reinterpret_cast<uint64_t>(BaseAddrs.spaddr + apply_offset));
 }
@@ -112,7 +112,7 @@ void UDRuntime_t::ud2t_memcpy(ptr_t data, uint64_t size, uint8_t ud_id, uint8_t 
   uint64_t apply_offset = get_lane_aligned_offset(ud_id, lane_num, offset);
   apply_offset /= sizeof(word_t);
   std::memcpy(data, BaseAddrs.spaddr + apply_offset, size);
-  UPDOWN_INFOMSG("Copying %lu bytes from UD %u, Lane %u to Top, offset %u. Signal in 0x%lX",
+  UPDOWN_INFOMSG("Copying %lu words from UD %u, Lane %u to Top, offset %u. Signal in 0x%lX",
                  size, ud_id, lane_num, offset,
                  reinterpret_cast<uint64_t>(BaseAddrs.spaddr + apply_offset));
 }

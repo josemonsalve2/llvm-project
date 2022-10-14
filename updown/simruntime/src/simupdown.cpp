@@ -132,7 +132,7 @@ void SimUDRuntime_t::start_exec(uint8_t ud_id, uint8_t lane_num) {
         smode_0 = (mode & 0x1);
         smode_1 = (mode & 0x2) >> 1;
         smode_2 = (mode & 0x4) >> 2;
-        UPDOWN_INFOMSG("Send Mode:mode:%d, 0:%d, 1:%d, 2:%d", mode, smode_0,
+        UPDOWN_INFOMSG("Send Mode: mode:%d, 0:%d, 1:%d, 2:%d", mode, smode_0,
                        smode_1, smode_2);
 
         uint32_t sm_cycle =
@@ -155,8 +155,8 @@ void SimUDRuntime_t::start_exec(uint8_t ud_id, uint8_t lane_num) {
           sdest = sendmap[lane_num][offset++];         //[8*i+4];
           uint32_t temp = sendmap[lane_num][offset++]; //[8*i+5];
           UPDOWN_INFOMSG("Send Lane: %d, Temp: %d", sdest, temp);
-          UPDOWN_ERROR_IF(sdest == temp,
-                          "Temp is not the same as the destination");
+          UPDOWN_ERROR_IF(sdest != temp,
+                          "Temp %d is not the same as the destination %d", sdest, temp);
         }
 
         // Get continuation and size
@@ -278,7 +278,7 @@ void SimUDRuntime_t::t2ud_memcpy(ptr_t data, uint64_t size, uint8_t ud_id,
   UDRuntime_t::t2ud_memcpy(data, size, ud_id, lane_num, offset);
   if (!python_enabled) return;
   uint64_t addr = get_lane_local_memory(ud_id, lane_num, offset);
-  for (int i = 0; i < size/4; i++) {
+  for (int i = 0; i < size; i++) {
     // Address is local
     upstream_pyintf->insert_scratch(addr, *data);
     addr += sizeof(word_t);

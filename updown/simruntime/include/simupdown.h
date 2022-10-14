@@ -109,41 +109,6 @@ private:
    */
   void initPythonInterface();
 
-  /**
-   * @brief Get offset in local memory
-   *
-   * This functions assumes that physical memory in the emulator side is
-   * contiguous and it does not have space for expansion. This is, instead
-   * of using the Scratchpad Capacity that is explained in
-   * UDRuntime_t::base_addr_t, it uses the actual size of the Scratchpad Memory.
-   *
-   * ### Scratchpad physical memory for 1 UD
-   * \verbatim
-   *        MEMORY                     SIZE
-   *   |--------------|  <-- Scratchpad Base Address
-   *   |              |
-   *   |    Lane 0    |
-   *   |              |
-   *   |--------------|  <-- SPmem BankSize
-   *   |              |
-   *   |    Lane 1    |
-   *   |              |
-   *   |--------------|  <-- 2 * SPmem BankSize
-   *   |      ...     |
-   *   |--------------|  <-- (NumLanes-1) * SPmem BankSize
-   *   |              |
-   *   |    Lane N    |
-   *   |              |
-   *   |--------------|  <-- (NumLanes) * SPmem BankSize
-   * \endverbatim
-   *
-   * @param ud_id UpDown ID
-   * @param lane_num Lane ID
-   * @param offset Offset in bytes
-   * @return uint64_t
-   */
-  uint64_t inline get_lane_local_memory(uint8_t ud_id, uint8_t lane_num,
-                                        uint32_t offset = 0);
 
 public:
   /**
@@ -299,6 +264,42 @@ public:
    */
   void test_wait_addr(uint8_t ud_id, uint8_t lane_num, uint32_t offset,
                       word_t expected = 1);
+
+  /**
+   * @brief Get offset in local memory
+   *
+   * This functions assumes that physical memory in the emulator side is
+   * contiguous and it does not have space for expansion. This is, instead
+   * of using the Scratchpad Capacity that is explained in
+   * UDRuntime_t::base_addr_t, it uses the actual size of the Scratchpad Memory.
+   *
+   * ### Scratchpad physical memory for 1 UD
+   * \verbatim
+   *        MEMORY                     SIZE
+   *   |--------------|  <-- Scratchpad Base Address
+   *   |              |
+   *   |    Lane 0    |
+   *   |              |
+   *   |--------------|  <-- SPmem BankSize
+   *   |              |
+   *   |    Lane 1    |
+   *   |              |
+   *   |--------------|  <-- 2 * SPmem BankSize
+   *   |      ...     |
+   *   |--------------|  <-- (NumLanes-1) * SPmem BankSize
+   *   |              |
+   *   |    Lane N    |
+   *   |              |
+   *   |--------------|  <-- (NumLanes) * SPmem BankSize
+   * \endverbatim
+   *
+   * @param ud_id UpDown ID
+   * @param lane_num Lane ID
+   * @param offset Offset in bytes
+   * @return uint64_t
+   */
+  uint64_t inline get_lane_local_memory(uint8_t ud_id, uint8_t lane_num,
+                                        uint32_t offset = 0);
 
   ~SimUDRuntime_t() {
     delete MappedMemory;
