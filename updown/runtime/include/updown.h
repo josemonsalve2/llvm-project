@@ -111,13 +111,13 @@ public:
    *
    * @todo This should avoid using memcpy
    */
-  operands_t(uint8_t num, ptr_t oper = nullptr, word_t cont = 0)
+  operands_t(uint8_t num, ptr_t oper, word_t cont = 0)
       : NumOperands(num),
         Data((ptr_t)malloc(sizeof(word_t) *
                            (NumOperands + 1))) { // TODO: Avoid this malloc
 
     Data[0] = cont; // Fake continuation
-    std::memcpy(Data+1,oper, get_NumOperands());
+    std::memcpy(Data+1, oper, get_NumOperands());
   }
 
 

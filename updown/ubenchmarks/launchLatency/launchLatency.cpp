@@ -8,9 +8,9 @@
 #include <pthread.h>
 #include <simupdown.h>
 
-#define USAGE "USAGE: ./eventRate <numevents> <numlanes> <numthreadsperlane> <mode> [<num_cores>] [<num_uds>]"
+#define USAGE "USAGE: ./launchLatency <numoperands> <numlanes> <numthreadsperlane> <mode> [<num_cores>] [<num_uds>]"
 
-void eventrate(int total_cores, int core_num, int num_lanes, int num_threads, int num_events){
+void launch(int total_cores, int core_num, int num_lanes, int num_threads, int num_operands) {
 
   UpDown::ud_machine_t machine;
   machine.NumLanes = num_lanes;
@@ -19,12 +19,12 @@ void eventrate(int total_cores, int core_num, int num_lanes, int num_threads, in
   int last_lane_checked=0;
   int lanes_pcore=num_lanes/total_cores;
 
-  UpDown::word_t ops_data[3];
-  UpDown::SimUDRuntime_t rt(machine, "eventRateEFA", "EventRateTest", "./");
+  UpDown::SimUDRuntime_t rt(machine, "launchLatencyEFA", "LaunchTest", "./");
   //UpDown::UDRuntime_t rt(machine);
 
-  UpDown::operands_t ops(3, ops_data);
+  UpDown::operands_t ops(num_operands);
 
+  // Init lane
   for(int i=core_num*lanes_pcore; i < (core_num+1)*lanes_pcore; i++) {
     UpDown::word_t data = 1;
     rt.t2ud_memcpy(&data  /*top_ptr*/,
@@ -33,12 +33,12 @@ void eventrate(int total_cores, int core_num, int num_lanes, int num_threads, in
                    i     /*LaneID*/,
                    0      /*offset in spmem*/);
   }
-  printf("Starting launch of events\n");
+
+  printf("Starting launchs\n");
   for(int ln=0; ln<lanes_pcore; ln++){
     lane_num=core_num+total_cores*ln;
-    ops.set_operand(0, num_events);
-    ops.set_operand(1, num_events*(num_events+1)/2); //termination counter
-    ops.set_operand(2, rt.get_lane_physical_memory(0, lane_num)); // First location of lane
+    for(int j=0; j<=num_operands; j++)
+      ops.set_operand(j, rt.get_lane_physical_memory(0, lane_num));
     // Events with operands
     UpDown::event_t evnt_ops(0 /*Event Label*/,
                              0 /*UD ID*/,
@@ -68,7 +68,7 @@ void eventrate(int total_cores, int core_num, int num_lanes, int num_threads, in
 
 /// TODO: This microbenchmark does not support multiple UDs or Threads. Fixme
 int main(int argc, char* argv[]) {
-  uint32_t num_events=0;
+  uint32_t num_operands=0;
   int num_lanes=1;
   int num_threads=1;
   int core_num=0;
@@ -81,7 +81,7 @@ int main(int argc, char* argv[]) {
         printf("%s\n", USAGE);
         exit(1);
   }
-  num_events = atoi(argv[1]);
+  num_operands = atoi(argv[1]);
   num_lanes = atoi(argv[2]);
   num_threads = atoi(argv[3]);
   mode = atoi(argv[4]);
@@ -118,12 +118,14 @@ int main(int argc, char* argv[]) {
         exit(1);
   }
   printf("Num Threads per Lane:%d\n", num_threads);
-  printf("Num Events to launch:%d\n", num_events);
+  printf("Num Operands to use:%d\n", num_operands);
 
-  eventrate(total_cores, core_num, num_lanes, num_threads, num_events);
+  launch(total_cores, core_num, num_lanes, num_threads, num_operands);
 
   printf("EventRate test done\n");
   
 }
+
+
 
 

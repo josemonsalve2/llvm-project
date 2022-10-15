@@ -63,7 +63,9 @@ Available libraries are:
 * `libUpDownSimRuntime.so`
 ## Building LLVM
 
-To enable the project it is necessary to add "updown" to the list of `-DLLVM_ENABLE_PROJECTS=`. See the following example. The important option is the last line
+To enable the project it is necessary to add "updown" to the list of `-DLLVM_ENABLE_PROJECTS=`. See the following example. The important option is the last line. 
+
+IMPORTANT: This is currently unsupported due to changes in the runtime interface that has not been reflected to the syntax plugin. 
 
 ```
 git clone https://www.github.com/josemonsalve2/llvm-project
@@ -86,8 +88,6 @@ cmake -G Ninja                     \
 -DCLANG_PLUGIN_SUPPORT=ON          \
 -DLLVM_ENABLE_PROJECTS="clang;updown"
 ```
-
-
 
 
 ### Python Syntax
