@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <fcntl.h>
 #include <sys/mman.h>
+#include "upstream_pyintf.hh"
 
 namespace UpDown {
 

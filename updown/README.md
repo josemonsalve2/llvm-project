@@ -1,7 +1,66 @@
 # UpDown recode project
 
-This repository contains software for UpDown using LLVM. 
+This repository contains the UpDown Runtime, the UpDown emulator, and Other infrastructure built around LLVM
 
+
+## Current content
+
+| Name | Description|
+|-----------|---------|
+| [UpDown Runtime](runtime) | Top runtime for the UpDown infrastructure. Right now, this is intended to be used with Gem5. |
+| [Simulated UpDown Runtime](simruntime) | Wrapper class that uses the same API of the UpDown runtime, but simulates the UpDown hardware |
+| [Microbenchmarks](ubenchmarks) | Wrapper class that uses the same API of the UpDown runtime, but simulates the UpDown hardware |
+| PythonSytanx Plugin | Plugin that allows to embed python code that describe a Codelet in the UpDown (alpha) |
+
+
+## Building runtime and simruntime standalone
+
+In order to build the runtime and the emulator for the updown lane, use the following commands
+
+### Full compilation
+Use the following command to include building tests, microbenchmarks, and debugging symbols. 
+```
+mkdir build_standalone && cd build_standalone
+cmake -G Ninja               \
+../llvm/updown/              \
+-DUPDOWNRT_ENABLE_TESTS=ON   \
+-DUPDOWNRT_ENABLE_UBENCH=ON   \
+-DUPDOWN_ENABLE_DEBUG=ON     \
+-DCMAKE_INSTALL_PREFIX=../install #Change to path to install
+```
+### Available CMake flags
+The `-DUPDOWNRT_ENABLE_TESTS` enable compilation of tests for both the runtime and the simruntime
+The `-DUPDOWNRT_ENABLE_UBENCH` enables compilation of the microbenchmarks
+The `-DUPDOWN_ENABLE_DEBUG` flag is used to enable debbuging messages in the runtime system.
+The `-DCMAKE_INSTALL_PREFIX=` determins the installation prefix. 
+
+### Linking the runtime to an external program
+
+Using the following code:
+
+```
+#include "updown.h"
+
+
+int main() {
+        UpDown::UDRuntime_t myRt;
+
+        return 0;
+}
+```
+
+You can build it with the following command
+
+```
+g++ -static main.cc -Iinstall/updown/include/ install/updown/lib/libUpDownRuntimeStatic.a -o main.exe
+```
+
+Available libraries are:
+
+* `libUpDownRuntimeStatic.a`
+* `libUpDownRuntime.so`
+* `libUpDownSimRuntimeStatic.a`
+* `libUpDownSimRuntime.so`
 ## Building LLVM
 
 To enable the project it is necessary to add "updown" to the list of `-DLLVM_ENABLE_PROJECTS=`. See the following example. The important option is the last line
@@ -28,50 +87,8 @@ cmake -G Ninja                     \
 -DLLVM_ENABLE_PROJECTS="clang;updown"
 ```
 
-## Building runtime only
-
-```
-mkdir build_standalone && cd build_standalone
-cmake -G Ninja               \
-../llvm/updown/              \
--DUPDOWNRT_ENABLE_TESTS=ON   \
--DUPDOWN_ENABLE_DEBUG=ON     \
--DCMAKE_INSTALL_PREFIX=../install #Change to path to install
-```
-
-The `-DUPDOWN_ENABLE_DEBUG` flag is used to enable debbuging messages 
-in the runtime system. Feel free to remove it. 
-
-The `-DCMAKE_INSTALL_PREFIX=` determins the installation prefix. 
-
-### Example code
-
-Using the following code:
-
-```
-#include "updown.h"
 
 
-int main() {
-        UpDown::UDRuntime_t myRt;
-
-        return 0;
-}
-```
-
-You can build it with the following command
-
-```
-g++ -static main.cc -Iinstall/updown/include/ install/updown/lib/libUpDownRuntimeStatic.a -o main.exe
-```
-
-## Current content
-
-| Name | Description|
-|-----------|---------|
-| PythonSytanx Plugin | Plugin that allows to embed python code that describe a Codelet in the UpDown |
-| UpDown Runtime | Top runtime for the UpDown infrastructure |
-| Simulated UpDown Runtime | Wrapper class that uses the updown runtime, but simulates the UpDown hardware (Under development) |
 
 ### Python Syntax
 

@@ -1,5 +1,7 @@
 if (UPDOWNRT_ENABLE_UBENCH)
 
+    set(UPDOWN_RUNTIME_INSTALL_DIR "updown")
+
     set(UPDOWNSIMRT_UBENCH_SRC 
         eventrate/eventRate.cpp
     )

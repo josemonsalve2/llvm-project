@@ -111,3 +111,4 @@ endif()
 
 add_subdirectory(runtime)
 add_subdirectory(simruntime)
+add_subdirectory(ubenchmarks)

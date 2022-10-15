@@ -40,7 +40,6 @@
 
 #include "debug.h"
 #include "updown.h"
-#include "upstream_pyintf.hh"
 
 #ifndef UPDOWN_INSTALL_DIR
 #define UPDOWN_INSTALL_DIR "."
@@ -50,6 +49,7 @@
 #define UPDOWN_SOURCE_DIR "."
 #endif
 
+class Upstream_PyIntf;
 namespace UpDown {
 
 /**

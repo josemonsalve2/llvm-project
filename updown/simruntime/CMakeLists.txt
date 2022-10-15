@@ -44,6 +44,5 @@
   add_definitions(-DUPDOWN_INSTALL_DIR="${CMAKE_INSTALL_PREFIX}/${UPDOWN_RUNTIME_LIB}" -DUPDOWN_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}/src" )
 
   add_subdirectory(tests)
-  add_subdirectory(ubenchmarks)
   target_link_libraries(UpDownSimRuntime PUBLIC UpDownRuntime ${Python_LIBRARIES})
   target_link_libraries(UpDownSimRuntimeStatic PUBLIC UpDownRuntimeStatic ${Python_LIBRARIES})

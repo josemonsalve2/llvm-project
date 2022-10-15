@@ -8,7 +8,7 @@
 #include <pthread.h>
 #include <simupdown.h>
 
-#define USAGE "USAGE: ./eventrate <numevents> <numlanes> <numthreadsperlane> <mode> [<num_cores>] [<num_uds>]"
+#define USAGE "USAGE: ./eventRate <numevents> <numlanes> <numthreadsperlane> <mode> [<num_cores>] [<num_uds>]"
 
 void eventrate(int total_cores, int core_num, int num_lanes, int num_threads, int num_events){
 
@@ -21,6 +21,7 @@ void eventrate(int total_cores, int core_num, int num_lanes, int num_threads, in
 
   UpDown::word_t ops_data[3];
   UpDown::SimUDRuntime_t rt(machine, "eventRateEFA", "EventRateTest", "./");
+  //UpDown::UDRuntime_t rt(machine);
 
   UpDown::operands_t ops(3, ops_data);
 
@@ -37,7 +38,7 @@ void eventrate(int total_cores, int core_num, int num_lanes, int num_threads, in
     lane_num=core_num+total_cores*ln;
     ops.set_operand(0, num_events);
     ops.set_operand(1, num_events*(num_events+1)/2); //termination counter
-    ops.set_operand(2, rt.get_lane_local_memory(0, lane_num)); // First location of lane
+    ops.set_operand(2, rt.get_lane_physical_memory(0, lane_num)); // First location of lane
     // Events with operands
     UpDown::event_t evnt_ops(0 /*Event Label*/,
                              0 /*UD ID*/,
@@ -65,6 +66,7 @@ void eventrate(int total_cores, int core_num, int num_lanes, int num_threads, in
   return;
 }
 
+/// TODO: This microbenchmark does not support multiple UDs or Threads. Fixme
 int main(int argc, char* argv[]) {
   /*
   * Options for Triangle Counting 
