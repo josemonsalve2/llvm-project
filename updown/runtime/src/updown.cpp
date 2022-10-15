@@ -75,6 +75,17 @@ uint64_t UDRuntime_t::get_lane_aligned_offset(uint8_t ud_id, uint8_t lane_num,
   return returned_offset;
 }
 
+uint64_t UDRuntime_t::get_lane_physical_memory(uint8_t ud_id, uint8_t lane_num,
+                                               uint32_t offset) {
+  auto alignment = sizeof(word_t);
+  auto aligned_offset = offset - offset % alignment;
+  UPDOWN_WARNING_IF(offset % alignment != 0, "Unaligned offset %u", offset);
+  uint64_t returned_offset =
+      MachineConfig.SPBankSize * lane_num + // Lane offset
+      aligned_offset;
+  return returned_offset;
+}
+
 void *UDRuntime_t::mm_malloc(uint64_t size) {
   UPDOWN_INFOMSG("Calling mm_malloc %u", size); 
   return MappedMemoryManager->get_region(size);
@@ -143,10 +154,4 @@ void UDRuntime_t::test_wait_addr(uint8_t ud_id, uint8_t lane_num,
   while (*(BaseAddrs.spaddr + apply_offset) != expected);
 }
 
-uint32_t UDRuntime_t::change_endian(uint32_t num) {
-  uint32_t result = ((num >> 24) & 0x000000ff) | ((num >> 8) & 0x0000ff00) |
-                    ((num << 8) & 0x00ff0000) | ((num << 24) & 0xff000000);
-  UPDOWN_INFOMSG("change_endian : 0x%X\n", result);
-  return result;
-}
 } // namespace UpDown

@@ -67,16 +67,6 @@ void SimUDRuntime_t::initPythonInterface() {
 }
 
 
-uint64_t SimUDRuntime_t::get_lane_local_memory(uint8_t ud_id, uint8_t lane_num,
-                                               uint32_t offset) {
-  auto alignment = sizeof(word_t);
-  auto aligned_offset = offset - offset % alignment;
-  UPDOWN_WARNING_IF(offset % alignment != 0, "Unaligned offset %u", offset);
-  uint64_t returned_offset =
-      MachineConfig.SPBankSize * lane_num + // Lane offset
-      aligned_offset;
-  return returned_offset;
-}
 
 void SimUDRuntime_t::send_event(event_t ev) {
   // Perform the regular access. This will have no effect
@@ -277,7 +267,7 @@ void SimUDRuntime_t::t2ud_memcpy(ptr_t data, uint64_t size, uint8_t ud_id,
                                  uint8_t lane_num, uint32_t offset) {
   UDRuntime_t::t2ud_memcpy(data, size, ud_id, lane_num, offset);
   if (!python_enabled) return;
-  uint64_t addr = get_lane_local_memory(ud_id, lane_num, offset);
+  uint64_t addr = UDRuntime_t::get_lane_physical_memory(ud_id, lane_num, offset);
   for (int i = 0; i < size; i++) {
     // Address is local
     upstream_pyintf->insert_scratch(addr, *data);
@@ -288,7 +278,7 @@ void SimUDRuntime_t::t2ud_memcpy(ptr_t data, uint64_t size, uint8_t ud_id,
 
 void SimUDRuntime_t::ud2t_memcpy(ptr_t data, uint64_t size, uint8_t ud_id,
                                  uint8_t lane_num, uint32_t offset) {
-  uint64_t addr = get_lane_local_memory(ud_id, lane_num, offset);
+  uint64_t addr = UDRuntime_t::get_lane_physical_memory(ud_id, lane_num, offset);
   uint64_t apply_offset = UDRuntime_t::get_lane_aligned_offset(ud_id, lane_num, offset);
   apply_offset /= sizeof(word_t);
   ptr_t base = BaseAddrs.spaddr + apply_offset;
@@ -299,7 +289,7 @@ void SimUDRuntime_t::ud2t_memcpy(ptr_t data, uint64_t size, uint8_t ud_id,
 
 bool SimUDRuntime_t::test_addr(uint8_t ud_id, uint8_t lane_num, uint32_t offset,
                                word_t expected) {
-  uint64_t addr = get_lane_local_memory(ud_id, lane_num, offset);
+  uint64_t addr = UDRuntime_t::get_lane_physical_memory(ud_id, lane_num, offset);
   uint64_t apply_offset = UDRuntime_t::get_lane_aligned_offset(ud_id, lane_num, offset);
   apply_offset /= sizeof(word_t);
   ptr_t base = BaseAddrs.spaddr + apply_offset;

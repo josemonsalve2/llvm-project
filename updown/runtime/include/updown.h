@@ -665,14 +665,6 @@ protected:
   void calc_addrmap();
 
   /**
-   * @brief
-   *
-   * @param num
-   * @return uint32_t
-   */
-  uint32_t change_endian(uint32_t num);
-
-  /**
    * @brief Get the aligned offset object
    *
    * @param ud_id UpDown ID
@@ -841,8 +833,51 @@ public:
                       word_t expected = 1);
 
   /**
+   * @brief Get offset in local memory
+   *
+   * This is a temporary solution to the absence of an appropriate virtual
+   * memory mapping. This functions assumes that physical memory side is
+   * contiguous and it does not have space for expansion. This is, instead
+   * of using the Scratchpad Capacity that is explained in
+   * UDRuntime_t::base_addr_t, it uses the actual size of the Scratchpad Memory.
+   * 
+   * Currently, this function is used to allow pointers to be passed from top
+   * to updown. 
+   *
+   * ### Scratchpad physical memory for 1 UD
+   * \verbatim
+   *        MEMORY                     SIZE
+   *   |--------------|  <-- Scratchpad Base Address
+   *   |              |
+   *   |    Lane 0    |
+   *   |              |
+   *   |--------------|  <-- SPmem BankSize
+   *   |              |
+   *   |    Lane 1    |
+   *   |              |
+   *   |--------------|  <-- 2 * SPmem BankSize
+   *   |      ...     |
+   *   |--------------|  <-- (NumLanes-1) * SPmem BankSize
+   *   |              |
+   *   |    Lane N    |
+   *   |              |
+   *   |--------------|  <-- (NumLanes) * SPmem BankSize
+   * \endverbatim
+   *
+   * @param ud_id UpDown ID
+   * @param lane_num Lane ID
+   * @param offset Offset in bytes
+   * @return uint64_t
+   */
+  uint64_t get_lane_physical_memory(uint8_t ud_id, uint8_t lane_num,
+                                           uint32_t offset = 0);
+
+
+  /**
    * @brief Helper function to dump current base addresses
    *
+   * This function has no effect on runtime, but it is useful for debugging
+   * 
    */
   void dumpBaseAddrs() {
     printf("  mmaddr     = 0x%lX\n"
@@ -856,6 +891,7 @@ public:
   /**
    * @brief Helper function to dump current Machine Config
    *
+   * This function has no effect on runtime, but it is useful for debugging
    */
   void dumpMachineConfig() {
     printf("  MapMemBase          = 0x%lX\n"
