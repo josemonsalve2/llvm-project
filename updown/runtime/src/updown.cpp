@@ -41,7 +41,7 @@ void UDRuntime_t::send_event(event_t ev) {
     for (uint8_t i = 0; i < ev.get_NumOperands() + 1; i++) {
       *(OpsQ) =
           ev.get_OperandsData()[i];
-      UPDOWN_INFOMSG("OB[%u]:%u", i, ev.get_OperandsData()[i]);
+      UPDOWN_INFOMSG("OB[%u]: %u (0x%X)", i, ev.get_OperandsData()[i], ev.get_OperandsData()[i]);
     }
   UPDOWN_INFOMSG("Unlocking 0x%lX", reinterpret_cast<uint64_t>(lock));
   *(lock) = 0;
@@ -96,18 +96,18 @@ void UDRuntime_t::mm_free(void *ptr) {
   return MappedMemoryManager->remove_region(ptr);
 }
 
-void UDRuntime_t::mm2t_memcpy(uint64_t offset, ptr_t src, uint64_t size) {
-  ptr_t dst = BaseAddrs.mmaddr + offset;
-  std::memcpy(src, dst, size);
-  UPDOWN_INFOMSG("Copying %lu words from mapped memory (%lX) to top (%lX)",
-                 size, reinterpret_cast<uint64_t>(src), reinterpret_cast<uint64_t>(dst));
+void UDRuntime_t::mm2t_memcpy(uint64_t offset, ptr_t dst, uint64_t size) {
+  ptr_t src = BaseAddrs.mmaddr + offset;
+  UPDOWN_INFOMSG("Copying %lu words from mapped memory (%lX = %d) to top (%lX = %d)",
+                 size, reinterpret_cast<uint64_t>(src), *src, reinterpret_cast<uint64_t>(dst), *dst);
+  std::memcpy(dst, src, size*sizeof(word_t));
 }
 
 void UDRuntime_t::t2mm_memcpy(uint64_t offset, ptr_t src, uint64_t size) {
   ptr_t dst = BaseAddrs.mmaddr + offset;
-  std::memcpy(src, dst, size);
-  UPDOWN_INFOMSG("Copying %lu words from top (%lX) to mapped memory (%lX)",
-                 size, reinterpret_cast<uint64_t>(src), reinterpret_cast<uint64_t>(dst));
+  UPDOWN_INFOMSG("Copying %lu words from top (%lX = %d) to mapped memory (%lX = %d)",
+                 size, reinterpret_cast<uint64_t>(src), *src, reinterpret_cast<uint64_t>(dst), *dst);
+  std::memcpy(dst, src, size*sizeof(word_t));
 }
 
 void UDRuntime_t::t2ud_memcpy(ptr_t data, uint64_t size,  uint8_t ud_id, uint8_t lane_num, uint32_t offset) {

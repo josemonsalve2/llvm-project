@@ -3,6 +3,8 @@
 #include <cstdlib>
 #include <fcntl.h>
 #include <sys/mman.h>
+#include <vector>
+#include <utility>
 #include "upstream_pyintf.hh"
 
 namespace UpDown {
@@ -34,6 +36,8 @@ void SimUDRuntime_t::initMemoryArrays() {
   this->MachineConfig.ControlBase = reinterpret_cast<uint64_t>(ControlMemory);
   UPDOWN_INFOMSG("ControlBase changed to 0x%lX",
                  this->MachineConfig.ControlBase);
+  // ReInit Memory Manager with new machine configuration
+  reset_memory_manager();
 }
 
 void SimUDRuntime_t::initPythonInterface() {
@@ -86,6 +90,9 @@ void SimUDRuntime_t::start_exec(uint8_t ud_id, uint8_t lane_num) {
   // Perform the regular access. This will have no effect
   UDRuntime_t::start_exec(ud_id, lane_num);
   if (!python_enabled) return;
+
+  // Execute these after finishing all the events in this lane
+  std::vector<std::pair<uint8_t, uint8_t>> other_lanes_exec;
 
   // Send and process all the messages that are in the Event Queues
   while (upstream_pyintf->getEventQ_Size(lane_num) > 0) {
@@ -140,7 +147,7 @@ void SimUDRuntime_t::start_exec(uint8_t ud_id, uint8_t lane_num) {
           sdest = (lower & 0xffffffff) | ((upper << 32) & 0xffffffff00000000);
           UPDOWN_INFOMSG("Memory Bound Load: %d, Store: %d", !smode_2,
                          smode_2);
-          UPDOWN_INFOMSG("Send Dest: %lx, Upper: %lx, Lower: %lx", sdest,
+          UPDOWN_INFOMSG("Send Dest: %lX, Upper: %lX, Lower: %lX", sdest,
                          upper, lower);
         } else { // Scratchpad Memory Bound to another lane
           sdest = sendmap[lane_num][offset++];         //[8*i+4];
@@ -196,11 +203,9 @@ void SimUDRuntime_t::start_exec(uint8_t ud_id, uint8_t lane_num) {
                 "Loading from Mapped Memory address: %lX, size: %d", sdest,
                 ssize);
 
-            // Loading data from mapped memory. Abusing this function slightly.
-            // The data is in the runtime and needs to be sent to the mapped
-            // memory. So in this case the name mm2t can be confusing. Top is
-            // sharing data with runtime
-            mm2t_memcpy(sdest, reinterpret_cast<ptr_t>(sdata), ssize/4);
+            ptr_t src = reinterpret_cast<ptr_t>(sdest);
+            ptr_t dst = reinterpret_cast<ptr_t>(sdata);
+            std::memcpy(dst, src, ssize/4);
             uint32_t edata = 0;
             uint32_t fake_cont = 0xffffffff;
             upstream_pyintf->insert_operand(
@@ -215,21 +220,17 @@ void SimUDRuntime_t::start_exec(uint8_t ud_id, uint8_t lane_num) {
             }
             upstream_pyintf->insert_event(scont, ssize / 4, lane_id);
 
-            // TODO: UpDown ID should be sent to the right one. Right now this
-            // is only supporting a single UpDown ID. This will need to be
-            // changed for multi-UpDown ID
-            start_exec(ud_id, lane_id); // Resolve messages and execution of the
+            if (lane_id != lane_num)
+              other_lanes_exec.emplace_back(ud_id, lane_id); // Resolve messages and execution of the
                                         // other lanes that received an event
           } else {
             // Stores
             UPDOWN_INFOMSG("Storing to Mapped Memory address: %lX, size: %d",
                            sdest, ssize);
 
-            // Storing data to mapped memory. Abusing this function slightly.
-            // The data is in the runtime and needs to be sent to the mapped
-            // memory. So in this case the name t2mm can be confusing. Top is
-            // sharing data with runtime
-            t2mm_memcpy(sdest, reinterpret_cast<ptr_t>(sdata), ssize/4);
+            ptr_t src = reinterpret_cast<ptr_t>(sdata);
+            ptr_t dst = reinterpret_cast<ptr_t>(sdest);
+            std::memcpy(dst, src, ssize/4);
 
             uint32_t fake_cont = 0xffffffff;
             upstream_pyintf->insert_operand(
@@ -240,20 +241,18 @@ void SimUDRuntime_t::start_exec(uint8_t ud_id, uint8_t lane_num) {
           // Sending message to Scratchpad of another lane
           upstream_pyintf->insert_operand(scont,
                                           sdest); // insert continuation first
-          UPDOWN_INFOMSG("LaneNum: %d, OB[0]: %d", sdest, scont);
+          UPDOWN_INFOMSG("LaneNum: %d, OB[0]: %d (0x%X)", sdest, scont, scont);
           for (int i = 0; i < ssize / 4; i++) {
             upstream_pyintf->insert_operand(
                 sdata_32[i], sdest); // insert all collected operands
-            UPDOWN_INFOMSG("LaneNum:%d, OB[%d]:%d", sdest, i + 1,
-                           sdata_32[i]);
+            UPDOWN_INFOMSG("LaneNum:%d, OB[%d]: %d (0x%X)", sdest, i + 1,
+                           sdata_32[i], sdata_32[i]);
           }
           upstream_pyintf->insert_event(sevent, ssize / 4,
                                         sdest); // insert all collected operands
 
-          // TODO: UpDown ID should be sent to the right one. Right now this is
-          // only supporting a single UpDown ID. This will need to be changed
-          // for multi-UpDown ID
-          start_exec(ud_id, sdest); // Resolve messages and execution of the
+          if (lane_id != lane_num)
+            other_lanes_exec.emplace_back(ud_id, lane_id); // Resolve messages and execution of the
                                     // other lanes that received an event
         }
       }
@@ -262,6 +261,12 @@ void SimUDRuntime_t::start_exec(uint8_t ud_id, uint8_t lane_num) {
                      lane_num);
     }
   }
+  // Let's execute pending events
+  // TODO: UpDown ID should be sent to the right one. Right now this is
+  // only supporting a single UpDown ID. This will need to be changed
+  // for multi-UpDown ID
+  for (auto &other_lane : other_lanes_exec)
+    start_exec(other_lane.first, other_lane.second);
 }
 
 void SimUDRuntime_t::t2ud_memcpy(ptr_t data, uint64_t size, uint8_t ud_id,

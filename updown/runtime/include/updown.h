@@ -117,7 +117,7 @@ public:
                            (NumOperands + 1))) { // TODO: Avoid this malloc
 
     Data[0] = cont; // Fake continuation
-    std::memcpy(Data+1, oper, get_NumOperands());
+    std::memcpy(Data+1, oper, get_NumOperands()*sizeof(word_t));
   }
 
 
@@ -674,6 +674,16 @@ protected:
    */
   inline uint64_t get_lane_aligned_offset(uint8_t ud_id, uint8_t lane_num,
                                           uint32_t offset = 0);
+
+  /**
+   * @brief Reset the Memory Manager when machine configuration is changed;
+   * 
+   */
+
+  inline void reset_memory_manager() {
+    delete MappedMemoryManager;
+    MappedMemoryManager = new ud_mapped_memory_t(this->MachineConfig);
+  }
 
 public:
   UDRuntime_t() {
