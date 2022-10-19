@@ -1,8 +1,5 @@
 var searchData=
 [
-  ['t2mm_5fmemcpy_0',['t2mm_memcpy',['../class_up_down_1_1_u_d_runtime__t.html#afc78cfc10527725c84302dbe3e2f7e07',1,'UpDown::UDRuntime_t']]],
-  ['t2ud_5fmemcpy_1',['t2ud_memcpy',['../class_up_down_1_1_u_d_runtime__t.html#a5085f1a2175bd89c266a85f4f551130b',1,'UpDown::UDRuntime_t']]],
-  ['test_5faddr_2',['test_addr',['../class_up_down_1_1_u_d_runtime__t.html#ab96599b352e42e823c692ecc4d3ee689',1,'UpDown::UDRuntime_t']]],
-  ['test_5fwait_5faddr_3',['test_wait_addr',['../class_up_down_1_1_u_d_runtime__t.html#a7e41c8dae74b2b76e74c8a3d20324d15',1,'UpDown::UDRuntime_t']]],
-  ['todo_20list_4',['Todo List',['../todo.html',1,'']]]
+  ['remove_5fregion_0',['remove_region',['../class_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t.html#adc9c872b795c000490acf4f5e350aa35',1,'UpDown::UDRuntime_t::ud_mapped_memory_t']]],
+  ['reset_5fmemory_5fmanager_1',['reset_memory_manager',['../class_up_down_1_1_u_d_runtime__t.html#a327a02b17f491af168ab57569240af8f',1,'UpDown::UDRuntime_t']]]
 ];

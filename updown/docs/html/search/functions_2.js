@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['event_5ft_0',['event_t',['../class_up_down_1_1event__t.html#a3ace3ad56fae2536c8f516f220ce0002',1,'UpDown::event_t::event_t()'],['../class_up_down_1_1event__t.html#a1136178568e8e060cd5878d5a06157cf',1,'UpDown::event_t::event_t(uint8_t e_label, uint8_t udid, uint8_t lid=0, uint8_t tid=ANY_THREAD, operands_t *operands=nullptr)']]]
+  ['dumpbaseaddrs_0',['dumpBaseAddrs',['../class_up_down_1_1_u_d_runtime__t.html#a206a9273dbdc8141741e7cd6b065a1fd',1,'UpDown::UDRuntime_t']]],
+  ['dumpmachineconfig_1',['dumpMachineConfig',['../class_up_down_1_1_u_d_runtime__t.html#a79ecb1814ceba28e24c404af732e073c',1,'UpDown::UDRuntime_t']]]
 ];

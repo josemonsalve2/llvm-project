@@ -1,0 +1,117 @@
+\hypertarget{class_upstream___py_intf}{}\doxysection{Upstream\+\_\+\+Py\+Intf Class Reference}
+\label{class_upstream___py_intf}\index{Upstream\_PyIntf@{Upstream\_PyIntf}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_upstream___py_intf_a77fa612088282587fc9af1a4fc63c3f5}\label{class_upstream___py_intf_a77fa612088282587fc9af1a4fc63c3f5}} 
+{\bfseries Upstream\+\_\+\+Py\+Intf} (int numlanes, std\+::string progfile, std\+::string efaname, std\+::string simdir, int lm\+\_\+mode, uint32\+\_\+t lmsize, std\+::string perf\+\_\+log\+\_\+file)
+\item 
+\mbox{\Hypertarget{class_upstream___py_intf_a99d9187ab5c8e6bcb08e18bfda1258b0}\label{class_upstream___py_intf_a99d9187ab5c8e6bcb08e18bfda1258b0}} 
+void {\bfseries insert\+\_\+event} (uint32\+\_\+t edata, int num\+Ob, int lane\+\_\+id)
+\item 
+\mbox{\Hypertarget{class_upstream___py_intf_a82f95953166362d7d91f134c338e72a5}\label{class_upstream___py_intf_a82f95953166362d7d91f134c338e72a5}} 
+void {\bfseries insert\+\_\+operand} (uint32\+\_\+t odata, int lane\+\_\+id)
+\item 
+\mbox{\Hypertarget{class_upstream___py_intf_a91b6f6e68693a8795a029cf04de2e886}\label{class_upstream___py_intf_a91b6f6e68693a8795a029cf04de2e886}} 
+int {\bfseries execute} (int cont\+\_\+state, struct \mbox{\hyperlink{structemulator__stats}{emulator\+\_\+stats}} $\ast$em\+\_\+stats, int lane\+\_\+id)
+\item 
+\mbox{\Hypertarget{class_upstream___py_intf_ae5b12351e8b69b36330014be78b24607}\label{class_upstream___py_intf_ae5b12351e8b69b36330014be78b24607}} 
+void {\bfseries insert\+\_\+scratch} (uint32\+\_\+t saddr, uint32\+\_\+t sdata)
+\item 
+\mbox{\Hypertarget{class_upstream___py_intf_afcef50c54a2f19936150d43053572998}\label{class_upstream___py_intf_afcef50c54a2f19936150d43053572998}} 
+void {\bfseries insert\+\_\+sbuffer} (uint32\+\_\+t saddr, uint32\+\_\+t sdata, int lane\+\_\+id)
+\item 
+\mbox{\Hypertarget{class_upstream___py_intf_a2a63db07fd281932537dd5817a178864}\label{class_upstream___py_intf_a2a63db07fd281932537dd5817a178864}} 
+void {\bfseries read\+\_\+scratch} (uint32\+\_\+t saddr, uint8\+\_\+t $\ast$data, uint32\+\_\+t size)
+\item 
+\mbox{\Hypertarget{class_upstream___py_intf_a2a1353f6942affa66a3130309368b4f9}\label{class_upstream___py_intf_a2a1353f6942affa66a3130309368b4f9}} 
+void {\bfseries read\+\_\+sbuffer} (uint32\+\_\+t saddr, uint8\+\_\+t $\ast$data, uint32\+\_\+t size, int lane\+\_\+id)
+\item 
+\mbox{\Hypertarget{class_upstream___py_intf_aa828e5cdb0db5bf290fdf0ff55b4a8c8}\label{class_upstream___py_intf_aa828e5cdb0db5bf290fdf0ff55b4a8c8}} 
+uint32\+\_\+t {\bfseries get\+Event\+Q\+\_\+\+Size} (int lane\+\_\+id)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_upstream___py_intf_a99a2127685cc8a949fb70f77304ff1eb}{add\+System\+Paths}} ()
+\begin{DoxyCompactList}\small\item\em Adds system paths for searching the necessary modules. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_upstream___py_intf_ae8e548ba04a758c674f06275560a5cb9}\label{class_upstream___py_intf_ae8e548ba04a758c674f06275560a5cb9}} 
+int {\bfseries proc\+\_\+id}
+\item 
+\mbox{\Hypertarget{class_upstream___py_intf_a9c3f7d53bd8bba44cd8e403f208c26ba}\label{class_upstream___py_intf_a9c3f7d53bd8bba44cd8e403f208c26ba}} 
+Py\+Object $\ast$ {\bfseries p\+Name}
+\item 
+\mbox{\Hypertarget{class_upstream___py_intf_a2c5486fa43ee241da80a57071ee408c3}\label{class_upstream___py_intf_a2c5486fa43ee241da80a57071ee408c3}} 
+Py\+Object $\ast$ {\bfseries p\+Module}
+\item 
+\mbox{\Hypertarget{class_upstream___py_intf_a35bb2cfcbe7669388d1078b611ef13cf}\label{class_upstream___py_intf_a35bb2cfcbe7669388d1078b611ef13cf}} 
+Py\+Object $\ast$ {\bfseries p\+Module2}
+\item 
+\mbox{\Hypertarget{class_upstream___py_intf_a5ff41e736b7de0eb02f1ac482e529bed}\label{class_upstream___py_intf_a5ff41e736b7de0eb02f1ac482e529bed}} 
+Py\+Object $\ast$ {\bfseries pargs}
+\item 
+\mbox{\Hypertarget{class_upstream___py_intf_ac71ccd2e60e23ad296f2a5cbe3831149}\label{class_upstream___py_intf_ac71ccd2e60e23ad296f2a5cbe3831149}} 
+Py\+Object $\ast$ {\bfseries pclass\+\_\+ve}
+\item 
+\mbox{\Hypertarget{class_upstream___py_intf_a90c52b6799cbb54896bdadf1b0b2810d}\label{class_upstream___py_intf_a90c52b6799cbb54896bdadf1b0b2810d}} 
+Py\+Object $\ast$ {\bfseries pinst\+\_\+ve}
+\item 
+\mbox{\Hypertarget{class_upstream___py_intf_abf8b7ba8a6d86c51bd4681e05c24cf47}\label{class_upstream___py_intf_abf8b7ba8a6d86c51bd4681e05c24cf47}} 
+Py\+Object $\ast$ {\bfseries p\+Emulator}
+\item 
+\mbox{\Hypertarget{class_upstream___py_intf_a782848cd91b1fb8d199ea9fa1094dbc8}\label{class_upstream___py_intf_a782848cd91b1fb8d199ea9fa1094dbc8}} 
+Py\+Object $\ast$ {\bfseries p\+Efafile}
+\item 
+\mbox{\Hypertarget{class_upstream___py_intf_ade751fce89e799a82566511f8059d81a}\label{class_upstream___py_intf_ade751fce89e799a82566511f8059d81a}} 
+Py\+Object $\ast$ {\bfseries p\+Virt\+Engine}
+\item 
+\mbox{\Hypertarget{class_upstream___py_intf_a3e27f81f6ddd2fb22ffa51fb3731d75e}\label{class_upstream___py_intf_a3e27f81f6ddd2fb22ffa51fb3731d75e}} 
+Py\+Object $\ast$ {\bfseries pinst\+\_\+eq}
+\item 
+\mbox{\Hypertarget{class_upstream___py_intf_a0167b45fec5bf5114aa7208cf4fce98d}\label{class_upstream___py_intf_a0167b45fec5bf5114aa7208cf4fce98d}} 
+Py\+Object $\ast$ {\bfseries pinst\+\_\+ob}
+\item 
+\mbox{\Hypertarget{class_upstream___py_intf_a36313e2bd93d7f1127f043205535bc28}\label{class_upstream___py_intf_a36313e2bd93d7f1127f043205535bc28}} 
+Py\+Object $\ast$ {\bfseries p\+LM}
+\item 
+\mbox{\Hypertarget{class_upstream___py_intf_ab3dbde00ddd5ebb2c1ffc0c4f649674b}\label{class_upstream___py_intf_ab3dbde00ddd5ebb2c1ffc0c4f649674b}} 
+Py\+Object $\ast$ {\bfseries planes}
+\item 
+\mbox{\Hypertarget{class_upstream___py_intf_aa5b09ef541b26422a1e5ad74328efa6d}\label{class_upstream___py_intf_aa5b09ef541b26422a1e5ad74328efa6d}} 
+Py\+Object $\ast$ {\bfseries pefa}
+\item 
+\mbox{\Hypertarget{class_upstream___py_intf_a221d57dbc30b58e9fdfac9d26674678c}\label{class_upstream___py_intf_a221d57dbc30b58e9fdfac9d26674678c}} 
+Py\+Object $\ast$ {\bfseries pefa\+\_\+prop}
+\item 
+\mbox{\Hypertarget{class_upstream___py_intf_ab22ad104dbdb931b65885b5abce2bd67}\label{class_upstream___py_intf_ab22ad104dbdb931b65885b5abce2bd67}} 
+Py\+Object $\ast$ {\bfseries pprop}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_upstream___py_intf_a99a2127685cc8a949fb70f77304ff1eb}\label{class_upstream___py_intf_a99a2127685cc8a949fb70f77304ff1eb}} 
+\index{Upstream\_PyIntf@{Upstream\_PyIntf}!addSystemPaths@{addSystemPaths}}
+\index{addSystemPaths@{addSystemPaths}!Upstream\_PyIntf@{Upstream\_PyIntf}}
+\doxysubsubsection{\texorpdfstring{addSystemPaths()}{addSystemPaths()}}
+{\footnotesize\ttfamily void Upstream\+\_\+\+Py\+Intf\+::add\+System\+Paths (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Adds system paths for searching the necessary modules. 
+
+This function adds the following system locations to the python system path\+:
+
+
+\begin{DoxyItemize}
+\item Installation path for updown runtime lib emulator
+\item Source code location for updown runtime lib emulator
+\item A folder named emulator in the current location 
+\end{DoxyItemize}
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/josemonsalvediaz/\+Documents/\+Project38/llvm/updown/simruntime/include/upstream\+\_\+pyintf.\+hh\item 
+/\+Users/josemonsalvediaz/\+Documents/\+Project38/llvm/updown/simruntime/src/upstream\+\_\+pyintf.\+cc\end{DoxyCompactItemize}

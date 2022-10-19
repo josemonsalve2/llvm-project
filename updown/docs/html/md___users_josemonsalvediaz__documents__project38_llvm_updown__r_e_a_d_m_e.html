@@ -93,10 +93,60 @@ $(document).ready(function(){initNavTree('md___users_josemonsalvediaz__documents
   <div class="headertitle"><div class="title">UpDown recode project </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p >This repository contains software for UpDown using LLVM.</p>
+<div class="textblock"><p >This repository contains the UpDown Runtime, the UpDown emulator, and Other infrastructure built around LLVM</p>
 <h1><a class="anchor" id="autotoc_md1"></a>
+Current content</h1>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Name   </th><th class="markdownTableHeadNone">Description    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">[UpDown Runtime](runtime)   </td><td class="markdownTableBodyNone">Top runtime for the UpDown infrastructure. Right now, this is intended to be used with Gem5.    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">[Simulated UpDown Runtime](simruntime)   </td><td class="markdownTableBodyNone">Wrapper class that uses the same API of the UpDown runtime, but simulates the UpDown hardware    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">[Microbenchmarks](ubenchmarks)   </td><td class="markdownTableBodyNone">Wrapper class that uses the same API of the UpDown runtime, but simulates the UpDown hardware    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">PythonSytanx Plugin   </td><td class="markdownTableBodyNone">Plugin that allows to embed python code that describe a Codelet in the UpDown (alpha)   </td></tr>
+</table>
+<h1><a class="anchor" id="autotoc_md2"></a>
+Building runtime and simruntime standalone</h1>
+<p >In order to build the runtime and the emulator for the updown lane, use the following commands</p>
+<h2><a class="anchor" id="autotoc_md3"></a>
+Full compilation</h2>
+<p >Use the following command to include building tests, microbenchmarks, and debugging symbols. </p><div class="fragment"><div class="line">mkdir build_standalone &amp;&amp; cd build_standalone</div>
+<div class="line">cmake -G Ninja               \</div>
+<div class="line">../llvm/updown/              \</div>
+<div class="line">-DUPDOWNRT_ENABLE_TESTS=ON   \</div>
+<div class="line">-DUPDOWNRT_ENABLE_UBENCH=ON   \</div>
+<div class="line">-DUPDOWN_ENABLE_DEBUG=ON     \</div>
+<div class="line">-DCMAKE_INSTALL_PREFIX=../install #Change to path to install</div>
+</div><!-- fragment --> <h2><a class="anchor" id="autotoc_md4"></a>
+Available CMake flags</h2>
+<p >The <code>-DUPDOWNRT_ENABLE_TESTS</code> enable compilation of tests for both the runtime and the simruntime The <code>-DUPDOWNRT_ENABLE_UBENCH</code> enables compilation of the microbenchmarks The <code>-DUPDOWN_ENABLE_DEBUG</code> flag is used to enable debbuging messages in the runtime system. The <code>-DCMAKE_INSTALL_PREFIX=</code> determins the installation prefix.</p>
+<h2><a class="anchor" id="autotoc_md5"></a>
+Linking the runtime to an external program</h2>
+<p >Using the following code:</p>
+<div class="fragment"><div class="line">#include &quot;updown.h&quot;</div>
+<div class="line"> </div>
+<div class="line"> </div>
+<div class="line">int main() {</div>
+<div class="line">        UpDown::UDRuntime_t myRt;</div>
+<div class="line"> </div>
+<div class="line">        return 0;</div>
+<div class="line">}</div>
+</div><!-- fragment --><p >You can build it with the following command</p>
+<div class="fragment"><div class="line">g++ -static main.cc -Iinstall/updown/include/ install/updown/lib/libUpDownRuntimeStatic.a -o main.exe</div>
+</div><!-- fragment --><p >Available libraries are:</p>
+<ul>
+<li><code>libUpDownRuntimeStatic.a</code></li>
+<li><code>libUpDownRuntime.so</code></li>
+<li><code>libUpDownSimRuntimeStatic.a</code></li>
+<li><code>libUpDownSimRuntime.so</code> </li>
+</ul>
+<h1><a class="anchor" id="autotoc_md6"></a>
 Building LLVM</h1>
-<p >To enable the project it is necessary to add "updown" to the list of <code>-DLLVM_ENABLE_PROJECTS=</code>. See the following example. The important option is the last line</p>
+<p >To enable the project it is necessary to add "updown" to the list of <code>-DLLVM_ENABLE_PROJECTS=</code>. See the following example. The important option is the last line.</p>
+<p >IMPORTANT: This is currently unsupported due to changes in the runtime interface that has not been reflected to the syntax plugin.</p>
 <div class="fragment"><div class="line">git clone https://www.github.com/josemonsalve2/llvm-project</div>
 <div class="line">git checkout updown-recode</div>
 <div class="line">mkdir build &amp;&amp; cd build</div>
@@ -116,42 +166,7 @@ Building LLVM</h1>
 <div class="line">-DLLVM_ENABLE_PLUGINS=ON           \</div>
 <div class="line">-DCLANG_PLUGIN_SUPPORT=ON          \</div>
 <div class="line">-DLLVM_ENABLE_PROJECTS=&quot;clang;updown&quot;</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md2"></a>
-Building runtime only</h1>
-<div class="fragment"><div class="line">mkdir build_standalone &amp;&amp; cd build_standalone</div>
-<div class="line">cmake -G Ninja               \</div>
-<div class="line">../llvm/updown/              \</div>
-<div class="line">-DUPDOWNRT_ENABLE_TESTS=ON   \</div>
-<div class="line">-DUPDOWN_ENABLE_DEBUG=ON     \</div>
-<div class="line">-DCMAKE_INSTALL_PREFIX=../install #Change to path to install</div>
-</div><!-- fragment --><p >The <code>-DUPDOWN_ENABLE_DEBUG</code> flag is used to enable debbuging messages in the runtime system. Feel free to remove it.</p>
-<p >The <code>-DCMAKE_INSTALL_PREFIX=</code> determins the installation prefix.</p>
-<h2><a class="anchor" id="autotoc_md3"></a>
-Example code</h2>
-<p >Using the following code:</p>
-<div class="fragment"><div class="line">#include &quot;updown.h&quot;</div>
-<div class="line"> </div>
-<div class="line"> </div>
-<div class="line">int main() {</div>
-<div class="line">        UpDown::UDRuntime_t myRt();</div>
-<div class="line"> </div>
-<div class="line">        return 0;</div>
-<div class="line">}</div>
-</div><!-- fragment --><p >You can build it with the following command</p>
-<div class="fragment"><div class="line">g++ -static main.cc -Iinstall/updown/include/ install/updown/lib/libUpDownRuntimeStatic.a </div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md4"></a>
-Current content</h1>
-<table class="markdownTable">
-<tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Name   </th><th class="markdownTableHeadNone">Description    </th></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">PythonSytanx Plugin   </td><td class="markdownTableBodyNone">Plugin that allows to embed python code that describe a Codelet in the UpDown    </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">UpDown Runtime   </td><td class="markdownTableBodyNone">Top runtime for the UpDown infrastructure    </td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone">Simulated UpDown Runtime   </td><td class="markdownTableBodyNone">Wrapper class that uses the updown runtime, but simulates the UpDown hardware (Under development)   </td></tr>
-</table>
-<h2><a class="anchor" id="autotoc_md5"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md7"></a>
 Python Syntax</h2>
 <p >The updown syntax plugin allows to inline python code that describes a Codelet into C++. It translates this Code to a single python file that can be used to call the emulator. On the C++ world syntax will be changed to use the updown runtime.</p>
 <p >Example code:</p>

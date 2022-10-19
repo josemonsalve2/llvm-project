@@ -18,12 +18,14 @@ Class that holds information about the operands.
 \begin{DoxyCompactList}\small\item\em Copy Constructor. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{class_up_down_1_1operands__t_abf4294c7e85bff1d380dbaacac2e5615}{operands\+\_\+t}} (\mbox{\hyperlink{class_up_down_1_1operands__t}{operands\+\_\+t}} \&\&o)
 \begin{DoxyCompactList}\small\item\em Copy Constructor. \end{DoxyCompactList}\item 
-\mbox{\hyperlink{class_up_down_1_1operands__t_aef9a024a90d4073d82d1195cf82fa660}{operands\+\_\+t}} (uint8\+\_\+t num, ptr\+\_\+t oper=nullptr, word\+\_\+t cont=0)
+\mbox{\hyperlink{class_up_down_1_1operands__t_ab85237b737f780d3985be56eec5067ff}{operands\+\_\+t}} (uint8\+\_\+t num, ptr\+\_\+t oper, word\+\_\+t cont=0)
 \begin{DoxyCompactList}\small\item\em Construct a new \mbox{\hyperlink{class_up_down_1_1operands__t}{operands\+\_\+t}} opbejct, setting the operands. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_up_down_1_1operands__t_a90604b735bc17d1136cbd32da1292496}{operands\+\_\+t}} (uint8\+\_\+t num, word\+\_\+t cont=0)
+\begin{DoxyCompactList}\small\item\em Construct a new \mbox{\hyperlink{class_up_down_1_1operands__t}{operands\+\_\+t}} opbejct,. \end{DoxyCompactList}\item 
 ptr\+\_\+t \mbox{\hyperlink{class_up_down_1_1operands__t_a4f59ca5f7e3d814256818b7b74d791bc}{get\+\_\+\+Data}} ()
 \begin{DoxyCompactList}\small\item\em Get the pointer to Data. \end{DoxyCompactList}\item 
-uint8\+\_\+t \mbox{\hyperlink{class_up_down_1_1operands__t_aa769b305fb95f01c74f1230386f6914c}{get\+\_\+\+Num\+Operands}} ()
-\begin{DoxyCompactList}\small\item\em Get the Num\+Operands. \end{DoxyCompactList}\end{DoxyCompactItemize}
+void \mbox{\hyperlink{class_up_down_1_1operands__t_a549f45dfa5f6e439f94b295dc6a4a122}{set\+\_\+operand}} (uint32\+\_\+t op, word\+\_\+t val)
+\begin{DoxyCompactList}\small\item\em Set an operand. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -44,7 +46,7 @@ Contains a pointer to data and the number of operands. data is an array of ptr\+
 \mbox{\Hypertarget{class_up_down_1_1operands__t_ac6ee39cc5caa0d26a4506cbe38f99db7}\label{class_up_down_1_1operands__t_ac6ee39cc5caa0d26a4506cbe38f99db7}} 
 \index{UpDown::operands\_t@{UpDown::operands\_t}!operands\_t@{operands\_t}}
 \index{operands\_t@{operands\_t}!UpDown::operands\_t@{UpDown::operands\_t}}
-\doxysubsubsection{\texorpdfstring{operands\_t()}{operands\_t()}\hspace{0.1cm}{\footnotesize\ttfamily [1/4]}}
+\doxysubsubsection{\texorpdfstring{operands\_t()}{operands\_t()}\hspace{0.1cm}{\footnotesize\ttfamily [1/5]}}
 {\footnotesize\ttfamily Up\+Down\+::operands\+\_\+t\+::operands\+\_\+t (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
@@ -54,7 +56,7 @@ Construct a new empty \mbox{\hyperlink{class_up_down_1_1operands__t}{operands\+\
 Set the Data pointer to null and Num\+Operands to 0 \mbox{\Hypertarget{class_up_down_1_1operands__t_a44a0e3e7568886b69809d4bedde0edf1}\label{class_up_down_1_1operands__t_a44a0e3e7568886b69809d4bedde0edf1}} 
 \index{UpDown::operands\_t@{UpDown::operands\_t}!operands\_t@{operands\_t}}
 \index{operands\_t@{operands\_t}!UpDown::operands\_t@{UpDown::operands\_t}}
-\doxysubsubsection{\texorpdfstring{operands\_t()}{operands\_t()}\hspace{0.1cm}{\footnotesize\ttfamily [2/4]}}
+\doxysubsubsection{\texorpdfstring{operands\_t()}{operands\_t()}\hspace{0.1cm}{\footnotesize\ttfamily [2/5]}}
 {\footnotesize\ttfamily Up\+Down\+::operands\+\_\+t\+::operands\+\_\+t (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_up_down_1_1operands__t}{operands\+\_\+t}} \&}]{o }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
@@ -69,7 +71,7 @@ Copy Constructor.
 \mbox{\Hypertarget{class_up_down_1_1operands__t_abf4294c7e85bff1d380dbaacac2e5615}\label{class_up_down_1_1operands__t_abf4294c7e85bff1d380dbaacac2e5615}} 
 \index{UpDown::operands\_t@{UpDown::operands\_t}!operands\_t@{operands\_t}}
 \index{operands\_t@{operands\_t}!UpDown::operands\_t@{UpDown::operands\_t}}
-\doxysubsubsection{\texorpdfstring{operands\_t()}{operands\_t()}\hspace{0.1cm}{\footnotesize\ttfamily [3/4]}}
+\doxysubsubsection{\texorpdfstring{operands\_t()}{operands\_t()}\hspace{0.1cm}{\footnotesize\ttfamily [3/5]}}
 {\footnotesize\ttfamily Up\+Down\+::operands\+\_\+t\+::operands\+\_\+t (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_up_down_1_1operands__t}{operands\+\_\+t}} \&\&}]{o }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
@@ -81,11 +83,11 @@ Copy Constructor.
 {\em o} & other object \\
 \hline
 \end{DoxyParams}
-\mbox{\Hypertarget{class_up_down_1_1operands__t_aef9a024a90d4073d82d1195cf82fa660}\label{class_up_down_1_1operands__t_aef9a024a90d4073d82d1195cf82fa660}} 
+\mbox{\Hypertarget{class_up_down_1_1operands__t_ab85237b737f780d3985be56eec5067ff}\label{class_up_down_1_1operands__t_ab85237b737f780d3985be56eec5067ff}} 
 \index{UpDown::operands\_t@{UpDown::operands\_t}!operands\_t@{operands\_t}}
 \index{operands\_t@{operands\_t}!UpDown::operands\_t@{UpDown::operands\_t}}
-\doxysubsubsection{\texorpdfstring{operands\_t()}{operands\_t()}\hspace{0.1cm}{\footnotesize\ttfamily [4/4]}}
-{\footnotesize\ttfamily Up\+Down\+::operands\+\_\+t\+::operands\+\_\+t (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{num,  }\item[{ptr\+\_\+t}]{oper = {\ttfamily nullptr},  }\item[{word\+\_\+t}]{cont = {\ttfamily 0} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+\doxysubsubsection{\texorpdfstring{operands\_t()}{operands\_t()}\hspace{0.1cm}{\footnotesize\ttfamily [4/5]}}
+{\footnotesize\ttfamily Up\+Down\+::operands\+\_\+t\+::operands\+\_\+t (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{num,  }\item[{ptr\+\_\+t}]{oper,  }\item[{word\+\_\+t}]{cont = {\ttfamily 0} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
@@ -102,6 +104,25 @@ Construct a new \mbox{\hyperlink{class_up_down_1_1operands__t}{operands\+\_\+t}}
 \end{DoxyParams}
 \begin{DoxyRefDesc}{Todo}
 \item[\mbox{\hyperlink{todo__todo000002}{Todo}}]This should avoid using memcpy \end{DoxyRefDesc}
+\mbox{\Hypertarget{class_up_down_1_1operands__t_a90604b735bc17d1136cbd32da1292496}\label{class_up_down_1_1operands__t_a90604b735bc17d1136cbd32da1292496}} 
+\index{UpDown::operands\_t@{UpDown::operands\_t}!operands\_t@{operands\_t}}
+\index{operands\_t@{operands\_t}!UpDown::operands\_t@{UpDown::operands\_t}}
+\doxysubsubsection{\texorpdfstring{operands\_t()}{operands\_t()}\hspace{0.1cm}{\footnotesize\ttfamily [5/5]}}
+{\footnotesize\ttfamily Up\+Down\+::operands\+\_\+t\+::operands\+\_\+t (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{num,  }\item[{word\+\_\+t}]{cont = {\ttfamily 0} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Construct a new \mbox{\hyperlink{class_up_down_1_1operands__t}{operands\+\_\+t}} opbejct,. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em num} & Number of operaqnds \\
+\hline
+{\em cont} & Continuation event\\
+\hline
+\end{DoxyParams}
+\begin{DoxyRefDesc}{Todo}
+\item[\mbox{\hyperlink{todo__todo000003}{Todo}}]This should avoid using memcpy \end{DoxyRefDesc}
 
 
 \doxysubsection{Member Function Documentation}
@@ -118,23 +139,23 @@ Get the pointer to Data.
 \begin{DoxyReturn}{Returns}
 ptr\+\_\+t pointer to data 
 \end{DoxyReturn}
-\mbox{\Hypertarget{class_up_down_1_1operands__t_aa769b305fb95f01c74f1230386f6914c}\label{class_up_down_1_1operands__t_aa769b305fb95f01c74f1230386f6914c}} 
-\index{UpDown::operands\_t@{UpDown::operands\_t}!get\_NumOperands@{get\_NumOperands}}
-\index{get\_NumOperands@{get\_NumOperands}!UpDown::operands\_t@{UpDown::operands\_t}}
-\doxysubsubsection{\texorpdfstring{get\_NumOperands()}{get\_NumOperands()}}
-{\footnotesize\ttfamily uint8\+\_\+t Up\+Down\+::operands\+\_\+t\+::get\+\_\+\+Num\+Operands (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+\mbox{\Hypertarget{class_up_down_1_1operands__t_a549f45dfa5f6e439f94b295dc6a4a122}\label{class_up_down_1_1operands__t_a549f45dfa5f6e439f94b295dc6a4a122}} 
+\index{UpDown::operands\_t@{UpDown::operands\_t}!set\_operand@{set\_operand}}
+\index{set\_operand@{set\_operand}!UpDown::operands\_t@{UpDown::operands\_t}}
+\doxysubsubsection{\texorpdfstring{set\_operand()}{set\_operand()}}
+{\footnotesize\ttfamily void Up\+Down\+::operands\+\_\+t\+::set\+\_\+operand (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{op,  }\item[{word\+\_\+t}]{val }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
 
 
 
-Get the Num\+Operands. 
-
-\begin{DoxyReturn}{Returns}
-uint8\+\_\+t number of operands 
-\end{DoxyReturn}
+Set an operand. 
 
 
-Referenced by \mbox{\hyperlink{class_up_down_1_1event__t_a1136178568e8e060cd5878d5a06157cf}{Up\+Down\+::event\+\_\+t\+::event\+\_\+t()}}, and \mbox{\hyperlink{class_up_down_1_1event__t_a82bb035d6e694deee44a89eab676911a}{Up\+Down\+::event\+\_\+t\+::set\+\_\+event()}}.
-
+\begin{DoxyParams}{Parameters}
+{\em op} & operand number \\
+\hline
+{\em val} & value for the operand \\
+\hline
+\end{DoxyParams}
 
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}

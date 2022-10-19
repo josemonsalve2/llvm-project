@@ -158,6 +158,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7e41c8dae74b2b76e74c8a3d20324d15"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a7e41c8dae74b2b76e74c8a3d20324d15">test_wait_addr</a> (uint8_t ud_id, uint8_t lane_num, uint32_t offset, word_t expected=1)</td></tr>
 <tr class="memdesc:a7e41c8dae74b2b76e74c8a3d20324d15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test a memory location in the updown bank for the expected value. Wait until it is the expected value.  <a href="class_up_down_1_1_u_d_runtime__t.html#a7e41c8dae74b2b76e74c8a3d20324d15">More...</a><br /></td></tr>
 <tr class="separator:a7e41c8dae74b2b76e74c8a3d20324d15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3d126b94a4803a73a7bcbdb18707cb2"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_up_down_1_1_u_d_runtime__t.html#aa3d126b94a4803a73a7bcbdb18707cb2">get_lane_physical_memory</a> (uint8_t ud_id, uint8_t lane_num, uint32_t offset=0)</td></tr>
+<tr class="memdesc:aa3d126b94a4803a73a7bcbdb18707cb2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get offset in local memory.  <a href="class_up_down_1_1_u_d_runtime__t.html#aa3d126b94a4803a73a7bcbdb18707cb2">More...</a><br /></td></tr>
+<tr class="separator:aa3d126b94a4803a73a7bcbdb18707cb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a206a9273dbdc8141741e7cd6b065a1fd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a206a9273dbdc8141741e7cd6b065a1fd">dumpBaseAddrs</a> ()</td></tr>
 <tr class="memdesc:a206a9273dbdc8141741e7cd6b065a1fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper function to dump current base addresses.  <a href="class_up_down_1_1_u_d_runtime__t.html#a206a9273dbdc8141741e7cd6b065a1fd">More...</a><br /></td></tr>
 <tr class="separator:a206a9273dbdc8141741e7cd6b065a1fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -170,11 +173,12 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a53609a9bdbc8caae702ea49684c0ea64"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a53609a9bdbc8caae702ea49684c0ea64">calc_addrmap</a> ()</td></tr>
 <tr class="memdesc:a53609a9bdbc8caae702ea49684c0ea64"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the base addresses for queues and states.  <a href="class_up_down_1_1_u_d_runtime__t.html#a53609a9bdbc8caae702ea49684c0ea64">More...</a><br /></td></tr>
 <tr class="separator:a53609a9bdbc8caae702ea49684c0ea64"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adc78083498f2a3e1a8fcfc1dd4c9f45a"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_up_down_1_1_u_d_runtime__t.html#adc78083498f2a3e1a8fcfc1dd4c9f45a">change_endian</a> (uint32_t num)</td></tr>
-<tr class="separator:adc78083498f2a3e1a8fcfc1dd4c9f45a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a33fce78b89238e7f2b21fd9e08bf4a2a"><td class="memItemLeft" align="right" valign="top">uint64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a33fce78b89238e7f2b21fd9e08bf4a2a">get_lane_aligned_offset</a> (uint8_t ud_id, uint8_t lane_num, uint32_t offset=0)</td></tr>
 <tr class="memdesc:a33fce78b89238e7f2b21fd9e08bf4a2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the aligned offset object.  <a href="class_up_down_1_1_u_d_runtime__t.html#a33fce78b89238e7f2b21fd9e08bf4a2a">More...</a><br /></td></tr>
 <tr class="separator:a33fce78b89238e7f2b21fd9e08bf4a2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a327a02b17f491af168ab57569240af8f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a327a02b17f491af168ab57569240af8f">reset_memory_manager</a> ()</td></tr>
+<tr class="memdesc:a327a02b17f491af168ab57569240af8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset the Memory Manager when machine configuration is changed;.  <a href="class_up_down_1_1_u_d_runtime__t.html#a327a02b17f491af168ab57569240af8f">More...</a><br /></td></tr>
+<tr class="separator:a327a02b17f491af168ab57569240af8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -224,39 +228,6 @@ Protected Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="adc78083498f2a3e1a8fcfc1dd4c9f45a" name="adc78083498f2a3e1a8fcfc1dd4c9f45a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adc78083498f2a3e1a8fcfc1dd4c9f45a">&#9670;&#160;</a></span>change_endian()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint32_t UpDown::UDRuntime_t::change_endian </td>
-          <td>(</td>
-          <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>num</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">num</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>uint32_t </dd></dl>
-
-</div>
-</div>
 <a id="a206a9273dbdc8141741e7cd6b065a1fd" name="a206a9273dbdc8141741e7cd6b065a1fd"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a206a9273dbdc8141741e7cd6b065a1fd">&#9670;&#160;</a></span>dumpBaseAddrs()</h2>
 
@@ -281,6 +252,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Helper function to dump current base addresses. </p>
+<p >This function has no effect on runtime, but it is useful for debugging </p>
 
 <p class="reference">References <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a84ed7807df12382d06ee8a09b172898f">BaseAddrs</a>.</p>
 
@@ -310,6 +282,7 @@ Protected Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Helper function to dump current Machine Config. </p>
+<p >This function has no effect on runtime, but it is useful for debugging </p>
 
 <p class="reference">References <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#ac550f02506c21c5e48b6648c2e8c3dd6">MachineConfig</a>.</p>
 
@@ -368,7 +341,76 @@ Protected Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#ac550f02506c21c5e48b6648c2e8c3dd6">MachineConfig</a>.</p>
 
-<p class="reference">Referenced by <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a5085f1a2175bd89c266a85f4f551130b">t2ud_memcpy()</a>, <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#ab96599b352e42e823c692ecc4d3ee689">test_addr()</a>, <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a7e41c8dae74b2b76e74c8a3d20324d15">test_wait_addr()</a>, and <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a52e14f5cd03e1c7c79697ce15f47abb5">ud2t_memcpy()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a5085f1a2175bd89c266a85f4f551130b">t2ud_memcpy()</a>, <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#ab96599b352e42e823c692ecc4d3ee689">test_addr()</a>, <a class="el" href="class_up_down_1_1_sim_u_d_runtime__t.html#a112bba7e502827b810ab98efbf114298">UpDown::SimUDRuntime_t::test_addr()</a>, <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a7e41c8dae74b2b76e74c8a3d20324d15">test_wait_addr()</a>, <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a52e14f5cd03e1c7c79697ce15f47abb5">ud2t_memcpy()</a>, and <a class="el" href="class_up_down_1_1_sim_u_d_runtime__t.html#a8b07d604450dde8d4754aa24e6c0fca2">UpDown::SimUDRuntime_t::ud2t_memcpy()</a>.</p>
+
+</div>
+</div>
+<a id="aa3d126b94a4803a73a7bcbdb18707cb2" name="aa3d126b94a4803a73a7bcbdb18707cb2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3d126b94a4803a73a7bcbdb18707cb2">&#9670;&#160;</a></span>get_lane_physical_memory()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint64_t UpDown::UDRuntime_t::get_lane_physical_memory </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>ud_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>lane_num</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>offset</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get offset in local memory. </p>
+<p >This is a temporary solution to the absence of an appropriate virtual memory mapping. This functions assumes that physical memory side is contiguous and it does not have space for expansion. This is, instead of using the Scratchpad Capacity that is explained in <a class="el" href="struct_up_down_1_1_u_d_runtime__t_1_1base__addr__t.html" title="Struct containing all the base addresses.">UDRuntime_t::base_addr_t</a>, it uses the actual size of the Scratchpad Memory.</p>
+<p >Currently, this function is used to allow pointers to be passed from top to updown.</p>
+<h3><a class="anchor" id="autotoc_md13"></a>
+Scratchpad physical memory for 1 UD</h3>
+<pre class="fragment">*        MEMORY                     SIZE
+*   |--------------|  &lt;-- Scratchpad Base Address
+*   |              |
+*   |    Lane 0    |
+*   |              |
+*   |--------------|  &lt;-- SPmem BankSize
+*   |              |
+*   |    Lane 1    |
+*   |              |
+*   |--------------|  &lt;-- 2 * SPmem BankSize
+*   |      ...     |
+*   |--------------|  &lt;-- (NumLanes-1) * SPmem BankSize
+*   |              |
+*   |    Lane N    |
+*   |              |
+*   |--------------|  &lt;-- (NumLanes) * SPmem BankSize
+* </pre><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ud_id</td><td>UpDown ID </td></tr>
+    <tr><td class="paramname">lane_num</td><td>Lane ID </td></tr>
+    <tr><td class="paramname">offset</td><td>Offset in bytes </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>uint64_t </dd></dl>
+
+<p class="reference">References <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#ac550f02506c21c5e48b6648c2e8c3dd6">MachineConfig</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="class_up_down_1_1_sim_u_d_runtime__t.html#a41f1e94eecd23017d26f2a7ad9fe1ce5">UpDown::SimUDRuntime_t::t2ud_memcpy()</a>, <a class="el" href="class_up_down_1_1_sim_u_d_runtime__t.html#a112bba7e502827b810ab98efbf114298">UpDown::SimUDRuntime_t::test_addr()</a>, and <a class="el" href="class_up_down_1_1_sim_u_d_runtime__t.html#a8b07d604450dde8d4754aa24e6c0fca2">UpDown::SimUDRuntime_t::ud2t_memcpy()</a>.</p>
 
 </div>
 </div>
@@ -437,7 +479,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Free an already existing memory allocation. </p>
 <p >Mapped memory is a region in DRAM that can be accessed from updown. This is necessary due to the lack of support for virtual memories in the UpDown. The UpDown will be able to use pointers directly into this region without need for address translation.</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo:</a></b></dt><dd>: This should be thread safe?</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000005">Todo:</a></b></dt><dd>: This should be thread safe?</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">ptr</td><td>pointer to deallocate </td></tr>
@@ -467,7 +509,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Memory allocator for the mapped memory. </p>
 <p >Mapped memory is a region in DRAM that can be accessed from updown. This is necessary due to the lack of support for virtual memories in the UpDown. The UpDown will be able to use pointers directly into this region without need for address translation.</p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000003">Todo:</a></b></dt><dd>: This should be thread safe?</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo:</a></b></dt><dd>: This should be thread safe?</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">size</td><td>size in bytes </td></tr>
@@ -477,6 +519,35 @@ Protected Attributes</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>void * Pointer to the location. </dd></dl>
 
 <p class="reference">References <a class="el" href="class_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t.html#a9a299c4ef46734c99eb39f00052e1ca6">UpDown::UDRuntime_t::ud_mapped_memory_t::get_region()</a>.</p>
+
+</div>
+</div>
+<a id="a327a02b17f491af168ab57569240af8f" name="a327a02b17f491af168ab57569240af8f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a327a02b17f491af168ab57569240af8f">&#9670;&#160;</a></span>reset_memory_manager()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void UpDown::UDRuntime_t::reset_memory_manager </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reset the Memory Manager when machine configuration is changed;. </p>
+
+<p class="reference">Referenced by <a class="el" href="class_up_down_1_1_sim_u_d_runtime__t.html#a7113c0fad105b40a81231139332c0061">UpDown::SimUDRuntime_t::initMemoryArrays()</a>.</p>
 
 </div>
 </div>
@@ -506,6 +577,8 @@ Protected Attributes</h2></td></tr>
 </dl>
 
 <p class="reference">References <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a84ed7807df12382d06ee8a09b172898f">BaseAddrs</a>, and <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#ac550f02506c21c5e48b6648c2e8c3dd6">MachineConfig</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="class_up_down_1_1_sim_u_d_runtime__t.html#af3aead899ca394be4048678a1769da4d">UpDown::SimUDRuntime_t::send_event()</a>.</p>
 
 </div>
 </div>
@@ -656,6 +729,8 @@ Protected Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a84ed7807df12382d06ee8a09b172898f">BaseAddrs</a>, and <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a33fce78b89238e7f2b21fd9e08bf4a2a">get_lane_aligned_offset()</a>.</p>
 
+<p class="reference">Referenced by <a class="el" href="class_up_down_1_1_sim_u_d_runtime__t.html#a41f1e94eecd23017d26f2a7ad9fe1ce5">UpDown::SimUDRuntime_t::t2ud_memcpy()</a>.</p>
+
 </div>
 </div>
 <a id="ab96599b352e42e823c692ecc4d3ee689" name="ab96599b352e42e823c692ecc4d3ee689"></a>
@@ -711,6 +786,8 @@ Protected Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a84ed7807df12382d06ee8a09b172898f">BaseAddrs</a>, and <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a33fce78b89238e7f2b21fd9e08bf4a2a">get_lane_aligned_offset()</a>.</p>
 
+<p class="reference">Referenced by <a class="el" href="class_up_down_1_1_sim_u_d_runtime__t.html#a112bba7e502827b810ab98efbf114298">UpDown::SimUDRuntime_t::test_addr()</a>.</p>
+
 </div>
 </div>
 <a id="a7e41c8dae74b2b76e74c8a3d20324d15" name="a7e41c8dae74b2b76e74c8a3d20324d15"></a>
@@ -763,6 +840,8 @@ Protected Attributes</h2></td></tr>
 </dl>
 
 <p class="reference">References <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a84ed7807df12382d06ee8a09b172898f">BaseAddrs</a>, and <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a33fce78b89238e7f2b21fd9e08bf4a2a">get_lane_aligned_offset()</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="class_up_down_1_1_sim_u_d_runtime__t.html#a32ebe16466d123ae02b3f0a56f159e1d">UpDown::SimUDRuntime_t::test_wait_addr()</a>.</p>
 
 </div>
 </div>
@@ -824,6 +903,8 @@ Protected Attributes</h2></td></tr>
 
 <p class="reference">References <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a84ed7807df12382d06ee8a09b172898f">BaseAddrs</a>, and <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a33fce78b89238e7f2b21fd9e08bf4a2a">get_lane_aligned_offset()</a>.</p>
 
+<p class="reference">Referenced by <a class="el" href="class_up_down_1_1_sim_u_d_runtime__t.html#a8b07d604450dde8d4754aa24e6c0fca2">UpDown::SimUDRuntime_t::ud2t_memcpy()</a>.</p>
+
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
@@ -849,7 +930,7 @@ Protected Attributes</h2></td></tr>
 
 <p>container for all base addresses </p>
 
-<p class="reference">Referenced by <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a53609a9bdbc8caae702ea49684c0ea64">calc_addrmap()</a>, <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a206a9273dbdc8141741e7cd6b065a1fd">dumpBaseAddrs()</a>, <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a27b3b73d185c6590aff7cf9c514a5430">mm2t_memcpy()</a>, <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#af58fb869d8558462617fa84bf83bb595">send_event()</a>, <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#af61e9f01022957944d9c74daf365c0a4">start_exec()</a>, <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#afc78cfc10527725c84302dbe3e2f7e07">t2mm_memcpy()</a>, <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a5085f1a2175bd89c266a85f4f551130b">t2ud_memcpy()</a>, <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#ab96599b352e42e823c692ecc4d3ee689">test_addr()</a>, <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a7e41c8dae74b2b76e74c8a3d20324d15">test_wait_addr()</a>, and <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a52e14f5cd03e1c7c79697ce15f47abb5">ud2t_memcpy()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a53609a9bdbc8caae702ea49684c0ea64">calc_addrmap()</a>, <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a206a9273dbdc8141741e7cd6b065a1fd">dumpBaseAddrs()</a>, <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a27b3b73d185c6590aff7cf9c514a5430">mm2t_memcpy()</a>, <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#af58fb869d8558462617fa84bf83bb595">send_event()</a>, <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#af61e9f01022957944d9c74daf365c0a4">start_exec()</a>, <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#afc78cfc10527725c84302dbe3e2f7e07">t2mm_memcpy()</a>, <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a5085f1a2175bd89c266a85f4f551130b">t2ud_memcpy()</a>, <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#ab96599b352e42e823c692ecc4d3ee689">test_addr()</a>, <a class="el" href="class_up_down_1_1_sim_u_d_runtime__t.html#a112bba7e502827b810ab98efbf114298">UpDown::SimUDRuntime_t::test_addr()</a>, <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a7e41c8dae74b2b76e74c8a3d20324d15">test_wait_addr()</a>, <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a52e14f5cd03e1c7c79697ce15f47abb5">ud2t_memcpy()</a>, and <a class="el" href="class_up_down_1_1_sim_u_d_runtime__t.html#a8b07d604450dde8d4754aa24e6c0fca2">UpDown::SimUDRuntime_t::ud2t_memcpy()</a>.</p>
 
 </div>
 </div>
@@ -875,7 +956,7 @@ Protected Attributes</h2></td></tr>
 
 <p>Contains configuration parameters of the machine abstraction. </p>
 
-<p class="reference">Referenced by <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a53609a9bdbc8caae702ea49684c0ea64">calc_addrmap()</a>, <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a79ecb1814ceba28e24c404af732e073c">dumpMachineConfig()</a>, <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a33fce78b89238e7f2b21fd9e08bf4a2a">get_lane_aligned_offset()</a>, <a class="el" href="class_up_down_1_1_sim_u_d_runtime__t.html#a7113c0fad105b40a81231139332c0061">UpDown::SimUDRuntime_t::initMemoryArrays()</a>, <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#af58fb869d8558462617fa84bf83bb595">send_event()</a>, and <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#af61e9f01022957944d9c74daf365c0a4">start_exec()</a>.</p>
+<p class="reference">Referenced by <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a53609a9bdbc8caae702ea49684c0ea64">calc_addrmap()</a>, <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a79ecb1814ceba28e24c404af732e073c">dumpMachineConfig()</a>, <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#a33fce78b89238e7f2b21fd9e08bf4a2a">get_lane_aligned_offset()</a>, <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#aa3d126b94a4803a73a7bcbdb18707cb2">get_lane_physical_memory()</a>, <a class="el" href="class_up_down_1_1_sim_u_d_runtime__t.html#a7113c0fad105b40a81231139332c0061">UpDown::SimUDRuntime_t::initMemoryArrays()</a>, <a class="el" href="class_up_down_1_1_sim_u_d_runtime__t.html#a2963b2da2e6f38e395f45558cc98438c">UpDown::SimUDRuntime_t::initPythonInterface()</a>, <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#af58fb869d8558462617fa84bf83bb595">send_event()</a>, and <a class="el" href="class_up_down_1_1_u_d_runtime__t.html#af61e9f01022957944d9c74daf365c0a4">start_exec()</a>.</p>
 
 </div>
 </div>

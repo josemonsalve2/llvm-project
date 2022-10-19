@@ -1,0 +1,25 @@
+This folder contains a collection of microbenchmarks. Each subfolder contains a top program written in C++ and an upstream program written in Python
+
+Following is the list of available microbenchmarks\hypertarget{md___users_josemonsalvediaz__documents__project38_llvm_updown_ubenchmarks__r_e_a_d_m_e_autotoc_md15}{}\doxysection{Event Rate Microbenchmark}\label{md___users_josemonsalvediaz__documents__project38_llvm_updown_ubenchmarks__r_e_a_d_m_e_autotoc_md15}
+This microbenchmark stresses the event creation by sending events to multiple event queues. These events will create a number of events to the same queue. This way, each event queue should be stressed equally.
+
+In order to execute this microbenchmark, use\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./eventRate <numevents> <numlanes> <numthreadsperlane> <mode> [<num\_cores>] [<num\_uds>]}
+
+\end{DoxyCode}
+\hypertarget{md___users_josemonsalvediaz__documents__project38_llvm_updown_ubenchmarks__r_e_a_d_m_e_autotoc_md16}{}\doxysubsection{Note\+:}\label{md___users_josemonsalvediaz__documents__project38_llvm_updown_ubenchmarks__r_e_a_d_m_e_autotoc_md16}
+Currently only the first two parameters are used. No multiprocessing on top, and no multi up down support yet\hypertarget{md___users_josemonsalvediaz__documents__project38_llvm_updown_ubenchmarks__r_e_a_d_m_e_autotoc_md17}{}\doxysection{Lauch Latency Microbenchmark}\label{md___users_josemonsalvediaz__documents__project38_llvm_updown_ubenchmarks__r_e_a_d_m_e_autotoc_md17}
+This microbenchmark stresses the launch operation from the top. It creates a single event with multiple operands for each of the lanes.
+
+In order to execute this microbenchmark, use\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{./launchLatency <numoperands> <numlanes> <numthreadsperlane> <mode> [<num\_cores>] [<num\_uds>]}
+
+\end{DoxyCode}
+\hypertarget{md___users_josemonsalvediaz__documents__project38_llvm_updown_ubenchmarks__r_e_a_d_m_e_autotoc_md18}{}\doxysection{Note\+:}\label{md___users_josemonsalvediaz__documents__project38_llvm_updown_ubenchmarks__r_e_a_d_m_e_autotoc_md18}
+Currently only the first two parameters are used. No multiprocessing on top, and no multi up down support yet 

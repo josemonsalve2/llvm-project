@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['ud2t_5fmemcpy_0',['ud2t_memcpy',['../class_up_down_1_1_u_d_runtime__t.html#a52e14f5cd03e1c7c79697ce15f47abb5',1,'UpDown::UDRuntime_t']]],
-  ['ud_5fmapped_5fmemory_5ft_1',['ud_mapped_memory_t',['../class_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t.html#a929c8ff3f9a0c45dfec467c86a4124d8',1,'UpDown::UDRuntime_t::ud_mapped_memory_t']]]
+  ['t2mm_5fmemcpy_0',['t2mm_memcpy',['../class_up_down_1_1_u_d_runtime__t.html#afc78cfc10527725c84302dbe3e2f7e07',1,'UpDown::UDRuntime_t']]],
+  ['t2ud_5fmemcpy_1',['t2ud_memcpy',['../class_up_down_1_1_u_d_runtime__t.html#a5085f1a2175bd89c266a85f4f551130b',1,'UpDown::UDRuntime_t::t2ud_memcpy()'],['../class_up_down_1_1_sim_u_d_runtime__t.html#a41f1e94eecd23017d26f2a7ad9fe1ce5',1,'UpDown::SimUDRuntime_t::t2ud_memcpy()']]],
+  ['test_5faddr_2',['test_addr',['../class_up_down_1_1_u_d_runtime__t.html#ab96599b352e42e823c692ecc4d3ee689',1,'UpDown::UDRuntime_t::test_addr()'],['../class_up_down_1_1_sim_u_d_runtime__t.html#a112bba7e502827b810ab98efbf114298',1,'UpDown::SimUDRuntime_t::test_addr()']]],
+  ['test_5fwait_5faddr_3',['test_wait_addr',['../class_up_down_1_1_u_d_runtime__t.html#a7e41c8dae74b2b76e74c8a3d20324d15',1,'UpDown::UDRuntime_t::test_wait_addr()'],['../class_up_down_1_1_sim_u_d_runtime__t.html#a32ebe16466d123ae02b3f0a56f159e1d',1,'UpDown::SimUDRuntime_t::test_wait_addr()']]]
 ];

@@ -7,19 +7,37 @@ Up\+Down ID is not being used
 
 
 , \mbox{\hyperlink{class_up_down_1_1event__t}{event\+\_\+t}} considers a 4 byte word size  
-\item[Member \mbox{\hyperlink{class_up_down_1_1operands__t_aef9a024a90d4073d82d1195cf82fa660}{Up\+Down\+::operands\+\_\+t\+::operands\+\_\+t}} (uint8\+\_\+t num, ptr\+\_\+t oper=nullptr, word\+\_\+t cont=0)]\label{todo__todo000002}%
+\item[Member \mbox{\hyperlink{class_up_down_1_1operands__t_ab85237b737f780d3985be56eec5067ff}{Up\+Down\+::operands\+\_\+t\+::operands\+\_\+t}} (uint8\+\_\+t num, ptr\+\_\+t oper, word\+\_\+t cont=0)]\label{todo__todo000002}%
 \Hypertarget{todo__todo000002}%
 This should avoid using memcpy  
-\item[Member \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a7113c0fad105b40a81231139332c0061}{Up\+Down\+::Sim\+UDRuntime\+\_\+t\+::init\+Memory\+Arrays}} ()]\label{todo__todo000005}%
-\Hypertarget{todo__todo000005}%
-We are allocating the whole address space. We could behave more like a driver and translate it to the actual available memory. This means. It should not allocate the reserved space for expansion.  
-\item[Member \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a4d07ad90b3cd6de2522c7e37ecdaf133}{Up\+Down\+::Sim\+UDRuntime\+\_\+t\+::start\+\_\+exec}} (uint8\+\_\+t ud\+\_\+id, uint8\+\_\+t lane\+\_\+num)]\label{todo__todo000006}%
-\Hypertarget{todo__todo000006}%
-we should start the UD Emulator here 
-\item[Member \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_aa02ee38bf2166f297f40176c88485c1a}{Up\+Down\+::UDRuntime\+\_\+t\+::mm\+\_\+free}} (void $\ast$ptr)]\label{todo__todo000004}%
-\Hypertarget{todo__todo000004}%
-\+: This should be thread safe? 
-\item[Member \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a3f6d1895e3d1ad7fc40b918154a027ad}{Up\+Down\+::UDRuntime\+\_\+t\+::mm\+\_\+malloc}} (uint64\+\_\+t size)]\label{todo__todo000003}%
+\item[Member \mbox{\hyperlink{class_up_down_1_1operands__t_a90604b735bc17d1136cbd32da1292496}{Up\+Down\+::operands\+\_\+t\+::operands\+\_\+t}} (uint8\+\_\+t num, word\+\_\+t cont=0)]\label{todo__todo000003}%
 \Hypertarget{todo__todo000003}%
+This should avoid using memcpy  
+\item[Class \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t}{Up\+Down\+::Sim\+UDRuntime\+\_\+t}} ]\label{todo__todo000006}%
+\Hypertarget{todo__todo000006}%
+This does not emulate multiple UPDs 
+\item[Member \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a7113c0fad105b40a81231139332c0061}{Up\+Down\+::Sim\+UDRuntime\+\_\+t\+::init\+Memory\+Arrays}} ()]\label{todo__todo000007}%
+\Hypertarget{todo__todo000007}%
+We are allocating the whole address space. We could behave more like a driver and translate it to the actual available memory. This means. It should not allocate the reserved space for expansion.  
+\item[Member \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a2963b2da2e6f38e395f45558cc98438c}{Up\+Down\+::Sim\+UDRuntime\+\_\+t\+::init\+Python\+Interface}} ()]\label{todo__todo000008}%
+\Hypertarget{todo__todo000008}%
+when increasing the number of lanes to multiple Up\+Downs, this function must be re-\/implemented  
+\item[Member \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a41f1e94eecd23017d26f2a7ad9fe1ce5}{Up\+Down\+::Sim\+UDRuntime\+\_\+t\+::t2ud\+\_\+memcpy}} (ptr\+\_\+t data, uint64\+\_\+t size, uint8\+\_\+t ud\+\_\+id, uint8\+\_\+t lane\+\_\+num, uint32\+\_\+t offset)]\label{todo__todo000009}%
+\Hypertarget{todo__todo000009}%
+The physical memory is contiguous, therefore the calculation of this offset is different to the address space in the virtual memory. Is there a way to express this? The runtime is doing some heavy lifting here that is translating things to physical memory  
+\item[Member \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a112bba7e502827b810ab98efbf114298}{Up\+Down\+::Sim\+UDRuntime\+\_\+t\+::test\+\_\+addr}} (uint8\+\_\+t ud\+\_\+id, uint8\+\_\+t lane\+\_\+num, uint32\+\_\+t offset, word\+\_\+t expected=1)]\label{todo__todo000011}%
+\Hypertarget{todo__todo000011}%
+The physical memory is contiguous, therefore the calculation of this offset is different to the address space in the virtual memory. Is there a way to express this? The runtime is doing some heavy lifting here that is translating things to physical memory  
+\item[Member \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a32ebe16466d123ae02b3f0a56f159e1d}{Up\+Down\+::Sim\+UDRuntime\+\_\+t\+::test\+\_\+wait\+\_\+addr}} (uint8\+\_\+t ud\+\_\+id, uint8\+\_\+t lane\+\_\+num, uint32\+\_\+t offset, word\+\_\+t expected=1)]\label{todo__todo000012}%
+\Hypertarget{todo__todo000012}%
+The physical memory is contiguous, therefore the calculation of this offset is different to the address space in the virtual memory. Is there a way to express this? The runtime is doing some heavy lifting here that is translating things to physical memory  
+\item[Member \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a8b07d604450dde8d4754aa24e6c0fca2}{Up\+Down\+::Sim\+UDRuntime\+\_\+t\+::ud2t\+\_\+memcpy}} (ptr\+\_\+t data, uint64\+\_\+t size, uint8\+\_\+t ud\+\_\+id, uint8\+\_\+t lane\+\_\+num, uint32\+\_\+t offset)]\label{todo__todo000010}%
+\Hypertarget{todo__todo000010}%
+The physical memory is contiguous, therefore the calculation of this offset is different to the address space in the virtual memory. Is there a way to express this? The runtime is doing some heavy lifting here that is translating things to physical memory  
+\item[Member \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_aa02ee38bf2166f297f40176c88485c1a}{Up\+Down\+::UDRuntime\+\_\+t\+::mm\+\_\+free}} (void $\ast$ptr)]\label{todo__todo000005}%
+\Hypertarget{todo__todo000005}%
+\+: This should be thread safe? 
+\item[Member \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a3f6d1895e3d1ad7fc40b918154a027ad}{Up\+Down\+::UDRuntime\+\_\+t\+::mm\+\_\+malloc}} (uint64\+\_\+t size)]\label{todo__todo000004}%
+\Hypertarget{todo__todo000004}%
 \+: This should be thread safe?
 \end{DoxyRefList}

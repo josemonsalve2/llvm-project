@@ -6,5 +6,8 @@ var annotated_dup =
       [ "SimUDRuntime_t", "class_up_down_1_1_sim_u_d_runtime__t.html", "class_up_down_1_1_sim_u_d_runtime__t" ],
       [ "ud_machine_t", "struct_up_down_1_1ud__machine__t.html", null ],
       [ "UDRuntime_t", "class_up_down_1_1_u_d_runtime__t.html", "class_up_down_1_1_u_d_runtime__t" ]
-    ] ]
+    ] ],
+    [ "emulator_stats", "structemulator__stats.html", null ],
+    [ "Event", "struct_event.html", null ],
+    [ "Upstream_PyIntf", "class_upstream___py_intf.html", "class_upstream___py_intf" ]
 ];

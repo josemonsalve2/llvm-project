@@ -26,13 +26,22 @@ var NAVTREE =
 [
   [ "UpDown Runtime", "index.html", [
     [ "UpDown recode project", "md___users_josemonsalvediaz__documents__project38_llvm_updown__r_e_a_d_m_e.html", [
-      [ "Building LLVM", "md___users_josemonsalvediaz__documents__project38_llvm_updown__r_e_a_d_m_e.html#autotoc_md1", null ],
-      [ "Building runtime only", "md___users_josemonsalvediaz__documents__project38_llvm_updown__r_e_a_d_m_e.html#autotoc_md2", [
-        [ "Example code", "md___users_josemonsalvediaz__documents__project38_llvm_updown__r_e_a_d_m_e.html#autotoc_md3", null ]
+      [ "Current content", "md___users_josemonsalvediaz__documents__project38_llvm_updown__r_e_a_d_m_e.html#autotoc_md1", null ],
+      [ "Building runtime and simruntime standalone", "md___users_josemonsalvediaz__documents__project38_llvm_updown__r_e_a_d_m_e.html#autotoc_md2", [
+        [ "Full compilation", "md___users_josemonsalvediaz__documents__project38_llvm_updown__r_e_a_d_m_e.html#autotoc_md3", null ],
+        [ "Available CMake flags", "md___users_josemonsalvediaz__documents__project38_llvm_updown__r_e_a_d_m_e.html#autotoc_md4", null ],
+        [ "Linking the runtime to an external program", "md___users_josemonsalvediaz__documents__project38_llvm_updown__r_e_a_d_m_e.html#autotoc_md5", null ]
       ] ],
-      [ "Current content", "md___users_josemonsalvediaz__documents__project38_llvm_updown__r_e_a_d_m_e.html#autotoc_md4", [
-        [ "Python Syntax", "md___users_josemonsalvediaz__documents__project38_llvm_updown__r_e_a_d_m_e.html#autotoc_md5", null ]
+      [ "Building LLVM", "md___users_josemonsalvediaz__documents__project38_llvm_updown__r_e_a_d_m_e.html#autotoc_md6", [
+        [ "Python Syntax", "md___users_josemonsalvediaz__documents__project38_llvm_updown__r_e_a_d_m_e.html#autotoc_md7", null ]
       ] ]
+    ] ],
+    [ "Microbenchmarks", "md___users_josemonsalvediaz__documents__project38_llvm_updown_ubenchmarks__r_e_a_d_m_e.html", [
+      [ "Event Rate Microbenchmark", "md___users_josemonsalvediaz__documents__project38_llvm_updown_ubenchmarks__r_e_a_d_m_e.html#autotoc_md15", [
+        [ "Note:", "md___users_josemonsalvediaz__documents__project38_llvm_updown_ubenchmarks__r_e_a_d_m_e.html#autotoc_md16", null ]
+      ] ],
+      [ "Lauch Latency Microbenchmark", "md___users_josemonsalvediaz__documents__project38_llvm_updown_ubenchmarks__r_e_a_d_m_e.html#autotoc_md17", null ],
+      [ "Note:", "md___users_josemonsalvediaz__documents__project38_llvm_updown_ubenchmarks__r_e_a_d_m_e.html#autotoc_md18", null ]
     ] ],
     [ "Todo List", "todo.html", null ],
     [ "Classes", "annotated.html", [

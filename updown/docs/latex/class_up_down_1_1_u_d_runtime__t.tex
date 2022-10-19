@@ -48,6 +48,8 @@ bool \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ab96599b352e42e823c692ecc
 \begin{DoxyCompactList}\small\item\em Test a memory location in the updwon bank for the expected value. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a7e41c8dae74b2b76e74c8a3d20324d15}{test\+\_\+wait\+\_\+addr}} (uint8\+\_\+t ud\+\_\+id, uint8\+\_\+t lane\+\_\+num, uint32\+\_\+t offset, word\+\_\+t expected=1)
 \begin{DoxyCompactList}\small\item\em Test a memory location in the updown bank for the expected value. Wait until it is the expected value. \end{DoxyCompactList}\item 
+uint64\+\_\+t \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_aa3d126b94a4803a73a7bcbdb18707cb2}{get\+\_\+lane\+\_\+physical\+\_\+memory}} (uint8\+\_\+t ud\+\_\+id, uint8\+\_\+t lane\+\_\+num, uint32\+\_\+t offset=0)
+\begin{DoxyCompactList}\small\item\em Get offset in local memory. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a206a9273dbdc8141741e7cd6b065a1fd}{dump\+Base\+Addrs}} ()
 \begin{DoxyCompactList}\small\item\em Helper function to dump current base addresses. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a79ecb1814ceba28e24c404af732e073c}{dump\+Machine\+Config}} ()
@@ -57,10 +59,10 @@ void \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a79ecb1814ceba28e24c404af
 \item 
 void \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a53609a9bdbc8caae702ea49684c0ea64}{calc\+\_\+addrmap}} ()
 \begin{DoxyCompactList}\small\item\em Initializes the base addresses for queues and states. \end{DoxyCompactList}\item 
-uint32\+\_\+t \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_adc78083498f2a3e1a8fcfc1dd4c9f45a}{change\+\_\+endian}} (uint32\+\_\+t num)
-\item 
 uint64\+\_\+t \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a33fce78b89238e7f2b21fd9e08bf4a2a}{get\+\_\+lane\+\_\+aligned\+\_\+offset}} (uint8\+\_\+t ud\+\_\+id, uint8\+\_\+t lane\+\_\+num, uint32\+\_\+t offset=0)
-\begin{DoxyCompactList}\small\item\em Get the aligned offset object. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Get the aligned offset object. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a327a02b17f491af168ab57569240af8f}{reset\+\_\+memory\+\_\+manager}} ()
+\begin{DoxyCompactList}\small\item\em Reset the Memory Manager when machine configuration is changed;. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Protected Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -97,20 +99,6 @@ References \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a84ed7807df12382d06
 
 Referenced by \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a1af458c531ea3297c7991facbed758fa}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::\+Sim\+UDRuntime\+\_\+t()}}.
 
-\mbox{\Hypertarget{class_up_down_1_1_u_d_runtime__t_adc78083498f2a3e1a8fcfc1dd4c9f45a}\label{class_up_down_1_1_u_d_runtime__t_adc78083498f2a3e1a8fcfc1dd4c9f45a}} 
-\index{UpDown::UDRuntime\_t@{UpDown::UDRuntime\_t}!change\_endian@{change\_endian}}
-\index{change\_endian@{change\_endian}!UpDown::UDRuntime\_t@{UpDown::UDRuntime\_t}}
-\doxysubsubsection{\texorpdfstring{change\_endian()}{change\_endian()}}
-{\footnotesize\ttfamily uint32\+\_\+t Up\+Down\+::\+UDRuntime\+\_\+t\+::change\+\_\+endian (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{num }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
-
-
-\begin{DoxyParams}{Parameters}
-{\em num} & \\
-\hline
-\end{DoxyParams}
-\begin{DoxyReturn}{Returns}
-uint32\+\_\+t 
-\end{DoxyReturn}
 \mbox{\Hypertarget{class_up_down_1_1_u_d_runtime__t_a206a9273dbdc8141741e7cd6b065a1fd}\label{class_up_down_1_1_u_d_runtime__t_a206a9273dbdc8141741e7cd6b065a1fd}} 
 \index{UpDown::UDRuntime\_t@{UpDown::UDRuntime\_t}!dumpBaseAddrs@{dumpBaseAddrs}}
 \index{dumpBaseAddrs@{dumpBaseAddrs}!UpDown::UDRuntime\_t@{UpDown::UDRuntime\_t}}
@@ -121,7 +109,7 @@ uint32\+\_\+t
 
 Helper function to dump current base addresses. 
 
-
+This function has no effect on runtime, but it is useful for debugging 
 
 References \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a84ed7807df12382d06ee8a09b172898f}{Base\+Addrs}}.
 
@@ -135,7 +123,7 @@ References \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a84ed7807df12382d06
 
 Helper function to dump current Machine Config. 
 
-
+This function has no effect on runtime, but it is useful for debugging 
 
 References \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{Machine\+Config}}.
 
@@ -167,7 +155,59 @@ References \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48
 
 
 
-Referenced by \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a5085f1a2175bd89c266a85f4f551130b}{t2ud\+\_\+memcpy()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ab96599b352e42e823c692ecc4d3ee689}{test\+\_\+addr()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a7e41c8dae74b2b76e74c8a3d20324d15}{test\+\_\+wait\+\_\+addr()}}, and \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a52e14f5cd03e1c7c79697ce15f47abb5}{ud2t\+\_\+memcpy()}}.
+Referenced by \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a5085f1a2175bd89c266a85f4f551130b}{t2ud\+\_\+memcpy()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ab96599b352e42e823c692ecc4d3ee689}{test\+\_\+addr()}}, \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a112bba7e502827b810ab98efbf114298}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::test\+\_\+addr()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a7e41c8dae74b2b76e74c8a3d20324d15}{test\+\_\+wait\+\_\+addr()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a52e14f5cd03e1c7c79697ce15f47abb5}{ud2t\+\_\+memcpy()}}, and \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a8b07d604450dde8d4754aa24e6c0fca2}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::ud2t\+\_\+memcpy()}}.
+
+\mbox{\Hypertarget{class_up_down_1_1_u_d_runtime__t_aa3d126b94a4803a73a7bcbdb18707cb2}\label{class_up_down_1_1_u_d_runtime__t_aa3d126b94a4803a73a7bcbdb18707cb2}} 
+\index{UpDown::UDRuntime\_t@{UpDown::UDRuntime\_t}!get\_lane\_physical\_memory@{get\_lane\_physical\_memory}}
+\index{get\_lane\_physical\_memory@{get\_lane\_physical\_memory}!UpDown::UDRuntime\_t@{UpDown::UDRuntime\_t}}
+\doxysubsubsection{\texorpdfstring{get\_lane\_physical\_memory()}{get\_lane\_physical\_memory()}}
+{\footnotesize\ttfamily uint64\+\_\+t Up\+Down\+::\+UDRuntime\+\_\+t\+::get\+\_\+lane\+\_\+physical\+\_\+memory (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{ud\+\_\+id,  }\item[{uint8\+\_\+t}]{lane\+\_\+num,  }\item[{uint32\+\_\+t}]{offset = {\ttfamily 0} }\end{DoxyParamCaption})}
+
+
+
+Get offset in local memory. 
+
+This is a temporary solution to the absence of an appropriate virtual memory mapping. This functions assumes that physical memory side is contiguous and it does not have space for expansion. This is, instead of using the Scratchpad Capacity that is explained in \mbox{\hyperlink{struct_up_down_1_1_u_d_runtime__t_1_1base__addr__t}{UDRuntime\+\_\+t\+::base\+\_\+addr\+\_\+t}}, it uses the actual size of the Scratchpad Memory.
+
+Currently, this function is used to allow pointers to be passed from top to updown.\hypertarget{class_up_down_1_1_u_d_runtime__t_autotoc_md13}{}\doxyparagraph{Scratchpad physical memory for 1 UD}\label{class_up_down_1_1_u_d_runtime__t_autotoc_md13}
+\begin{DoxyVerb}*        MEMORY                     SIZE
+*   |--------------|  <-- Scratchpad Base Address
+*   |              |
+*   |    Lane 0    |
+*   |              |
+*   |--------------|  <-- SPmem BankSize
+*   |              |
+*   |    Lane 1    |
+*   |              |
+*   |--------------|  <-- 2 * SPmem BankSize
+*   |      ...     |
+*   |--------------|  <-- (NumLanes-1) * SPmem BankSize
+*   |              |
+*   |    Lane N    |
+*   |              |
+*   |--------------|  <-- (NumLanes) * SPmem BankSize
+* \end{DoxyVerb}
+
+
+
+\begin{DoxyParams}{Parameters}
+{\em ud\+\_\+id} & Up\+Down ID \\
+\hline
+{\em lane\+\_\+num} & Lane ID \\
+\hline
+{\em offset} & Offset in bytes \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+uint64\+\_\+t 
+\end{DoxyReturn}
+
+
+References \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{Machine\+Config}}.
+
+
+
+Referenced by \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a41f1e94eecd23017d26f2a7ad9fe1ce5}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::t2ud\+\_\+memcpy()}}, \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a112bba7e502827b810ab98efbf114298}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::test\+\_\+addr()}}, and \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a8b07d604450dde8d4754aa24e6c0fca2}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::ud2t\+\_\+memcpy()}}.
 
 \mbox{\Hypertarget{class_up_down_1_1_u_d_runtime__t_a27b3b73d185c6590aff7cf9c514a5430}\label{class_up_down_1_1_u_d_runtime__t_a27b3b73d185c6590aff7cf9c514a5430}} 
 \index{UpDown::UDRuntime\_t@{UpDown::UDRuntime\_t}!mm2t\_memcpy@{mm2t\_memcpy}}
@@ -207,7 +247,7 @@ Free an already existing memory allocation.
 Mapped memory is a region in DRAM that can be accessed from updown. This is necessary due to the lack of support for virtual memories in the Up\+Down. The Up\+Down will be able to use pointers directly into this region without need for address translation.
 
 \begin{DoxyRefDesc}{Todo}
-\item[\mbox{\hyperlink{todo__todo000004}{Todo}}]\+: This should be thread safe?\end{DoxyRefDesc}
+\item[\mbox{\hyperlink{todo__todo000005}{Todo}}]\+: This should be thread safe?\end{DoxyRefDesc}
 
 
 
@@ -232,7 +272,7 @@ Memory allocator for the mapped memory.
 Mapped memory is a region in DRAM that can be accessed from updown. This is necessary due to the lack of support for virtual memories in the Up\+Down. The Up\+Down will be able to use pointers directly into this region without need for address translation.
 
 \begin{DoxyRefDesc}{Todo}
-\item[\mbox{\hyperlink{todo__todo000003}{Todo}}]\+: This should be thread safe?\end{DoxyRefDesc}
+\item[\mbox{\hyperlink{todo__todo000004}{Todo}}]\+: This should be thread safe?\end{DoxyRefDesc}
 
 
 
@@ -246,6 +286,20 @@ void $\ast$ Pointer to the location.
 
 
 References \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t_a9a299c4ef46734c99eb39f00052e1ca6}{Up\+Down\+::\+UDRuntime\+\_\+t\+::ud\+\_\+mapped\+\_\+memory\+\_\+t\+::get\+\_\+region()}}.
+
+\mbox{\Hypertarget{class_up_down_1_1_u_d_runtime__t_a327a02b17f491af168ab57569240af8f}\label{class_up_down_1_1_u_d_runtime__t_a327a02b17f491af168ab57569240af8f}} 
+\index{UpDown::UDRuntime\_t@{UpDown::UDRuntime\_t}!reset\_memory\_manager@{reset\_memory\_manager}}
+\index{reset\_memory\_manager@{reset\_memory\_manager}!UpDown::UDRuntime\_t@{UpDown::UDRuntime\_t}}
+\doxysubsubsection{\texorpdfstring{reset\_memory\_manager()}{reset\_memory\_manager()}}
+{\footnotesize\ttfamily void Up\+Down\+::\+UDRuntime\+\_\+t\+::reset\+\_\+memory\+\_\+manager (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [protected]}}
+
+
+
+Reset the Memory Manager when machine configuration is changed;. 
+
+
+
+Referenced by \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a7113c0fad105b40a81231139332c0061}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::init\+Memory\+Arrays()}}.
 
 \mbox{\Hypertarget{class_up_down_1_1_u_d_runtime__t_af58fb869d8558462617fa84bf83bb595}\label{class_up_down_1_1_u_d_runtime__t_af58fb869d8558462617fa84bf83bb595}} 
 \index{UpDown::UDRuntime\_t@{UpDown::UDRuntime\_t}!send\_event@{send\_event}}
@@ -267,6 +321,10 @@ Sends a new event to the updown event queues. Information about the destination 
 
 
 References \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a84ed7807df12382d06ee8a09b172898f}{Base\+Addrs}}, and \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{Machine\+Config}}.
+
+
+
+Referenced by \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_af3aead899ca394be4048678a1769da4d}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::send\+\_\+event()}}.
 
 \mbox{\Hypertarget{class_up_down_1_1_u_d_runtime__t_af61e9f01022957944d9c74daf365c0a4}\label{class_up_down_1_1_u_d_runtime__t_af61e9f01022957944d9c74daf365c0a4}} 
 \index{UpDown::UDRuntime\_t@{UpDown::UDRuntime\_t}!start\_exec@{start\_exec}}
@@ -347,6 +405,10 @@ This function sends data to the bank associated with the lane\+\_\+num The addre
 
 References \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a84ed7807df12382d06ee8a09b172898f}{Base\+Addrs}}, and \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a33fce78b89238e7f2b21fd9e08bf4a2a}{get\+\_\+lane\+\_\+aligned\+\_\+offset()}}.
 
+
+
+Referenced by \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a41f1e94eecd23017d26f2a7ad9fe1ce5}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::t2ud\+\_\+memcpy()}}.
+
 \mbox{\Hypertarget{class_up_down_1_1_u_d_runtime__t_ab96599b352e42e823c692ecc4d3ee689}\label{class_up_down_1_1_u_d_runtime__t_ab96599b352e42e823c692ecc4d3ee689}} 
 \index{UpDown::UDRuntime\_t@{UpDown::UDRuntime\_t}!test\_addr@{test\_addr}}
 \index{test\_addr@{test\_addr}!UpDown::UDRuntime\_t@{UpDown::UDRuntime\_t}}
@@ -377,6 +439,10 @@ word\+\_\+t
 
 References \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a84ed7807df12382d06ee8a09b172898f}{Base\+Addrs}}, and \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a33fce78b89238e7f2b21fd9e08bf4a2a}{get\+\_\+lane\+\_\+aligned\+\_\+offset()}}.
 
+
+
+Referenced by \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a112bba7e502827b810ab98efbf114298}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::test\+\_\+addr()}}.
+
 \mbox{\Hypertarget{class_up_down_1_1_u_d_runtime__t_a7e41c8dae74b2b76e74c8a3d20324d15}\label{class_up_down_1_1_u_d_runtime__t_a7e41c8dae74b2b76e74c8a3d20324d15}} 
 \index{UpDown::UDRuntime\_t@{UpDown::UDRuntime\_t}!test\_wait\_addr@{test\_wait\_addr}}
 \index{test\_wait\_addr@{test\_wait\_addr}!UpDown::UDRuntime\_t@{UpDown::UDRuntime\_t}}
@@ -401,6 +467,10 @@ Spinwaiting on a location of the updown scratchpad memory bank until the value r
 
 
 References \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a84ed7807df12382d06ee8a09b172898f}{Base\+Addrs}}, and \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a33fce78b89238e7f2b21fd9e08bf4a2a}{get\+\_\+lane\+\_\+aligned\+\_\+offset()}}.
+
+
+
+Referenced by \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a32ebe16466d123ae02b3f0a56f159e1d}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::test\+\_\+wait\+\_\+addr()}}.
 
 \mbox{\Hypertarget{class_up_down_1_1_u_d_runtime__t_a52e14f5cd03e1c7c79697ce15f47abb5}\label{class_up_down_1_1_u_d_runtime__t_a52e14f5cd03e1c7c79697ce15f47abb5}} 
 \index{UpDown::UDRuntime\_t@{UpDown::UDRuntime\_t}!ud2t\_memcpy@{ud2t\_memcpy}}
@@ -431,6 +501,10 @@ References \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a84ed7807df12382d06
 
 
 
+Referenced by \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a8b07d604450dde8d4754aa24e6c0fca2}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::ud2t\+\_\+memcpy()}}.
+
+
+
 \doxysubsection{Member Data Documentation}
 \mbox{\Hypertarget{class_up_down_1_1_u_d_runtime__t_a84ed7807df12382d06ee8a09b172898f}\label{class_up_down_1_1_u_d_runtime__t_a84ed7807df12382d06ee8a09b172898f}} 
 \index{UpDown::UDRuntime\_t@{UpDown::UDRuntime\_t}!BaseAddrs@{BaseAddrs}}
@@ -444,7 +518,7 @@ container for all base addresses
 
 
 
-Referenced by \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a53609a9bdbc8caae702ea49684c0ea64}{calc\+\_\+addrmap()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a206a9273dbdc8141741e7cd6b065a1fd}{dump\+Base\+Addrs()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a27b3b73d185c6590aff7cf9c514a5430}{mm2t\+\_\+memcpy()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_af58fb869d8558462617fa84bf83bb595}{send\+\_\+event()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_af61e9f01022957944d9c74daf365c0a4}{start\+\_\+exec()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_afc78cfc10527725c84302dbe3e2f7e07}{t2mm\+\_\+memcpy()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a5085f1a2175bd89c266a85f4f551130b}{t2ud\+\_\+memcpy()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ab96599b352e42e823c692ecc4d3ee689}{test\+\_\+addr()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a7e41c8dae74b2b76e74c8a3d20324d15}{test\+\_\+wait\+\_\+addr()}}, and \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a52e14f5cd03e1c7c79697ce15f47abb5}{ud2t\+\_\+memcpy()}}.
+Referenced by \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a53609a9bdbc8caae702ea49684c0ea64}{calc\+\_\+addrmap()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a206a9273dbdc8141741e7cd6b065a1fd}{dump\+Base\+Addrs()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a27b3b73d185c6590aff7cf9c514a5430}{mm2t\+\_\+memcpy()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_af58fb869d8558462617fa84bf83bb595}{send\+\_\+event()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_af61e9f01022957944d9c74daf365c0a4}{start\+\_\+exec()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_afc78cfc10527725c84302dbe3e2f7e07}{t2mm\+\_\+memcpy()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a5085f1a2175bd89c266a85f4f551130b}{t2ud\+\_\+memcpy()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ab96599b352e42e823c692ecc4d3ee689}{test\+\_\+addr()}}, \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a112bba7e502827b810ab98efbf114298}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::test\+\_\+addr()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a7e41c8dae74b2b76e74c8a3d20324d15}{test\+\_\+wait\+\_\+addr()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a52e14f5cd03e1c7c79697ce15f47abb5}{ud2t\+\_\+memcpy()}}, and \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a8b07d604450dde8d4754aa24e6c0fca2}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::ud2t\+\_\+memcpy()}}.
 
 \mbox{\Hypertarget{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}\label{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}} 
 \index{UpDown::UDRuntime\_t@{UpDown::UDRuntime\_t}!MachineConfig@{MachineConfig}}
@@ -458,7 +532,7 @@ Contains configuration parameters of the machine abstraction.
 
 
 
-Referenced by \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a53609a9bdbc8caae702ea49684c0ea64}{calc\+\_\+addrmap()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a79ecb1814ceba28e24c404af732e073c}{dump\+Machine\+Config()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a33fce78b89238e7f2b21fd9e08bf4a2a}{get\+\_\+lane\+\_\+aligned\+\_\+offset()}}, \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a7113c0fad105b40a81231139332c0061}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::init\+Memory\+Arrays()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_af58fb869d8558462617fa84bf83bb595}{send\+\_\+event()}}, and \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_af61e9f01022957944d9c74daf365c0a4}{start\+\_\+exec()}}.
+Referenced by \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a53609a9bdbc8caae702ea49684c0ea64}{calc\+\_\+addrmap()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a79ecb1814ceba28e24c404af732e073c}{dump\+Machine\+Config()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a33fce78b89238e7f2b21fd9e08bf4a2a}{get\+\_\+lane\+\_\+aligned\+\_\+offset()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_aa3d126b94a4803a73a7bcbdb18707cb2}{get\+\_\+lane\+\_\+physical\+\_\+memory()}}, \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a7113c0fad105b40a81231139332c0061}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::init\+Memory\+Arrays()}}, \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a2963b2da2e6f38e395f45558cc98438c}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::init\+Python\+Interface()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_af58fb869d8558462617fa84bf83bb595}{send\+\_\+event()}}, and \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_af61e9f01022957944d9c74daf365c0a4}{start\+\_\+exec()}}.
 
 
 

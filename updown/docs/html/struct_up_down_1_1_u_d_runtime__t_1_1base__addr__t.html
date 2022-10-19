@@ -115,10 +115,10 @@ volatile ptr_t&#160;</td><td class="memItemRight" valign="bottom"><b>ctrlAddr</b
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >Struct containing all the base addresses. </p>
 <p >Base addresses are locations in memory where the top to updown communication happens.</p>
-<h2><a class="anchor" id="autotoc_md6"></a>
+<h2><a class="anchor" id="autotoc_md8"></a>
 Current Memory Structure</h2>
 <p >The memory is organized in two: Scratchpad memory and Control mapped registers and queues</p>
-<h3><a class="anchor" id="autotoc_md7"></a>
+<h3><a class="anchor" id="autotoc_md9"></a>
 Scratchpad memory address space</h3>
 <pre class="fragment">*        MEMORY                     SIZE
 *   |--------------|  &lt;-- Scratchpad Base Address
@@ -136,7 +136,7 @@ Scratchpad memory address space</h3>
 *   |   SPMEM UDN  |
 *   |              |
 *   |--------------|  &lt;-- NumUDs * CapacityPerLane * CapacityNumLanes
-* </pre><h3><a class="anchor" id="autotoc_md8"></a>
+* </pre><h3><a class="anchor" id="autotoc_md10"></a>
 Scratchpad memory for 1 UD</h3>
 <pre class="fragment">*        MEMORY                     SIZE
 *   |--------------|  &lt;-- Scratchpad Base Address
@@ -172,7 +172,7 @@ Scratchpad memory for 1 UD</h3>
 *   |* * * * * * * |   -|
 *   | * * * * * * *|
 *   |--------------|  &lt;-- CapacityPerLane * CapacityNumLanes
-* </pre><h3><a class="anchor" id="autotoc_md9"></a>
+* </pre><h3><a class="anchor" id="autotoc_md11"></a>
 Control signals memory address space</h3>
 <pre class="fragment">*        MEMORY                     SIZE
 *   |--------------|  &lt;-- Control Base Address
@@ -190,8 +190,8 @@ Control signals memory address space</h3>
 *   |  CONTROL UD2 |
 *   |              |
 *   |--------------|  &lt;-- NumUDs * CapacityControlPerLane * CapacityNumLanes
-* </pre><h3><a class="anchor" id="autotoc_md10"></a>
-Scratchpad memory for 1 UD</h3>
+* </pre><h3><a class="anchor" id="autotoc_md12"></a>
+Control signals memory address space for 1 UD</h3>
 <pre class="fragment">*        MEMORY                     SIZE
 *   |--------------|  &lt;-- Control Base Address
 *   |    Lane 0    |

@@ -1,4 +1,9 @@
 var searchData=
 [
-  ['operands_5ft_0',['operands_t',['../class_up_down_1_1operands__t.html#ac6ee39cc5caa0d26a4506cbe38f99db7',1,'UpDown::operands_t::operands_t()'],['../class_up_down_1_1operands__t.html#a44a0e3e7568886b69809d4bedde0edf1',1,'UpDown::operands_t::operands_t(const operands_t &amp;o)'],['../class_up_down_1_1operands__t.html#abf4294c7e85bff1d380dbaacac2e5615',1,'UpDown::operands_t::operands_t(operands_t &amp;&amp;o)'],['../class_up_down_1_1operands__t.html#aef9a024a90d4073d82d1195cf82fa660',1,'UpDown::operands_t::operands_t(uint8_t num, ptr_t oper=nullptr, word_t cont=0)'],['../class_up_down_1_1operands__t.html',1,'UpDown::operands_t']]]
+  ['machineconfig_0',['MachineConfig',['../class_up_down_1_1_u_d_runtime__t.html#ac550f02506c21c5e48b6648c2e8c3dd6',1,'UpDown::UDRuntime_t']]],
+  ['mem_5fregion_5ft_1',['mem_region_t',['../struct_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t_1_1mem__region__t.html',1,'UpDown::UDRuntime_t::ud_mapped_memory_t']]],
+  ['microbenchmarks_2',['Microbenchmarks',['../md___users_josemonsalvediaz__documents__project38_llvm_updown_ubenchmarks__r_e_a_d_m_e.html',1,'']]],
+  ['mm2t_5fmemcpy_3',['mm2t_memcpy',['../class_up_down_1_1_u_d_runtime__t.html#a27b3b73d185c6590aff7cf9c514a5430',1,'UpDown::UDRuntime_t']]],
+  ['mm_5ffree_4',['mm_free',['../class_up_down_1_1_u_d_runtime__t.html#aa02ee38bf2166f297f40176c88485c1a',1,'UpDown::UDRuntime_t']]],
+  ['mm_5fmalloc_5',['mm_malloc',['../class_up_down_1_1_u_d_runtime__t.html#a3f6d1895e3d1ad7fc40b918154a027ad',1,'UpDown::UDRuntime_t']]]
 ];

@@ -1,0 +1,74 @@
+\hypertarget{upstream__pyintf_8hh_source}{}\doxysection{upstream\+\_\+pyintf.\+hh}
+\label{upstream__pyintf_8hh_source}\index{/Users/josemonsalvediaz/Documents/Project38/llvm/updown/simruntime/include/upstream\_pyintf.hh@{/Users/josemonsalvediaz/Documents/Project38/llvm/updown/simruntime/include/upstream\_pyintf.hh}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#ifndef UPSTREAM\_PYINTF\_HH}}
+\DoxyCodeLine{2 \textcolor{preprocessor}{\#define UPSTREAM\_PYINTF\_HH}}
+\DoxyCodeLine{3 }
+\DoxyCodeLine{4 \textcolor{keyword}{extern} \textcolor{stringliteral}{"{}C"{}} \{}
+\DoxyCodeLine{5 \textcolor{preprocessor}{\#include "{}Python.h"{}}}
+\DoxyCodeLine{6 \}}
+\DoxyCodeLine{7 }
+\DoxyCodeLine{8 \textcolor{keyword}{struct }\mbox{\hyperlink{structemulator__stats}{emulator\_stats}} \{}
+\DoxyCodeLine{9   uint32\_t actcnt;}
+\DoxyCodeLine{10   uint32\_t num\_sends;}
+\DoxyCodeLine{11   uint32\_t exec\_cycles;}
+\DoxyCodeLine{12   uint32\_t idle\_cycles;}
+\DoxyCodeLine{13   uint32\_t uplmwritebytes;}
+\DoxyCodeLine{14   uint32\_t uplmreadbytes;}
+\DoxyCodeLine{15   uint32\_t msg\_acts;}
+\DoxyCodeLine{16   uint32\_t mov\_acts;}
+\DoxyCodeLine{17   uint32\_t branch\_acts;}
+\DoxyCodeLine{18   uint32\_t alu\_acts;}
+\DoxyCodeLine{19   uint32\_t yld\_acts;}
+\DoxyCodeLine{20   uint32\_t comp\_acts;}
+\DoxyCodeLine{21   uint32\_t cmp\_swp\_acts;}
+\DoxyCodeLine{22   uint32\_t transcnt;}
+\DoxyCodeLine{23 \};}
+\DoxyCodeLine{24 \textcolor{keyword}{struct }\mbox{\hyperlink{struct_event}{Event}} \{}
+\DoxyCodeLine{25   uint8\_t event\_id;}
+\DoxyCodeLine{26   uint8\_t num\_operands;}
+\DoxyCodeLine{27   uint8\_t event\_label;}
+\DoxyCodeLine{28   uint8\_t event\_base;}
+\DoxyCodeLine{29   uint8\_t tid;}
+\DoxyCodeLine{30   uint8\_t ptid;}
+\DoxyCodeLine{31 \};}
+\DoxyCodeLine{32 }
+\DoxyCodeLine{33 \textcolor{keyword}{class }\mbox{\hyperlink{class_upstream___py_intf}{Upstream\_PyIntf}} \{}
+\DoxyCodeLine{34 \textcolor{keyword}{private}:}
+\DoxyCodeLine{35   \textcolor{keywordtype}{int} proc\_id;}
+\DoxyCodeLine{36   PyObject *pName, *pModule, *pModule2, *pargs, *pclass\_ve, *pinst\_ve;}
+\DoxyCodeLine{37   PyObject *pEmulator, *pEfafile, *pVirtEngine;}
+\DoxyCodeLine{38   PyObject *pinst\_eq, *pinst\_ob;}
+\DoxyCodeLine{39   PyObject *pLM, *planes;}
+\DoxyCodeLine{40   PyObject *pefa, *pefa\_prop, *pprop;}
+\DoxyCodeLine{41 }
+\DoxyCodeLine{53   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_upstream___py_intf_a99a2127685cc8a949fb70f77304ff1eb}{addSystemPaths}}();}
+\DoxyCodeLine{54 }
+\DoxyCodeLine{55 \textcolor{keyword}{public}:}
+\DoxyCodeLine{56   \mbox{\hyperlink{class_upstream___py_intf}{Upstream\_PyIntf}}();}
+\DoxyCodeLine{57   \mbox{\hyperlink{class_upstream___py_intf}{Upstream\_PyIntf}}(\textcolor{keywordtype}{int} numlanes, std::string progfile, std::string efaname,}
+\DoxyCodeLine{58                   std::string simdir, \textcolor{keywordtype}{int} lm\_mode, uint32\_t lmsize,}
+\DoxyCodeLine{59                   std::string perf\_log\_file);}
+\DoxyCodeLine{60   \textcolor{keywordtype}{void} insert\_event(uint32\_t edata, \textcolor{keywordtype}{int} numOb, \textcolor{keywordtype}{int} lane\_id);}
+\DoxyCodeLine{61   \textcolor{keywordtype}{void} insert\_operand(uint32\_t odata, \textcolor{keywordtype}{int} lane\_id);}
+\DoxyCodeLine{62 }
+\DoxyCodeLine{63   \textcolor{keywordtype}{int} execute(\textcolor{keywordtype}{int} cont\_state, \textcolor{keyword}{struct} \mbox{\hyperlink{structemulator__stats}{emulator\_stats}} *em\_stats, \textcolor{keywordtype}{int} lane\_id);}
+\DoxyCodeLine{64 }
+\DoxyCodeLine{65   \textcolor{keywordtype}{void} insert\_scratch(uint32\_t saddr, uint32\_t sdata);}
+\DoxyCodeLine{66   \textcolor{keywordtype}{void} insert\_sbuffer(uint32\_t saddr, uint32\_t sdata, \textcolor{keywordtype}{int} lane\_id);}
+\DoxyCodeLine{67 }
+\DoxyCodeLine{68   \textcolor{keywordtype}{void} read\_scratch(uint32\_t saddr, uint8\_t *data, uint32\_t size);}
+\DoxyCodeLine{69   \textcolor{keywordtype}{void} read\_sbuffer(uint32\_t saddr, uint8\_t *data, uint32\_t size, \textcolor{keywordtype}{int} lane\_id);}
+\DoxyCodeLine{70 }
+\DoxyCodeLine{71   uint32\_t getEventQ\_Size(\textcolor{keywordtype}{int} lane\_id);}
+\DoxyCodeLine{72 }
+\DoxyCodeLine{73   \textcolor{comment}{/*}}
+\DoxyCodeLine{74 \textcolor{comment}{   * Simple Wrapper for upstream emulator Virtual engine}}
+\DoxyCodeLine{75 \textcolor{comment}{   */}}
+\DoxyCodeLine{76   \mbox{\hyperlink{class_upstream___py_intf}{\string~Upstream\_PyIntf}}() \{ Py\_Finalize(); \}}
+\DoxyCodeLine{77 \};}
+\DoxyCodeLine{78 }
+\DoxyCodeLine{79 \textcolor{preprocessor}{\#endif }\textcolor{comment}{// UPSTREAM\_LANE\_HH}}
+
+\end{DoxyCode}
