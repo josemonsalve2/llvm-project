@@ -1,85 +1,83 @@
-#include <cstdio>
-#include <cstdlib>
 #include <algorithm>
 #include <cmath>
+#include <cstdio>
+#include <cstdlib>
 #include <iostream>
-#include <vector>
 #include <map>
 #include <pthread.h>
 #include <simupdown.h>
+#include <vector>
 
-#define USAGE "USAGE: ./eventRate <numevents> <numlanes> <numthreadsperlane> <mode> [<num_cores>] [<num_uds>]"
+#define USAGE                                                                  \
+  "USAGE: ./eventRate <numevents> <numlanes> <numthreadsperlane> <mode> "      \
+  "[<num_cores>] [<num_uds>]"
 
-void eventrate(int total_cores, int core_num, int num_lanes, int num_threads, int num_events){
+void eventrate(int total_cores, int core_num, int num_lanes, int num_threads,
+               int num_events) {
 
   UpDown::ud_machine_t machine;
   machine.NumLanes = num_lanes;
 
-  int lane_num=0;
-  int last_lane_checked=0;
-  int lanes_pcore=num_lanes/total_cores;
+  int lane_num = 0;
+  int last_lane_checked = 0;
+  int lanes_pcore = num_lanes / total_cores;
 
   UpDown::word_t ops_data[3];
   UpDown::SimUDRuntime_t rt(machine, "eventRateEFA", "EventRateTest", "./");
-  //UpDown::UDRuntime_t rt(machine);
+  // UpDown::UDRuntime_t rt(machine);
 
   UpDown::operands_t ops(3, ops_data);
 
-  for(int i=core_num*lanes_pcore; i < (core_num+1)*lanes_pcore; i++) {
+  for (int i = core_num * lanes_pcore; i < (core_num + 1) * lanes_pcore; i++) {
     UpDown::word_t data = 1;
-    rt.t2ud_memcpy(&data  /*top_ptr*/,
-                   1     /*size in words*/,
-                   0     /*Ud ID*/,
-                   i     /*LaneID*/,
-                   0      /*offset in spmem*/);
+    rt.t2ud_memcpy(&data /*top_ptr*/, 1 /*size in words*/, 0 /*Ud ID*/,
+                   i /*LaneID*/, 0 /*offset in spmem*/);
   }
   printf("Starting launch of events\n");
-  for(int ln=0; ln<lanes_pcore; ln++){
-    lane_num=core_num+total_cores*ln;
+  for (int ln = 0; ln < lanes_pcore; ln++) {
+    lane_num = core_num + total_cores * ln;
     ops.set_operand(0, num_events);
-    ops.set_operand(1, num_events*(num_events+1)/2); //termination counter
-    ops.set_operand(2, rt.get_lane_physical_memory(0, lane_num)); // First location of lane
+    ops.set_operand(1, num_events * (num_events + 1) / 2); // termination
+                                                           // counter
+    ops.set_operand(
+        2, rt.get_lane_physical_memory(0, lane_num)); // First location of lane
     // Events with operands
-    UpDown::event_t evnt_ops(0 /*Event Label*/,
-                             0 /*UD ID*/,
-                             lane_num /*Lane ID*/,
-                             UpDown::ANY_THREAD /*Thread ID*/,
-                             &ops /*Operands*/);
+    UpDown::event_t evnt_ops(
+        0 /*Event Label*/, 0 /*UD ID*/, lane_num /*Lane ID*/,
+        UpDown::ANY_THREAD /*Thread ID*/, &ops /*Operands*/);
     rt.send_event(evnt_ops);
   }
-  
+
   // Start execution in all the lanes
-  for(int ln=0; ln<lanes_pcore; ln++){
-    lane_num=core_num+total_cores*ln;
+  for (int ln = 0; ln < lanes_pcore; ln++) {
+    lane_num = core_num + total_cores * ln;
     rt.start_exec(0, lane_num);
   }
-  
+
   // Check for termination
-  for(int ln=0; ln<lanes_pcore; ln++){
-    lane_num=core_num+total_cores*ln;
-    rt.test_wait_addr(0         /*UD ID*/, 
-                      lane_num  /*Lane ID*/, 
-                      0         /*Offset*/, 
-                      -1         /*Expected value*/);
+  for (int ln = 0; ln < lanes_pcore; ln++) {
+    lane_num = core_num + total_cores * ln;
+    rt.test_wait_addr(0 /*UD ID*/, lane_num /*Lane ID*/, 0 /*Offset*/,
+                      -1 /*Expected value*/);
   }
   printf("All Events launched and threads terminated\n");
   return;
 }
 
 /// TODO: This microbenchmark does not support multiple UDs or Threads. Fixme
-int main(int argc, char* argv[]) {
-  uint32_t num_events=0;
-  int num_lanes=1;
-  int num_threads=1;
-  int core_num=0;
-  int mode=0;
-  int total_cores=1;
-  int total_ud=1;
+int main(int argc, char *argv[]) {
+  uint32_t num_events = 0;
+  int num_lanes = 1;
+  int num_threads = 1;
+  int core_num = 0;
+  int mode = 0;
+  int total_cores = 1;
+  int total_ud = 1;
 
-  if(argc < 5) {
-        printf("Insufficient Input Params\n");
-        printf("%s\n", USAGE);
-        exit(1);
+  if (argc < 5) {
+    printf("Insufficient Input Params\n");
+    printf("%s\n", USAGE);
+    exit(1);
   }
   num_events = atoi(argv[1]);
   num_lanes = atoi(argv[2]);
@@ -91,31 +89,31 @@ int main(int argc, char* argv[]) {
     mode = 1 - multi thread topcore, singe updown
     mode = 2 - multi thread topcore, multi updown
   */
-  if(mode == 0){
+  if (mode == 0) {
     printf("Single thread Topcore Single Updown!\n");
-    total_cores=1;
-    core_num=0;
-    if(argv[5])
+    total_cores = 1;
+    core_num = 0;
+    if (argv[5])
       total_cores = atoi(argv[5]);
-    if(total_cores > 1 && argv[6])
+    if (total_cores > 1 && argv[6])
       core_num = atoi(argv[6]);
-  }else if(mode == 1){
+  } else if (mode == 1) {
     printf("Multi thread Topcore Single Updown!\n");
-    if(argv[5])
+    if (argv[5])
       total_cores = atoi(argv[5]);
-    if(total_cores > 1 && argv[6])
+    if (total_cores > 1 && argv[6])
       core_num = atoi(argv[6]);
-  }else if(mode == 2){
+  } else if (mode == 2) {
     printf("Multi thread Topcore Multi Updown!\n");
-    if(argv[5])
+    if (argv[5])
       total_cores = atoi(argv[5]);
-    if(total_cores > 1 && argv[6])
+    if (total_cores > 1 && argv[6])
       core_num = atoi(argv[6]);
-    if(argv[7])
+    if (argv[7])
       total_ud = atoi(argv[7]);
-  }else{
-        printf("Incorrect mode %d specified should be 0,1,2\n", mode);
-        exit(1);
+  } else {
+    printf("Incorrect mode %d specified should be 0,1,2\n", mode);
+    exit(1);
   }
   printf("Num Threads per Lane:%d\n", num_threads);
   printf("Num Events to launch:%d\n", num_events);
@@ -123,7 +121,4 @@ int main(int argc, char* argv[]) {
   eventrate(total_cores, core_num, num_lanes, num_threads, num_events);
 
   printf("EventRate test done\n");
-  
 }
-
-
