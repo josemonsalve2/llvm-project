@@ -152,6 +152,11 @@ void Upstream_PyIntf::insert_operand(uint32_t odata, int lane_id) {
   Py_DECREF(res);
 }
 
+void Upstream_PyIntf::set_print_level(int printLvl) {
+  PyObject *efautil_ev = PyObject_GetAttrString(pEmulator, "efa_util");
+  PyObject_CallMethod(efautil_ev, "printLevel", "(i)", printLvl);
+}
+
 void Upstream_PyIntf::insert_scratch(uint32_t saddr, uint32_t sdata) {
   PyObject *res;
   res = PyObject_CallMethod(pVirtEngine, "write_scratch", "(ii)", saddr, sdata);
@@ -160,14 +165,6 @@ void Upstream_PyIntf::insert_scratch(uint32_t saddr, uint32_t sdata) {
   Py_DECREF(res);
 }
 
-void Upstream_PyIntf::insert_sbuffer(uint32_t saddr, uint32_t sdata,
-                                     int lane_id) {
-  PyObject *res = PyObject_CallMethod(pVirtEngine, "write_sbuffer", "(iii)",
-                                      saddr, sdata, lane_id);
-
-  UPDOWN_INFOMSG("Entered into StreamBuffer");
-  Py_DECREF(res);
-}
 
 void Upstream_PyIntf::read_scratch(uint32_t saddr, uint8_t *data,
                                    uint32_t size) {
@@ -229,42 +226,6 @@ void Upstream_PyIntf::read_scratch(uint32_t saddr, uint8_t *data,
       locaddr += 4;
     }
   }
-}
-
-void Upstream_PyIntf::read_sbuffer(uint32_t saddr, uint8_t *data, uint32_t size,
-                                   int lane_id) {
-  PyObject *res;
-  if (size == 1) {
-    res = PyObject_CallMethod(pVirtEngine, "read_sbuffer", "(iii)", saddr, size,
-                              lane_id);
-    *data = (uint8_t)PyLong_AsLong(res);
-  } else if (size == 2) {
-    res = PyObject_CallMethod(pVirtEngine, "read_sbuffer", "(iii)", saddr, size,
-                              lane_id);
-    uint16_t temp = (uint16_t)PyLong_AsLong(res);
-    data[0] = temp & 0xff;
-    data[1] = (temp >> 8) & 0xff;
-  } else if (size == 4) {
-    res = PyObject_CallMethod(pVirtEngine, "read_sbuffer", "(iii)", saddr, size,
-                              lane_id);
-    if (res == nullptr) {
-      PyErr_Print();
-      UPDOWN_ERROR("Read_Stream Buffer Error: Return object NULL");
-      exit(1);
-    }
-    uint32_t temp = (uint32_t)PyLong_AsLong(res);
-    data[0] = temp & 0xff;
-    data[1] = (temp >> 8) & 0xff;
-    data[2] = (temp >> 16) & 0xff;
-    data[3] = (temp >> 24) & 0xff;
-
-  } else {
-    PyErr_Print();
-    UPDOWN_ERROR(
-        "Cannot read from Upstream LM - if not aligned to 4bytes > 4Bytes");
-    exit(1);
-  }
-  Py_DECREF(res);
 }
 
 uint32_t Upstream_PyIntf::getEventQ_Size(int lane_id) {

@@ -53,6 +53,19 @@ class Upstream_PyIntf;
 namespace UpDown {
 
 /**
+ * @brief Control emulator log print level
+ * 
+ * This flag uses the EfaUtil.py printing interface
+ * to set the level of printing in the execution of the emulator.
+ */
+enum EmulatorLogLevel {
+  FULL_TRACE = 0,
+  STAGE_TRACE = 1,
+  PROGRESS_TRACE = 2,
+  NONE = 5,
+};
+
+/**
  * @brief Wrapper class that allows simulation of runtime calls
  *
  * This class inherits from UDRuntime_t, and it overwrites the methods
@@ -103,12 +116,13 @@ private:
    *
    * This function handles initialization of the interface with python
    * EFA emulator. The emulator is in charge of UpDown behavior.
+   * 
+   * @param printLevel Printing level for the python emulator
    *
    * @todo when increasing the number of lanes to multiple UpDowns, this
    * function must be re-implemented
    */
-  void initPythonInterface();
-
+  void initPythonInterface(EmulatorLogLevel printLevel);
 
 public:
   /**
@@ -158,7 +172,8 @@ public:
    * @param machineConfig Machine configuration
    */
   SimUDRuntime_t(std::string programFile,
-                 std::string programName, std::string simulationDir)
+                 std::string programName, std::string simulationDir,
+                 EmulatorLogLevel printLvl = EmulatorLogLevel::NONE)
       : UDRuntime_t(), programFile(programFile),
         programName(programName), simulationDir(simulationDir),
         python_enabled(true), sendmap(nullptr) {
@@ -166,7 +181,7 @@ public:
     initMemoryArrays();
     UPDOWN_INFOMSG("Running file %s Program %s Dir %s", programFile.c_str(),
                    programName.c_str(), simulationDir.c_str());
-    initPythonInterface();
+    initPythonInterface(printLvl);
     // Recalculate address map
     calc_addrmap();
   }
@@ -182,7 +197,8 @@ public:
    * @param machineConfig Machine configuration
    */
   SimUDRuntime_t(ud_machine_t machineConfig, std::string programFile,
-                 std::string programName, std::string simulationDir)
+                 std::string programName, std::string simulationDir,
+                 EmulatorLogLevel printLvl = EmulatorLogLevel::NONE)
       : UDRuntime_t(machineConfig), programFile(programFile),
         programName(programName), simulationDir(simulationDir),
         python_enabled(true), sendmap(nullptr) {
@@ -190,7 +206,7 @@ public:
     initMemoryArrays();
     UPDOWN_INFOMSG("Running file %s Program %s Dir %s", programFile.c_str(),
                    programName.c_str(), simulationDir.c_str());
-    initPythonInterface();
+    initPythonInterface(printLvl);
     // Recalculate address map
     calc_addrmap();
   }

@@ -40,7 +40,7 @@ void SimUDRuntime_t::initMemoryArrays() {
   reset_memory_manager();
 }
 
-void SimUDRuntime_t::initPythonInterface() {
+void SimUDRuntime_t::initPythonInterface(EmulatorLogLevel printLevel) {
   upstream_pyintf = new Upstream_PyIntf(MachineConfig.NumLanes, programFile,
                                         programName, simulationDir, 0,
                                         MachineConfig.SPBankSize, LogFileName);
@@ -68,6 +68,8 @@ void SimUDRuntime_t::initPythonInterface() {
       exit(EXIT_FAILURE);
     }
   }
+  upstream_pyintf->set_print_level(printLevel);
+  
   delete fd;
 }
 

@@ -60,13 +60,13 @@ public:
   void insert_event(uint32_t edata, int numOb, int lane_id);
   void insert_operand(uint32_t odata, int lane_id);
 
+  void set_print_level(int printLvl);
+
   int execute(int cont_state, struct emulator_stats *em_stats, int lane_id);
 
   void insert_scratch(uint32_t saddr, uint32_t sdata);
-  void insert_sbuffer(uint32_t saddr, uint32_t sdata, int lane_id);
 
   void read_scratch(uint32_t saddr, uint8_t *data, uint32_t size);
-  void read_sbuffer(uint32_t saddr, uint8_t *data, uint32_t size, int lane_id);
 
   uint32_t getEventQ_Size(int lane_id);
 
