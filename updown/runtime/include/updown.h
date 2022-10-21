@@ -157,12 +157,9 @@ public:
   /**
    * @brief Set multiple operands at once
    * 
-   * @param op_begin Start operand inclusive
-   * @param op_end End operand inclusive
-   * @param val pointer to the value to be copied
-   * 
    * Example:
-   * ```
+   * 
+   * ```C
    * // Mapping a struct to different operands
    * // Assume no padding
    * 
@@ -181,10 +178,16 @@ public:
    * 
    * // the struct will be copied bit a bit, each
    * // operand in a different location.
+   * ```
+   * 
+   * @param op_begin Start operand inclusive
+   * @param op_end End operand inclusive
+   * @param val pointer to the value to be copied
+   * 
    * 
    */
-  inline void set_operands(uint32_t op_begin, uint32_t op_end, ptr_t val) {
-    std::memcpy(Data+op_begin+1, val, op_end - op_begin);
+  inline void set_operands(uint32_t op_begin, uint32_t op_end, void* val) {
+    std::memcpy(Data+op_begin+1, val, (op_end - op_begin)*sizeof(word_t));
   }
 
   /**
