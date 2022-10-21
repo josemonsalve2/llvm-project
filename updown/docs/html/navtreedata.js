@@ -36,12 +36,32 @@ var NAVTREE =
         [ "Python Syntax", "md___users_josemonsalvediaz__documents__project38_llvm_updown__r_e_a_d_m_e.html#autotoc_md7", null ]
       ] ]
     ] ],
-    [ "Microbenchmarks", "md___users_josemonsalvediaz__documents__project38_llvm_updown_ubenchmarks__r_e_a_d_m_e.html", [
-      [ "Event Rate Microbenchmark", "md___users_josemonsalvediaz__documents__project38_llvm_updown_ubenchmarks__r_e_a_d_m_e.html#autotoc_md15", [
-        [ "Note:", "md___users_josemonsalvediaz__documents__project38_llvm_updown_ubenchmarks__r_e_a_d_m_e.html#autotoc_md16", null ]
+    [ "Kickstart tutorial", "md___users_josemonsalvediaz__documents__project38_llvm_updown_tutorials__oct21_22__r_e_a_d_m_e.html", [
+      [ "Building the runtime system in standalone mode", "md___users_josemonsalvediaz__documents__project38_llvm_updown_tutorials__oct21_22__r_e_a_d_m_e.html#autotoc_md15", [
+        [ "Notes", "md___users_josemonsalvediaz__documents__project38_llvm_updown_tutorials__oct21_22__r_e_a_d_m_e.html#autotoc_md16", null ]
       ] ],
-      [ "Lauch Latency Microbenchmark", "md___users_josemonsalvediaz__documents__project38_llvm_updown_ubenchmarks__r_e_a_d_m_e.html#autotoc_md17", null ],
-      [ "Note:", "md___users_josemonsalvediaz__documents__project38_llvm_updown_ubenchmarks__r_e_a_d_m_e.html#autotoc_md18", null ]
+      [ "Small terminology reminder", "md___users_josemonsalvediaz__documents__project38_llvm_updown_tutorials__oct21_22__r_e_a_d_m_e.html#autotoc_md17", [
+        [ "UpDowns, lanes and threads", "md___users_josemonsalvediaz__documents__project38_llvm_updown_tutorials__oct21_22__r_e_a_d_m_e.html#autotoc_md18", null ],
+        [ "UpDown memory address space", "md___users_josemonsalvediaz__documents__project38_llvm_updown_tutorials__oct21_22__r_e_a_d_m_e.html#autotoc_md19", null ],
+        [ "Notes", "md___users_josemonsalvediaz__documents__project38_llvm_updown_tutorials__oct21_22__r_e_a_d_m_e.html#autotoc_md20", null ]
+      ] ],
+      [ "Creating a hello world program", "md___users_josemonsalvediaz__documents__project38_llvm_updown_tutorials__oct21_22__r_e_a_d_m_e.html#autotoc_md21", [
+        [ "Output:", "md___users_josemonsalvediaz__documents__project38_llvm_updown_tutorials__oct21_22__r_e_a_d_m_e.html#autotoc_md22", null ]
+      ] ]
+    ] ],
+    [ "Microbenchmarks", "md___users_josemonsalvediaz__documents__project38_llvm_updown_ubenchmarks__r_e_a_d_m_e.html", [
+      [ "Event Rate Microbenchmark", "md___users_josemonsalvediaz__documents__project38_llvm_updown_ubenchmarks__r_e_a_d_m_e.html#autotoc_md24", [
+        [ "Note:", "md___users_josemonsalvediaz__documents__project38_llvm_updown_ubenchmarks__r_e_a_d_m_e.html#autotoc_md25", null ]
+      ] ],
+      [ "Lauch Latency Microbenchmark", "md___users_josemonsalvediaz__documents__project38_llvm_updown_ubenchmarks__r_e_a_d_m_e.html#autotoc_md26", [
+        [ "Note:", "md___users_josemonsalvediaz__documents__project38_llvm_updown_ubenchmarks__r_e_a_d_m_e.html#autotoc_md27", null ]
+      ] ],
+      [ "DRAM Read Bandwidth", "md___users_josemonsalvediaz__documents__project38_llvm_updown_ubenchmarks__r_e_a_d_m_e.html#autotoc_md28", [
+        [ "Note:", "md___users_josemonsalvediaz__documents__project38_llvm_updown_ubenchmarks__r_e_a_d_m_e.html#autotoc_md29", null ]
+      ] ],
+      [ "DRAM Write Bandwidth", "md___users_josemonsalvediaz__documents__project38_llvm_updown_ubenchmarks__r_e_a_d_m_e.html#autotoc_md30", [
+        [ "Note:", "md___users_josemonsalvediaz__documents__project38_llvm_updown_ubenchmarks__r_e_a_d_m_e.html#autotoc_md31", null ]
+      ] ]
     ] ],
     [ "Todo List", "todo.html", null ],
     [ "Classes", "annotated.html", [

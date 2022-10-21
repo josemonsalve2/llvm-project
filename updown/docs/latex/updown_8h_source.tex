@@ -88,7 +88,7 @@
 \DoxyCodeLine{117                            (NumOperands + 1))) \{ \textcolor{comment}{// TODO: Avoid this malloc}}
 \DoxyCodeLine{118 }
 \DoxyCodeLine{119     Data[0] = cont; \textcolor{comment}{// Fake continuation}}
-\DoxyCodeLine{120     std::memcpy(Data+1, oper, get\_NumOperands()*\textcolor{keyword}{sizeof}(word\_t));}
+\DoxyCodeLine{120     std::memcpy(Data+1, oper, \mbox{\hyperlink{class_up_down_1_1operands__t_aa769b305fb95f01c74f1230386f6914c}{get\_NumOperands}}()*\textcolor{keyword}{sizeof}(word\_t));}
 \DoxyCodeLine{121   \}}
 \DoxyCodeLine{122 }
 \DoxyCodeLine{123 }
@@ -106,335 +106,335 @@
 \DoxyCodeLine{154     Data[op+1] = val;}
 \DoxyCodeLine{155   \}}
 \DoxyCodeLine{156 }
-\DoxyCodeLine{186   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} set\_operands(uint32\_t op\_begin, uint32\_t op\_end, ptr\_t val) \{}
-\DoxyCodeLine{187     std::memcpy(Data+op\_begin+1, val, op\_end -\/ op\_begin);}
-\DoxyCodeLine{188   \}}
-\DoxyCodeLine{189 }
-\DoxyCodeLine{195   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} set\_cont(word\_t cont) \{}
-\DoxyCodeLine{196     Data[0] = cont;}
-\DoxyCodeLine{197   \}}
-\DoxyCodeLine{198 }
-\DoxyCodeLine{204   uint8\_t get\_NumOperands() \{ \textcolor{keywordflow}{return} NumOperands; \}}
-\DoxyCodeLine{205 }
-\DoxyCodeLine{206   \string~operands\_t() \{ \textcolor{keyword}{delete} Data; \}}
-\DoxyCodeLine{207 \};}
+\DoxyCodeLine{189   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1operands__t_acaaa965b8f9003feccb35257e37d8bf4}{set\_operands}}(uint32\_t op\_begin, uint32\_t op\_end, \textcolor{keywordtype}{void}* val) \{}
+\DoxyCodeLine{190     std::memcpy(Data+op\_begin+1, val, (op\_end -\/ op\_begin)*\textcolor{keyword}{sizeof}(word\_t));}
+\DoxyCodeLine{191   \}}
+\DoxyCodeLine{192 }
+\DoxyCodeLine{198   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1operands__t_a2c195c07c62074860cae11275adc99c1}{set\_cont}}(word\_t cont) \{}
+\DoxyCodeLine{199     Data[0] = cont;}
+\DoxyCodeLine{200   \}}
+\DoxyCodeLine{201 }
+\DoxyCodeLine{207   uint8\_t \mbox{\hyperlink{class_up_down_1_1operands__t_aa769b305fb95f01c74f1230386f6914c}{get\_NumOperands}}() \{ \textcolor{keywordflow}{return} NumOperands; \}}
 \DoxyCodeLine{208 }
-\DoxyCodeLine{219 \textcolor{keyword}{class }\mbox{\hyperlink{class_up_down_1_1event__t}{event\_t}} \{}
-\DoxyCodeLine{220 \textcolor{keyword}{private}:}
-\DoxyCodeLine{221   uint8\_t UdId;       \textcolor{comment}{// UpDown ID}}
-\DoxyCodeLine{222   uint8\_t LaneId;     \textcolor{comment}{// Lane ID}}
-\DoxyCodeLine{223   uint8\_t ThreadId;   \textcolor{comment}{// Thread ID. ANY\_THREAD for any thread}}
-\DoxyCodeLine{224   uint8\_t EventLabel; \textcolor{comment}{// Number representing the event label}}
-\DoxyCodeLine{225 }
-\DoxyCodeLine{226   \mbox{\hyperlink{class_up_down_1_1operands__t}{operands\_t}} *Operands; \textcolor{comment}{// Operands to be sent with this event}}
-\DoxyCodeLine{227 }
-\DoxyCodeLine{228   word\_t EventWord; \textcolor{comment}{// Concatenated event word that contains all the fields}}
-\DoxyCodeLine{229 }
-\DoxyCodeLine{230 \textcolor{keyword}{public}:}
-\DoxyCodeLine{235   \mbox{\hyperlink{class_up_down_1_1event__t_a3ace3ad56fae2536c8f516f220ce0002}{event\_t}}()}
-\DoxyCodeLine{236       : UdId(0), LaneId(0), ThreadId(0xFF), EventLabel(0), Operands(nullptr),}
-\DoxyCodeLine{237         EventWord(((LaneId << 24) \& 0xff000000) |}
-\DoxyCodeLine{238                   ((ThreadId << 16) \& 0xff0000) | ((0 << 8) \& 0xff00) |}
-\DoxyCodeLine{239                   (EventLabel \& 0xff)) \{}
-\DoxyCodeLine{240     UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Creating a new event label = \%d, lane\_id = \%d, "{}}}
-\DoxyCodeLine{241                    \textcolor{stringliteral}{"{}thread\_id = \%d, num\_operands = \%d, ev\_word = \%X"{}},}
-\DoxyCodeLine{242                    EventLabel, LaneId, ThreadId, 0, EventWord);}
-\DoxyCodeLine{243   \}}
-\DoxyCodeLine{244 }
-\DoxyCodeLine{254   \mbox{\hyperlink{class_up_down_1_1event__t_a1136178568e8e060cd5878d5a06157cf}{event\_t}}(uint8\_t e\_label, uint8\_t udid, uint8\_t lid = 0,}
-\DoxyCodeLine{255           uint8\_t tid = ANY\_THREAD, \mbox{\hyperlink{class_up_down_1_1operands__t}{operands\_t}} *operands = \textcolor{keyword}{nullptr})}
-\DoxyCodeLine{256       : UdId(udid), LaneId(lid), ThreadId(tid), EventLabel(e\_label),}
-\DoxyCodeLine{257         Operands(operands),}
-\DoxyCodeLine{258         EventWord(}
-\DoxyCodeLine{259             ((LaneId << 24) \& 0xff000000) | ((ThreadId << 16) \& 0xff0000) |}
-\DoxyCodeLine{260             (((Operands != nullptr ? Operands-\/>get\_NumOperands() : 0) << 8) \&}
-\DoxyCodeLine{261              0xff00) |}
-\DoxyCodeLine{262             (EventLabel \& 0xff)) \{}
-\DoxyCodeLine{263     UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Creating a new event label = \%d, lane\_id = \%d, "{}}}
-\DoxyCodeLine{264                    \textcolor{stringliteral}{"{}thread\_id = \%d, num\_operands = \%d, ev\_word = \%X"{}},}
-\DoxyCodeLine{265                    EventLabel, LaneId, ThreadId,}
-\DoxyCodeLine{266                    (Operands != \textcolor{keyword}{nullptr}) ? Operands-\/>get\_NumOperands() : 0,}
-\DoxyCodeLine{267                    EventWord);}
-\DoxyCodeLine{268   \}}
-\DoxyCodeLine{269 }
-\DoxyCodeLine{278   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1event__t_a82bb035d6e694deee44a89eab676911a}{set\_event}}(uint8\_t e\_label, uint8\_t udid, uint8\_t lid = 0,}
-\DoxyCodeLine{279                  uint8\_t tid = ANY\_THREAD, \mbox{\hyperlink{class_up_down_1_1operands__t}{operands\_t}} *operands = \textcolor{keyword}{nullptr}) \{}
-\DoxyCodeLine{280     EventLabel = e\_label;}
-\DoxyCodeLine{281     LaneId = lid;}
-\DoxyCodeLine{282     UdId = udid;}
-\DoxyCodeLine{283     ThreadId = tid;}
-\DoxyCodeLine{284     Operands = operands;}
-\DoxyCodeLine{285     EventWord =}
-\DoxyCodeLine{286         ((LaneId << 24) \& 0xff000000) | ((ThreadId << 16) \& 0xff0000) |}
-\DoxyCodeLine{287         (((Operands != \textcolor{keyword}{nullptr} ? Operands-\/>get\_NumOperands() : 0) << 8) \&}
-\DoxyCodeLine{288          0xff00) |}
-\DoxyCodeLine{289         (EventLabel \& 0xff);}
-\DoxyCodeLine{290     UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Setting the event word = \%d, lane\_id = \%d, "{}}}
-\DoxyCodeLine{291                    \textcolor{stringliteral}{"{}thread\_id = \%d, num\_operands = \%d, ev\_word = \%X"{}},}
-\DoxyCodeLine{292                    EventLabel, LaneId, ThreadId,}
-\DoxyCodeLine{293                    (Operands != \textcolor{keyword}{nullptr}) ? Operands-\/>get\_NumOperands() : 0,}
-\DoxyCodeLine{294                    EventWord);}
-\DoxyCodeLine{295   \}}
-\DoxyCodeLine{296 }
-\DoxyCodeLine{297   word\_t get\_EventWord() \{ \textcolor{keywordflow}{return} EventWord; \}}
-\DoxyCodeLine{298   operands\_t *get\_Operands() \{ \textcolor{keywordflow}{return} Operands; \}}
-\DoxyCodeLine{299   \textcolor{keywordtype}{void} set\_operands(operands\_t *ops) \{ Operands = ops; \}}
-\DoxyCodeLine{300   uint8\_t get\_UdId() \{ \textcolor{keywordflow}{return} UdId; \}}
-\DoxyCodeLine{301   uint8\_t get\_LaneId() \{ \textcolor{keywordflow}{return} LaneId; \}}
-\DoxyCodeLine{302   uint8\_t get\_ThreadId() \{ \textcolor{keywordflow}{return} ThreadId; \}}
-\DoxyCodeLine{303   uint8\_t get\_EventLabel() \{ \textcolor{keywordflow}{return} EventLabel; \}}
-\DoxyCodeLine{304   uint8\_t get\_NumOperands() \{}
-\DoxyCodeLine{305     \textcolor{keywordflow}{return} (Operands != \textcolor{keyword}{nullptr}) ? Operands-\/>get\_NumOperands() : 0;}
-\DoxyCodeLine{306   \}}
-\DoxyCodeLine{307   ptr\_t get\_OperandsData() \{}
-\DoxyCodeLine{308     \textcolor{keywordflow}{return} (Operands != \textcolor{keyword}{nullptr}) ? Operands-\/>\mbox{\hyperlink{class_up_down_1_1operands__t_a4f59ca5f7e3d814256818b7b74d791bc}{get\_Data}}() : \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{209   \mbox{\hyperlink{class_up_down_1_1operands__t}{\string~operands\_t}}() \{ \textcolor{keyword}{delete} Data; \}}
+\DoxyCodeLine{210 \};}
+\DoxyCodeLine{211 }
+\DoxyCodeLine{222 \textcolor{keyword}{class }\mbox{\hyperlink{class_up_down_1_1event__t}{event\_t}} \{}
+\DoxyCodeLine{223 \textcolor{keyword}{private}:}
+\DoxyCodeLine{224   uint8\_t UdId;       \textcolor{comment}{// UpDown ID}}
+\DoxyCodeLine{225   uint8\_t LaneId;     \textcolor{comment}{// Lane ID}}
+\DoxyCodeLine{226   uint8\_t ThreadId;   \textcolor{comment}{// Thread ID. ANY\_THREAD for any thread}}
+\DoxyCodeLine{227   uint8\_t EventLabel; \textcolor{comment}{// Number representing the event label}}
+\DoxyCodeLine{228 }
+\DoxyCodeLine{229   \mbox{\hyperlink{class_up_down_1_1operands__t}{operands\_t}} *Operands; \textcolor{comment}{// Operands to be sent with this event}}
+\DoxyCodeLine{230 }
+\DoxyCodeLine{231   word\_t EventWord; \textcolor{comment}{// Concatenated event word that contains all the fields}}
+\DoxyCodeLine{232 }
+\DoxyCodeLine{233 \textcolor{keyword}{public}:}
+\DoxyCodeLine{238   \mbox{\hyperlink{class_up_down_1_1event__t_a3ace3ad56fae2536c8f516f220ce0002}{event\_t}}()}
+\DoxyCodeLine{239       : UdId(0), LaneId(0), ThreadId(0xFF), EventLabel(0), Operands(nullptr),}
+\DoxyCodeLine{240         EventWord(((LaneId << 24) \& 0xff000000) |}
+\DoxyCodeLine{241                   ((ThreadId << 16) \& 0xff0000) | ((0 << 8) \& 0xff00) |}
+\DoxyCodeLine{242                   (EventLabel \& 0xff)) \{}
+\DoxyCodeLine{243     UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Creating a new event label = \%d, lane\_id = \%d, "{}}}
+\DoxyCodeLine{244                    \textcolor{stringliteral}{"{}thread\_id = \%d, num\_operands = \%d, ev\_word = \%X"{}},}
+\DoxyCodeLine{245                    EventLabel, LaneId, ThreadId, 0, EventWord);}
+\DoxyCodeLine{246   \}}
+\DoxyCodeLine{247 }
+\DoxyCodeLine{257   \mbox{\hyperlink{class_up_down_1_1event__t_a1136178568e8e060cd5878d5a06157cf}{event\_t}}(uint8\_t e\_label, uint8\_t udid, uint8\_t lid = 0,}
+\DoxyCodeLine{258           uint8\_t tid = ANY\_THREAD, \mbox{\hyperlink{class_up_down_1_1operands__t}{operands\_t}} *operands = \textcolor{keyword}{nullptr})}
+\DoxyCodeLine{259       : UdId(udid), LaneId(lid), ThreadId(tid), EventLabel(e\_label),}
+\DoxyCodeLine{260         Operands(operands),}
+\DoxyCodeLine{261         EventWord(}
+\DoxyCodeLine{262             ((LaneId << 24) \& 0xff000000) | ((ThreadId << 16) \& 0xff0000) |}
+\DoxyCodeLine{263             (((Operands != nullptr ? Operands-\/>get\_NumOperands() : 0) << 8) \&}
+\DoxyCodeLine{264              0xff00) |}
+\DoxyCodeLine{265             (EventLabel \& 0xff)) \{}
+\DoxyCodeLine{266     UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Creating a new event label = \%d, lane\_id = \%d, "{}}}
+\DoxyCodeLine{267                    \textcolor{stringliteral}{"{}thread\_id = \%d, num\_operands = \%d, ev\_word = \%X"{}},}
+\DoxyCodeLine{268                    EventLabel, LaneId, ThreadId,}
+\DoxyCodeLine{269                    (Operands != \textcolor{keyword}{nullptr}) ? Operands-\/>\mbox{\hyperlink{class_up_down_1_1operands__t_aa769b305fb95f01c74f1230386f6914c}{get\_NumOperands}}() : 0,}
+\DoxyCodeLine{270                    EventWord);}
+\DoxyCodeLine{271   \}}
+\DoxyCodeLine{272 }
+\DoxyCodeLine{281   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1event__t_a82bb035d6e694deee44a89eab676911a}{set\_event}}(uint8\_t e\_label, uint8\_t udid, uint8\_t lid = 0,}
+\DoxyCodeLine{282                  uint8\_t tid = ANY\_THREAD, \mbox{\hyperlink{class_up_down_1_1operands__t}{operands\_t}} *operands = \textcolor{keyword}{nullptr}) \{}
+\DoxyCodeLine{283     EventLabel = e\_label;}
+\DoxyCodeLine{284     LaneId = lid;}
+\DoxyCodeLine{285     UdId = udid;}
+\DoxyCodeLine{286     ThreadId = tid;}
+\DoxyCodeLine{287     Operands = operands;}
+\DoxyCodeLine{288     EventWord =}
+\DoxyCodeLine{289         ((LaneId << 24) \& 0xff000000) | ((ThreadId << 16) \& 0xff0000) |}
+\DoxyCodeLine{290         (((Operands != \textcolor{keyword}{nullptr} ? Operands-\/>\mbox{\hyperlink{class_up_down_1_1operands__t_aa769b305fb95f01c74f1230386f6914c}{get\_NumOperands}}() : 0) << 8) \&}
+\DoxyCodeLine{291          0xff00) |}
+\DoxyCodeLine{292         (EventLabel \& 0xff);}
+\DoxyCodeLine{293     UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Setting the event word = \%d, lane\_id = \%d, "{}}}
+\DoxyCodeLine{294                    \textcolor{stringliteral}{"{}thread\_id = \%d, num\_operands = \%d, ev\_word = \%X"{}},}
+\DoxyCodeLine{295                    EventLabel, LaneId, ThreadId,}
+\DoxyCodeLine{296                    (Operands != \textcolor{keyword}{nullptr}) ? Operands-\/>\mbox{\hyperlink{class_up_down_1_1operands__t_aa769b305fb95f01c74f1230386f6914c}{get\_NumOperands}}() : 0,}
+\DoxyCodeLine{297                    EventWord);}
+\DoxyCodeLine{298   \}}
+\DoxyCodeLine{299 }
+\DoxyCodeLine{300   word\_t get\_EventWord() \{ \textcolor{keywordflow}{return} EventWord; \}}
+\DoxyCodeLine{301   operands\_t *get\_Operands() \{ \textcolor{keywordflow}{return} Operands; \}}
+\DoxyCodeLine{302   \textcolor{keywordtype}{void} set\_operands(operands\_t *ops) \{ Operands = ops; \}}
+\DoxyCodeLine{303   uint8\_t get\_UdId() \{ \textcolor{keywordflow}{return} UdId; \}}
+\DoxyCodeLine{304   uint8\_t get\_LaneId() \{ \textcolor{keywordflow}{return} LaneId; \}}
+\DoxyCodeLine{305   uint8\_t get\_ThreadId() \{ \textcolor{keywordflow}{return} ThreadId; \}}
+\DoxyCodeLine{306   uint8\_t get\_EventLabel() \{ \textcolor{keywordflow}{return} EventLabel; \}}
+\DoxyCodeLine{307   uint8\_t get\_NumOperands() \{}
+\DoxyCodeLine{308     \textcolor{keywordflow}{return} (Operands != \textcolor{keyword}{nullptr}) ? Operands-\/>\mbox{\hyperlink{class_up_down_1_1operands__t_aa769b305fb95f01c74f1230386f6914c}{get\_NumOperands}}() : 0;}
 \DoxyCodeLine{309   \}}
-\DoxyCodeLine{310 \};}
-\DoxyCodeLine{311 }
-\DoxyCodeLine{319 \textcolor{keyword}{struct }\mbox{\hyperlink{struct_up_down_1_1ud__machine__t}{ud\_machine\_t}} \{}
-\DoxyCodeLine{320   \textcolor{comment}{// Offsets for addrs space}}
-\DoxyCodeLine{321   uint64\_t MapMemBase = BASE\_MAPPED\_ADDR;         \textcolor{comment}{// Base address for memory map}}
-\DoxyCodeLine{322   uint64\_t UDbase = BASE\_SPMEM\_ADDR;              \textcolor{comment}{// Base address for upstream}}
-\DoxyCodeLine{323   uint64\_t SPMemBase = BASE\_SPMEM\_ADDR;           \textcolor{comment}{// ScratchPad Base address}}
-\DoxyCodeLine{324   uint64\_t ControlBase = BASE\_CTRL\_ADDR;          \textcolor{comment}{// Base for control operands}}
-\DoxyCodeLine{325   uint64\_t EventQueueOffset = EVENT\_QUEUE\_OFFSET; \textcolor{comment}{// Offset for Event Queues}}
-\DoxyCodeLine{326   uint64\_t OperandQueueOffset =}
-\DoxyCodeLine{327       OPERAND\_QUEUE\_OFFSET;                     \textcolor{comment}{// Offset for Operands Queues}}
-\DoxyCodeLine{328   uint64\_t StartExecOffset = START\_EXEC\_OFFSET; \textcolor{comment}{// Offset for Start Exec signal}}
-\DoxyCodeLine{329   uint64\_t LockOffset = LOCK\_OFFSET;            \textcolor{comment}{// Offset for Lock signal}}
-\DoxyCodeLine{330 }
-\DoxyCodeLine{331   \textcolor{comment}{// Machine config and capacities}}
-\DoxyCodeLine{332   uint64\_t CapNumUDs = NUM\_UDS\_CAPACITY;              \textcolor{comment}{// Max number of UpDowns}}
-\DoxyCodeLine{333   uint64\_t CapNumLanes = NUM\_LANES\_CAPACITY;          \textcolor{comment}{// Max number of UpDowns}}
-\DoxyCodeLine{334   uint64\_t CapSPmemPerLane = SPMEM\_CAPACITY\_PER\_LANE; \textcolor{comment}{// Max bank size per lane}}
-\DoxyCodeLine{335   uint64\_t CapControlPerLane =}
-\DoxyCodeLine{336       CONTROL\_CAPACITY\_PER\_LANE;     \textcolor{comment}{// Max Control Sigs and regs per lane}}
-\DoxyCodeLine{337   uint64\_t NumUDs = DEF\_NUM\_UDS;     \textcolor{comment}{// Number of UpDowns}}
-\DoxyCodeLine{338   uint64\_t NumLanes = DEF\_NUM\_LANES; \textcolor{comment}{// Number of lanes}}
-\DoxyCodeLine{339 }
-\DoxyCodeLine{340   \textcolor{comment}{// Sizes for memories}}
-\DoxyCodeLine{341   uint64\_t MapMemSize = DEF\_MAPPED\_SIZE; \textcolor{comment}{// Mapped Memory size}}
-\DoxyCodeLine{342   uint64\_t SPBankSize =}
-\DoxyCodeLine{343       DEF\_SPMEM\_BANK\_SIZE; \textcolor{comment}{// Local Momory (scratchpad) Bank Size}}
-\DoxyCodeLine{344   uint64\_t SPBankSizeWords =}
-\DoxyCodeLine{345       DEF\_SPMEM\_BANK\_SIZE * DEF\_WORD\_SIZE; \textcolor{comment}{// LocalMemorySize in Words}}
-\DoxyCodeLine{346 \};}
-\DoxyCodeLine{347 }
-\DoxyCodeLine{356 \textcolor{keyword}{class }\mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t}{UDRuntime\_t}} \{}
-\DoxyCodeLine{357 \textcolor{keyword}{private}:}
-\DoxyCodeLine{491   \textcolor{keyword}{struct }\mbox{\hyperlink{struct_up_down_1_1_u_d_runtime__t_1_1base__addr__t}{base\_addr\_t}} \{}
-\DoxyCodeLine{492     \textcolor{keyword}{volatile} ptr\_t mmaddr;}
-\DoxyCodeLine{493     \textcolor{keyword}{volatile} ptr\_t spaddr;}
-\DoxyCodeLine{494     \textcolor{keyword}{volatile} ptr\_t ctrlAddr;}
-\DoxyCodeLine{495   \};}
-\DoxyCodeLine{496 }
-\DoxyCodeLine{503   \textcolor{keyword}{class }\mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t}{ud\_mapped\_memory\_t}} \{}
-\DoxyCodeLine{504   \textcolor{keyword}{private}:}
-\DoxyCodeLine{511     \textcolor{keyword}{struct }\mbox{\hyperlink{struct_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t_1_1mem__region__t}{mem\_region\_t}} \{}
-\DoxyCodeLine{512       uint64\_t size; \textcolor{comment}{// Size of the region}}
-\DoxyCodeLine{513       \textcolor{keywordtype}{bool} free;     \textcolor{comment}{// Is the region free or being used}}
-\DoxyCodeLine{514     \};}
-\DoxyCodeLine{515 }
-\DoxyCodeLine{516     \textcolor{comment}{// Map to keep track of the free and used regions.}}
-\DoxyCodeLine{517     std::map<void *, mem\_region\_t> regions;}
+\DoxyCodeLine{310   ptr\_t get\_OperandsData() \{}
+\DoxyCodeLine{311     \textcolor{keywordflow}{return} (Operands != \textcolor{keyword}{nullptr}) ? Operands-\/>\mbox{\hyperlink{class_up_down_1_1operands__t_a4f59ca5f7e3d814256818b7b74d791bc}{get\_Data}}() : \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{312   \}}
+\DoxyCodeLine{313 \};}
+\DoxyCodeLine{314 }
+\DoxyCodeLine{322 \textcolor{keyword}{struct }\mbox{\hyperlink{struct_up_down_1_1ud__machine__t}{ud\_machine\_t}} \{}
+\DoxyCodeLine{323   \textcolor{comment}{// Offsets for addrs space}}
+\DoxyCodeLine{324   uint64\_t MapMemBase = BASE\_MAPPED\_ADDR;         \textcolor{comment}{// Base address for memory map}}
+\DoxyCodeLine{325   uint64\_t UDbase = BASE\_SPMEM\_ADDR;              \textcolor{comment}{// Base address for upstream}}
+\DoxyCodeLine{326   uint64\_t SPMemBase = BASE\_SPMEM\_ADDR;           \textcolor{comment}{// ScratchPad Base address}}
+\DoxyCodeLine{327   uint64\_t ControlBase = BASE\_CTRL\_ADDR;          \textcolor{comment}{// Base for control operands}}
+\DoxyCodeLine{328   uint64\_t EventQueueOffset = EVENT\_QUEUE\_OFFSET; \textcolor{comment}{// Offset for Event Queues}}
+\DoxyCodeLine{329   uint64\_t OperandQueueOffset =}
+\DoxyCodeLine{330       OPERAND\_QUEUE\_OFFSET;                     \textcolor{comment}{// Offset for Operands Queues}}
+\DoxyCodeLine{331   uint64\_t StartExecOffset = START\_EXEC\_OFFSET; \textcolor{comment}{// Offset for Start Exec signal}}
+\DoxyCodeLine{332   uint64\_t LockOffset = LOCK\_OFFSET;            \textcolor{comment}{// Offset for Lock signal}}
+\DoxyCodeLine{333 }
+\DoxyCodeLine{334   \textcolor{comment}{// Machine config and capacities}}
+\DoxyCodeLine{335   uint64\_t CapNumUDs = NUM\_UDS\_CAPACITY;              \textcolor{comment}{// Max number of UpDowns}}
+\DoxyCodeLine{336   uint64\_t CapNumLanes = NUM\_LANES\_CAPACITY;          \textcolor{comment}{// Max number of UpDowns}}
+\DoxyCodeLine{337   uint64\_t CapSPmemPerLane = SPMEM\_CAPACITY\_PER\_LANE; \textcolor{comment}{// Max bank size per lane}}
+\DoxyCodeLine{338   uint64\_t CapControlPerLane =}
+\DoxyCodeLine{339       CONTROL\_CAPACITY\_PER\_LANE;     \textcolor{comment}{// Max Control Sigs and regs per lane}}
+\DoxyCodeLine{340   uint64\_t NumUDs = DEF\_NUM\_UDS;     \textcolor{comment}{// Number of UpDowns}}
+\DoxyCodeLine{341   uint64\_t NumLanes = DEF\_NUM\_LANES; \textcolor{comment}{// Number of lanes}}
+\DoxyCodeLine{342 }
+\DoxyCodeLine{343   \textcolor{comment}{// Sizes for memories}}
+\DoxyCodeLine{344   uint64\_t MapMemSize = DEF\_MAPPED\_SIZE; \textcolor{comment}{// Mapped Memory size}}
+\DoxyCodeLine{345   uint64\_t SPBankSize =}
+\DoxyCodeLine{346       DEF\_SPMEM\_BANK\_SIZE; \textcolor{comment}{// Local Momory (scratchpad) Bank Size}}
+\DoxyCodeLine{347   uint64\_t SPBankSizeWords =}
+\DoxyCodeLine{348       DEF\_SPMEM\_BANK\_SIZE * DEF\_WORD\_SIZE; \textcolor{comment}{// LocalMemorySize in Words}}
+\DoxyCodeLine{349 \};}
+\DoxyCodeLine{350 }
+\DoxyCodeLine{359 \textcolor{keyword}{class }\mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t}{UDRuntime\_t}} \{}
+\DoxyCodeLine{360 \textcolor{keyword}{private}:}
+\DoxyCodeLine{494   \textcolor{keyword}{struct }\mbox{\hyperlink{struct_up_down_1_1_u_d_runtime__t_1_1base__addr__t}{base\_addr\_t}} \{}
+\DoxyCodeLine{495     \textcolor{keyword}{volatile} ptr\_t mmaddr;}
+\DoxyCodeLine{496     \textcolor{keyword}{volatile} ptr\_t spaddr;}
+\DoxyCodeLine{497     \textcolor{keyword}{volatile} ptr\_t ctrlAddr;}
+\DoxyCodeLine{498   \};}
+\DoxyCodeLine{499 }
+\DoxyCodeLine{506   \textcolor{keyword}{class }\mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t}{ud\_mapped\_memory\_t}} \{}
+\DoxyCodeLine{507   \textcolor{keyword}{private}:}
+\DoxyCodeLine{514     \textcolor{keyword}{struct }\mbox{\hyperlink{struct_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t_1_1mem__region__t}{mem\_region\_t}} \{}
+\DoxyCodeLine{515       uint64\_t size; \textcolor{comment}{// Size of the region}}
+\DoxyCodeLine{516       \textcolor{keywordtype}{bool} free;     \textcolor{comment}{// Is the region free or being used}}
+\DoxyCodeLine{517     \};}
 \DoxyCodeLine{518 }
-\DoxyCodeLine{519   \textcolor{keyword}{public}:}
-\DoxyCodeLine{528     \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t_a929c8ff3f9a0c45dfec467c86a4124d8}{ud\_mapped\_memory\_t}}(\mbox{\hyperlink{struct_up_down_1_1ud__machine__t}{ud\_machine\_t}} \&machine) \{}
-\DoxyCodeLine{529       UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Initializing Mapped Memory Manager for \%lu at \%lX"{}}, }
-\DoxyCodeLine{530                       machine.MapMemSize, machine.MapMemBase);}
-\DoxyCodeLine{531       \textcolor{comment}{// Create the first segment}}
-\DoxyCodeLine{532       \textcolor{keywordtype}{void} *baseAddr = \textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{void} *\textcolor{keyword}{>}(machine.MapMemBase);}
-\DoxyCodeLine{533       regions[baseAddr] = \{machine.MapMemSize, \textcolor{keyword}{true}\};}
-\DoxyCodeLine{534     \}}
-\DoxyCodeLine{535 }
-\DoxyCodeLine{546     \textcolor{keywordtype}{void} *\mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t_a9a299c4ef46734c99eb39f00052e1ca6}{get\_region}}(uint64\_t size) \{}
-\DoxyCodeLine{547       UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Allocating new region of size \%lu bytes"{}}, size); }
-\DoxyCodeLine{548       \textcolor{comment}{// Iterate over the regions finding one that fits}}
-\DoxyCodeLine{549       \textcolor{keyword}{auto} used\_reg = regions.end();}
-\DoxyCodeLine{550       \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} it = regions.begin(); it != regions.end(); ++it) \{}
-\DoxyCodeLine{551         \textcolor{comment}{// Check if region is free and have enough size}}
-\DoxyCodeLine{552         \textcolor{keywordflow}{if} (it-\/>second.free \&\& size <= it-\/>second.size) \{}
-\DoxyCodeLine{553           UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Found a region at \%lX"{}}, \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(it-\/>first)); }
-\DoxyCodeLine{554           used\_reg = it;}
-\DoxyCodeLine{555           \textcolor{keywordflow}{break};}
-\DoxyCodeLine{556         \}}
-\DoxyCodeLine{557       \}}
-\DoxyCodeLine{558       \textcolor{comment}{// Check if we found space}}
-\DoxyCodeLine{559       \textcolor{keywordflow}{if} (used\_reg == regions.end()) \{}
-\DoxyCodeLine{560         UPDOWN\_ERROR(\textcolor{stringliteral}{"{}Allocator run out of memory. Cannot allocate \%lu bytes"{}},}
-\DoxyCodeLine{561                      size);}
-\DoxyCodeLine{562         \textcolor{keywordflow}{return} \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{563       \}}
-\DoxyCodeLine{564       \textcolor{comment}{// split the new region}}
-\DoxyCodeLine{565       used\_reg-\/>second.free = \textcolor{keyword}{false};}
-\DoxyCodeLine{566       uint64\_t new\_size = used\_reg-\/>second.size -\/ size;}
-\DoxyCodeLine{567       used\_reg-\/>second.size = size;}
-\DoxyCodeLine{568       \textcolor{comment}{// Create a new empty region}}
-\DoxyCodeLine{569       \textcolor{keywordflow}{if} (new\_size != 0) \{}
-\DoxyCodeLine{570         \textcolor{keywordtype}{void} *new\_reg = \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{char} *\textcolor{keyword}{>}(used\_reg-\/>first) + size;}
-\DoxyCodeLine{571         regions[new\_reg] = \{new\_size, \textcolor{keyword}{true}\};}
-\DoxyCodeLine{572         UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Creating a new region \%lX with the remaining size \%lu"{}}, }
-\DoxyCodeLine{573                         \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(new\_reg), new\_size); }
-\DoxyCodeLine{574       \}}
-\DoxyCodeLine{575       UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Returning region \%lX = \{\%lu, \%s\}"{}},}
-\DoxyCodeLine{576                       \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(used\_reg-\/>first), used\_reg-\/>second.size, }
-\DoxyCodeLine{577                       (used\_reg-\/>second.free)? \textcolor{stringliteral}{"{}Free"{}}:\textcolor{stringliteral}{"{}Used"{}}); }
-\DoxyCodeLine{578       \textcolor{comment}{// Return the new pointer}}
-\DoxyCodeLine{579       \textcolor{keywordflow}{return} used\_reg-\/>first;}
-\DoxyCodeLine{580     \}}
-\DoxyCodeLine{581 }
-\DoxyCodeLine{592     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t_adc9c872b795c000490acf4f5e350aa35}{remove\_region}}(\textcolor{keywordtype}{void} *ptr) \{}
-\DoxyCodeLine{593       UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Freeing the space at \%lX"{}}, \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(ptr)); }
-\DoxyCodeLine{594       \textcolor{comment}{// Find location to free}}
-\DoxyCodeLine{595       \textcolor{keyword}{auto} it = regions.find(ptr);}
-\DoxyCodeLine{596       \textcolor{keywordflow}{if} (it == regions.end() || it-\/>second.free) \{}
-\DoxyCodeLine{597         UPDOWN\_ERROR(\textcolor{stringliteral}{"{}Trying to free pointer \%lX that is not in the regions"{}}}
-\DoxyCodeLine{598                      \textcolor{stringliteral}{"{} or the region is free (double free?)"{}},}
-\DoxyCodeLine{599                      \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(ptr));}
-\DoxyCodeLine{600         \textcolor{keywordflow}{return};}
-\DoxyCodeLine{601       \}}
-\DoxyCodeLine{602       \textcolor{comment}{// merge left if free}}
-\DoxyCodeLine{603       \textcolor{keywordflow}{if} (it != regions.begin() \&\& std::prev(it, 1)-\/>second.free) \{}
-\DoxyCodeLine{604         uint64\_t size = it-\/>second.size;}
-\DoxyCodeLine{605         it-\/-\/;}
-\DoxyCodeLine{606         it-\/>second.size += size;}
-\DoxyCodeLine{607         UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Merging left \%lX to \%lX, adding \%lu for a total of region with \%lu"{}}, }
-\DoxyCodeLine{608                         \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(it-\/>first), \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(std::next(it, 1)-\/>first),}
-\DoxyCodeLine{609                         size, it-\/>second.size); }
-\DoxyCodeLine{610         UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Removing previous region at \%lX"{}}, }
-\DoxyCodeLine{611                         \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(it-\/>first)); }
-\DoxyCodeLine{612         regions.erase(std::next(it, 1));}
-\DoxyCodeLine{613 }
-\DoxyCodeLine{614       \}}
-\DoxyCodeLine{615       \textcolor{comment}{// merge right if free}}
-\DoxyCodeLine{616       \textcolor{keyword}{auto} nextIt = std::next(it, 1);}
-\DoxyCodeLine{617       \textcolor{keywordflow}{if} (nextIt != regions.end() \&\& nextIt-\/>second.free) \{}
-\DoxyCodeLine{618         uint64\_t size = nextIt-\/>second.size;}
-\DoxyCodeLine{619         it-\/>second.size += size;}
-\DoxyCodeLine{620         UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Merging right \%lX to \%lX, adding \%lu for a total of region with \%lu"{}}, }
-\DoxyCodeLine{621                         \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(it-\/>first), \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(nextIt-\/>first),}
-\DoxyCodeLine{622                         size, it-\/>second.size); }
-\DoxyCodeLine{623         UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Removing previous region at \%lX"{}}, }
-\DoxyCodeLine{624                         \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(it-\/>first)); }
-\DoxyCodeLine{625         regions.erase(nextIt);}
-\DoxyCodeLine{626       \}}
-\DoxyCodeLine{627 }
-\DoxyCodeLine{628       \textcolor{comment}{// Check if there were no merges}}
-\DoxyCodeLine{629       \textcolor{keywordflow}{if} (it-\/>first == ptr) \{}
-\DoxyCodeLine{630         UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}No merges performed, just freeing \%lX = \{\%lu, \%s\}"{}}, }
-\DoxyCodeLine{631                         \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(it-\/>first), (it-\/>second.size),}
-\DoxyCodeLine{632                         (it-\/>second.free)? \textcolor{stringliteral}{"{}Free"{}}:\textcolor{stringliteral}{"{}Used"{}}); }
-\DoxyCodeLine{633         it-\/>second.free = \textcolor{keyword}{true};}
-\DoxyCodeLine{634       \}}
-\DoxyCodeLine{635     \}}
-\DoxyCodeLine{636   \};}
-\DoxyCodeLine{637 }
-\DoxyCodeLine{638 }
-\DoxyCodeLine{639 \textcolor{keyword}{protected}:}
-\DoxyCodeLine{644   \mbox{\hyperlink{struct_up_down_1_1_u_d_runtime__t_1_1base__addr__t}{base\_addr\_t}} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a84ed7807df12382d06ee8a09b172898f}{BaseAddrs}};}
-\DoxyCodeLine{645 }
-\DoxyCodeLine{650   \mbox{\hyperlink{struct_up_down_1_1ud__machine__t}{ud\_machine\_t}} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}};}
-\DoxyCodeLine{651 }
-\DoxyCodeLine{656   \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t}{ud\_mapped\_memory\_t}} *MappedMemoryManager;}
-\DoxyCodeLine{657 }
-\DoxyCodeLine{665   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a53609a9bdbc8caae702ea49684c0ea64}{calc\_addrmap}}();}
-\DoxyCodeLine{666 }
-\DoxyCodeLine{675   \textcolor{keyword}{inline} uint64\_t \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a33fce78b89238e7f2b21fd9e08bf4a2a}{get\_lane\_aligned\_offset}}(uint8\_t ud\_id, uint8\_t lane\_num,}
-\DoxyCodeLine{676                                           uint32\_t offset = 0);}
-\DoxyCodeLine{677 }
-\DoxyCodeLine{683   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a327a02b17f491af168ab57569240af8f}{reset\_memory\_manager}}() \{}
-\DoxyCodeLine{684     \textcolor{keyword}{delete} MappedMemoryManager;}
-\DoxyCodeLine{685     MappedMemoryManager = \textcolor{keyword}{new} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t}{ud\_mapped\_memory\_t}}(this-\/>MachineConfig);}
-\DoxyCodeLine{686   \}}
-\DoxyCodeLine{687 }
-\DoxyCodeLine{688 \textcolor{keyword}{public}:}
-\DoxyCodeLine{689   \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t}{UDRuntime\_t}}() \{}
-\DoxyCodeLine{690     UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Initializing runtime"{}}); }
-\DoxyCodeLine{691     \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a53609a9bdbc8caae702ea49684c0ea64}{calc\_addrmap}}();}
-\DoxyCodeLine{692     MappedMemoryManager = \textcolor{keyword}{new} ud\_mapped\_memory\_t(this-\/>MachineConfig);}
-\DoxyCodeLine{693   \}}
-\DoxyCodeLine{694 }
-\DoxyCodeLine{695   UDRuntime\_t(ud\_machine\_t machineConfig) : \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}(machineConfig) \{}
-\DoxyCodeLine{696     UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Initializing runtime with custom machineConfig"{}}); }
-\DoxyCodeLine{697     \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a53609a9bdbc8caae702ea49684c0ea64}{calc\_addrmap}}();}
-\DoxyCodeLine{698     MappedMemoryManager = \textcolor{keyword}{new} ud\_mapped\_memory\_t(this-\/>MachineConfig);}
-\DoxyCodeLine{699   \}}
-\DoxyCodeLine{700 }
-\DoxyCodeLine{701   \string~UDRuntime\_t() \{ \textcolor{keyword}{delete} MappedMemoryManager; \}}
-\DoxyCodeLine{702 }
-\DoxyCodeLine{713   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_af58fb869d8558462617fa84bf83bb595}{send\_event}}(event\_t ev);}
-\DoxyCodeLine{714 }
-\DoxyCodeLine{721   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_af61e9f01022957944d9c74daf365c0a4}{start\_exec}}(uint8\_t ud\_id, uint8\_t lane\_num);}
-\DoxyCodeLine{722 }
-\DoxyCodeLine{738   \textcolor{keywordtype}{void} *\mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a3f6d1895e3d1ad7fc40b918154a027ad}{mm\_malloc}}(uint64\_t size);}
-\DoxyCodeLine{739 }
-\DoxyCodeLine{754   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_aa02ee38bf2166f297f40176c88485c1a}{mm\_free}}(\textcolor{keywordtype}{void} *ptr);}
-\DoxyCodeLine{755 }
-\DoxyCodeLine{770   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_afc78cfc10527725c84302dbe3e2f7e07}{t2mm\_memcpy}}(uint64\_t offset, ptr\_t src, uint64\_t size = 1);}
-\DoxyCodeLine{771 }
-\DoxyCodeLine{786   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a27b3b73d185c6590aff7cf9c514a5430}{mm2t\_memcpy}}(uint64\_t offset, ptr\_t dst, uint64\_t size = 1);}
-\DoxyCodeLine{787 }
-\DoxyCodeLine{801   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a5085f1a2175bd89c266a85f4f551130b}{t2ud\_memcpy}}(ptr\_t data, uint64\_t size, uint8\_t ud\_id, uint8\_t lane\_num, uint32\_t offset);}
-\DoxyCodeLine{802 }
-\DoxyCodeLine{814   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a52e14f5cd03e1c7c79697ce15f47abb5}{ud2t\_memcpy}}(ptr\_t data, uint64\_t size, uint8\_t ud\_id, uint8\_t lane\_num, uint32\_t offset);}
-\DoxyCodeLine{815 }
-\DoxyCodeLine{828   \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ab96599b352e42e823c692ecc4d3ee689}{test\_addr}}(uint8\_t ud\_id, uint8\_t lane\_num, uint32\_t offset,}
-\DoxyCodeLine{829                  word\_t expected = 1);}
-\DoxyCodeLine{830 }
-\DoxyCodeLine{842   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a7e41c8dae74b2b76e74c8a3d20324d15}{test\_wait\_addr}}(uint8\_t ud\_id, uint8\_t lane\_num, uint32\_t offset,}
-\DoxyCodeLine{843                       word\_t expected = 1);}
-\DoxyCodeLine{844 }
-\DoxyCodeLine{882   uint64\_t \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_aa3d126b94a4803a73a7bcbdb18707cb2}{get\_lane\_physical\_memory}}(uint8\_t ud\_id, uint8\_t lane\_num,}
-\DoxyCodeLine{883                                            uint32\_t offset = 0);}
-\DoxyCodeLine{884 }
-\DoxyCodeLine{885 }
-\DoxyCodeLine{892   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a206a9273dbdc8141741e7cd6b065a1fd}{dumpBaseAddrs}}() \{}
-\DoxyCodeLine{893     printf(\textcolor{stringliteral}{"{}  mmaddr     = 0x\%lX\(\backslash\)n"{}}}
-\DoxyCodeLine{894            \textcolor{stringliteral}{"{}  spaddr    = 0x\%lX\(\backslash\)n"{}}}
-\DoxyCodeLine{895            \textcolor{stringliteral}{"{}  ctrlAddr  = 0x\%lX\(\backslash\)n"{}},}
-\DoxyCodeLine{896            \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(\mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a84ed7807df12382d06ee8a09b172898f}{BaseAddrs}}.mmaddr),}
-\DoxyCodeLine{897            \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(\mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a84ed7807df12382d06ee8a09b172898f}{BaseAddrs}}.spaddr),}
-\DoxyCodeLine{898            \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(\mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a84ed7807df12382d06ee8a09b172898f}{BaseAddrs}}.ctrlAddr));}
-\DoxyCodeLine{899   \}}
-\DoxyCodeLine{900 }
-\DoxyCodeLine{906   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a79ecb1814ceba28e24c404af732e073c}{dumpMachineConfig}}() \{}
-\DoxyCodeLine{907     printf(\textcolor{stringliteral}{"{}  MapMemBase          = 0x\%lX\(\backslash\)n"{}}}
-\DoxyCodeLine{908            \textcolor{stringliteral}{"{}  UDbase              = 0x\%lX\(\backslash\)n"{}}}
-\DoxyCodeLine{909            \textcolor{stringliteral}{"{}  SPMemBase           = 0x\%lX\(\backslash\)n"{}}}
-\DoxyCodeLine{910            \textcolor{stringliteral}{"{}  ControlBase         = 0x\%lX\(\backslash\)n"{}}}
-\DoxyCodeLine{911            \textcolor{stringliteral}{"{}  EventQueueOffset    = (0x\%lX)\%lu\(\backslash\)n"{}}}
-\DoxyCodeLine{912            \textcolor{stringliteral}{"{}  OperandQueueOffset  = (0x\%lX)\%lu\(\backslash\)n"{}}}
-\DoxyCodeLine{913            \textcolor{stringliteral}{"{}  StartExecOffset     = (0x\%lX)\%lu\(\backslash\)n"{}}}
-\DoxyCodeLine{914            \textcolor{stringliteral}{"{}  LockOffset          = (0x\%lX)\%lu\(\backslash\)n"{}}}
-\DoxyCodeLine{915            \textcolor{stringliteral}{"{}  CapNumUDs           = (0x\%lX)\%lu\(\backslash\)n"{}}}
-\DoxyCodeLine{916            \textcolor{stringliteral}{"{}  CapNumLanes         = (0x\%lX)\%lu\(\backslash\)n"{}}}
-\DoxyCodeLine{917            \textcolor{stringliteral}{"{}  CapSPmemPerLane     = (0x\%lX)\%lu\(\backslash\)n"{}}}
-\DoxyCodeLine{918            \textcolor{stringliteral}{"{}  CapControlPerLane   = (0x\%lX)\%lu\(\backslash\)n"{}}}
-\DoxyCodeLine{919            \textcolor{stringliteral}{"{}  NumUDs              = (0x\%lX)\%lu\(\backslash\)n"{}}}
-\DoxyCodeLine{920            \textcolor{stringliteral}{"{}  NumLanes            = (0x\%lX)\%lu\(\backslash\)n"{}}}
-\DoxyCodeLine{921            \textcolor{stringliteral}{"{}  MapMemSize          = (0x\%lX)\%lu\(\backslash\)n"{}}}
-\DoxyCodeLine{922            \textcolor{stringliteral}{"{}  SPBankSize          = (0x\%lX)\%lu\(\backslash\)n"{}}}
-\DoxyCodeLine{923            \textcolor{stringliteral}{"{}  SPBankSizeWords     = (0x\%lX)\%lu\(\backslash\)n"{}},}
-\DoxyCodeLine{924            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.MapMemBase, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.UDbase,}
-\DoxyCodeLine{925            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.SPMemBase, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.ControlBase,}
-\DoxyCodeLine{926            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.EventQueueOffset, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.EventQueueOffset,}
-\DoxyCodeLine{927            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.OperandQueueOffset, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.OperandQueueOffset,}
-\DoxyCodeLine{928            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.StartExecOffset, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.StartExecOffset,}
-\DoxyCodeLine{929            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.LockOffset, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.LockOffset,}
-\DoxyCodeLine{930            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.CapNumUDs, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.CapNumUDs,}
-\DoxyCodeLine{931            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.CapNumLanes, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.CapNumLanes,}
-\DoxyCodeLine{932            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.CapSPmemPerLane, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.CapSPmemPerLane,}
-\DoxyCodeLine{933            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.CapControlPerLane, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.CapControlPerLane,}
-\DoxyCodeLine{934            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.NumUDs, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.NumUDs, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.NumLanes,}
-\DoxyCodeLine{935            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.NumLanes, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.MapMemSize,}
-\DoxyCodeLine{936            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.MapMemSize, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.SPBankSize,}
-\DoxyCodeLine{937            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.SPBankSize, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.SPBankSizeWords,}
-\DoxyCodeLine{938            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.SPBankSizeWords);}
-\DoxyCodeLine{939   \}}
-\DoxyCodeLine{940 \};}
-\DoxyCodeLine{941 }
-\DoxyCodeLine{942 \} \textcolor{comment}{// namespace UpDown}}
-\DoxyCodeLine{943 }
-\DoxyCodeLine{944 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{519     \textcolor{comment}{// Map to keep track of the free and used regions.}}
+\DoxyCodeLine{520     std::map<void *, mem\_region\_t> regions;}
+\DoxyCodeLine{521 }
+\DoxyCodeLine{522   \textcolor{keyword}{public}:}
+\DoxyCodeLine{531     \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t_a929c8ff3f9a0c45dfec467c86a4124d8}{ud\_mapped\_memory\_t}}(\mbox{\hyperlink{struct_up_down_1_1ud__machine__t}{ud\_machine\_t}} \&machine) \{}
+\DoxyCodeLine{532       UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Initializing Mapped Memory Manager for \%lu at \%lX"{}}, }
+\DoxyCodeLine{533                       machine.MapMemSize, machine.MapMemBase);}
+\DoxyCodeLine{534       \textcolor{comment}{// Create the first segment}}
+\DoxyCodeLine{535       \textcolor{keywordtype}{void} *baseAddr = \textcolor{keyword}{reinterpret\_cast<}\textcolor{keywordtype}{void} *\textcolor{keyword}{>}(machine.MapMemBase);}
+\DoxyCodeLine{536       regions[baseAddr] = \{machine.MapMemSize, \textcolor{keyword}{true}\};}
+\DoxyCodeLine{537     \}}
+\DoxyCodeLine{538 }
+\DoxyCodeLine{549     \textcolor{keywordtype}{void} *\mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t_a9a299c4ef46734c99eb39f00052e1ca6}{get\_region}}(uint64\_t size) \{}
+\DoxyCodeLine{550       UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Allocating new region of size \%lu bytes"{}}, size); }
+\DoxyCodeLine{551       \textcolor{comment}{// Iterate over the regions finding one that fits}}
+\DoxyCodeLine{552       \textcolor{keyword}{auto} used\_reg = regions.end();}
+\DoxyCodeLine{553       \textcolor{keywordflow}{for} (\textcolor{keyword}{auto} it = regions.begin(); it != regions.end(); ++it) \{}
+\DoxyCodeLine{554         \textcolor{comment}{// Check if region is free and have enough size}}
+\DoxyCodeLine{555         \textcolor{keywordflow}{if} (it-\/>second.free \&\& size <= it-\/>second.size) \{}
+\DoxyCodeLine{556           UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Found a region at \%lX"{}}, \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(it-\/>first)); }
+\DoxyCodeLine{557           used\_reg = it;}
+\DoxyCodeLine{558           \textcolor{keywordflow}{break};}
+\DoxyCodeLine{559         \}}
+\DoxyCodeLine{560       \}}
+\DoxyCodeLine{561       \textcolor{comment}{// Check if we found space}}
+\DoxyCodeLine{562       \textcolor{keywordflow}{if} (used\_reg == regions.end()) \{}
+\DoxyCodeLine{563         UPDOWN\_ERROR(\textcolor{stringliteral}{"{}Allocator run out of memory. Cannot allocate \%lu bytes"{}},}
+\DoxyCodeLine{564                      size);}
+\DoxyCodeLine{565         \textcolor{keywordflow}{return} \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{566       \}}
+\DoxyCodeLine{567       \textcolor{comment}{// split the new region}}
+\DoxyCodeLine{568       used\_reg-\/>second.free = \textcolor{keyword}{false};}
+\DoxyCodeLine{569       uint64\_t new\_size = used\_reg-\/>second.size -\/ size;}
+\DoxyCodeLine{570       used\_reg-\/>second.size = size;}
+\DoxyCodeLine{571       \textcolor{comment}{// Create a new empty region}}
+\DoxyCodeLine{572       \textcolor{keywordflow}{if} (new\_size != 0) \{}
+\DoxyCodeLine{573         \textcolor{keywordtype}{void} *new\_reg = \textcolor{keyword}{static\_cast<}\textcolor{keywordtype}{char} *\textcolor{keyword}{>}(used\_reg-\/>first) + size;}
+\DoxyCodeLine{574         regions[new\_reg] = \{new\_size, \textcolor{keyword}{true}\};}
+\DoxyCodeLine{575         UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Creating a new region \%lX with the remaining size \%lu"{}}, }
+\DoxyCodeLine{576                         \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(new\_reg), new\_size); }
+\DoxyCodeLine{577       \}}
+\DoxyCodeLine{578       UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Returning region \%lX = \{\%lu, \%s\}"{}},}
+\DoxyCodeLine{579                       \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(used\_reg-\/>first), used\_reg-\/>second.size, }
+\DoxyCodeLine{580                       (used\_reg-\/>second.free)? \textcolor{stringliteral}{"{}Free"{}}:\textcolor{stringliteral}{"{}Used"{}}); }
+\DoxyCodeLine{581       \textcolor{comment}{// Return the new pointer}}
+\DoxyCodeLine{582       \textcolor{keywordflow}{return} used\_reg-\/>first;}
+\DoxyCodeLine{583     \}}
+\DoxyCodeLine{584 }
+\DoxyCodeLine{595     \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t_adc9c872b795c000490acf4f5e350aa35}{remove\_region}}(\textcolor{keywordtype}{void} *ptr) \{}
+\DoxyCodeLine{596       UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Freeing the space at \%lX"{}}, \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(ptr)); }
+\DoxyCodeLine{597       \textcolor{comment}{// Find location to free}}
+\DoxyCodeLine{598       \textcolor{keyword}{auto} it = regions.find(ptr);}
+\DoxyCodeLine{599       \textcolor{keywordflow}{if} (it == regions.end() || it-\/>second.free) \{}
+\DoxyCodeLine{600         UPDOWN\_ERROR(\textcolor{stringliteral}{"{}Trying to free pointer \%lX that is not in the regions"{}}}
+\DoxyCodeLine{601                      \textcolor{stringliteral}{"{} or the region is free (double free?)"{}},}
+\DoxyCodeLine{602                      \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(ptr));}
+\DoxyCodeLine{603         \textcolor{keywordflow}{return};}
+\DoxyCodeLine{604       \}}
+\DoxyCodeLine{605       \textcolor{comment}{// merge left if free}}
+\DoxyCodeLine{606       \textcolor{keywordflow}{if} (it != regions.begin() \&\& std::prev(it, 1)-\/>second.free) \{}
+\DoxyCodeLine{607         uint64\_t size = it-\/>second.size;}
+\DoxyCodeLine{608         it-\/-\/;}
+\DoxyCodeLine{609         it-\/>second.size += size;}
+\DoxyCodeLine{610         UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Merging left \%lX to \%lX, adding \%lu for a total of region with \%lu"{}}, }
+\DoxyCodeLine{611                         \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(it-\/>first), \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(std::next(it, 1)-\/>first),}
+\DoxyCodeLine{612                         size, it-\/>second.size); }
+\DoxyCodeLine{613         UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Removing previous region at \%lX"{}}, }
+\DoxyCodeLine{614                         \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(it-\/>first)); }
+\DoxyCodeLine{615         regions.erase(std::next(it, 1));}
+\DoxyCodeLine{616 }
+\DoxyCodeLine{617       \}}
+\DoxyCodeLine{618       \textcolor{comment}{// merge right if free}}
+\DoxyCodeLine{619       \textcolor{keyword}{auto} nextIt = std::next(it, 1);}
+\DoxyCodeLine{620       \textcolor{keywordflow}{if} (nextIt != regions.end() \&\& nextIt-\/>second.free) \{}
+\DoxyCodeLine{621         uint64\_t size = nextIt-\/>second.size;}
+\DoxyCodeLine{622         it-\/>second.size += size;}
+\DoxyCodeLine{623         UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Merging right \%lX to \%lX, adding \%lu for a total of region with \%lu"{}}, }
+\DoxyCodeLine{624                         \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(it-\/>first), \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(nextIt-\/>first),}
+\DoxyCodeLine{625                         size, it-\/>second.size); }
+\DoxyCodeLine{626         UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Removing previous region at \%lX"{}}, }
+\DoxyCodeLine{627                         \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(it-\/>first)); }
+\DoxyCodeLine{628         regions.erase(nextIt);}
+\DoxyCodeLine{629       \}}
+\DoxyCodeLine{630 }
+\DoxyCodeLine{631       \textcolor{comment}{// Check if there were no merges}}
+\DoxyCodeLine{632       \textcolor{keywordflow}{if} (it-\/>first == ptr) \{}
+\DoxyCodeLine{633         UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}No merges performed, just freeing \%lX = \{\%lu, \%s\}"{}}, }
+\DoxyCodeLine{634                         \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(it-\/>first), (it-\/>second.size),}
+\DoxyCodeLine{635                         (it-\/>second.free)? \textcolor{stringliteral}{"{}Free"{}}:\textcolor{stringliteral}{"{}Used"{}}); }
+\DoxyCodeLine{636         it-\/>second.free = \textcolor{keyword}{true};}
+\DoxyCodeLine{637       \}}
+\DoxyCodeLine{638     \}}
+\DoxyCodeLine{639   \};}
+\DoxyCodeLine{640 }
+\DoxyCodeLine{641 }
+\DoxyCodeLine{642 \textcolor{keyword}{protected}:}
+\DoxyCodeLine{647   \mbox{\hyperlink{struct_up_down_1_1_u_d_runtime__t_1_1base__addr__t}{base\_addr\_t}} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a84ed7807df12382d06ee8a09b172898f}{BaseAddrs}};}
+\DoxyCodeLine{648 }
+\DoxyCodeLine{653   \mbox{\hyperlink{struct_up_down_1_1ud__machine__t}{ud\_machine\_t}} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}};}
+\DoxyCodeLine{654 }
+\DoxyCodeLine{659   \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t}{ud\_mapped\_memory\_t}} *MappedMemoryManager;}
+\DoxyCodeLine{660 }
+\DoxyCodeLine{668   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a53609a9bdbc8caae702ea49684c0ea64}{calc\_addrmap}}();}
+\DoxyCodeLine{669 }
+\DoxyCodeLine{678   \textcolor{keyword}{inline} uint64\_t \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a33fce78b89238e7f2b21fd9e08bf4a2a}{get\_lane\_aligned\_offset}}(uint8\_t ud\_id, uint8\_t lane\_num,}
+\DoxyCodeLine{679                                           uint32\_t offset = 0);}
+\DoxyCodeLine{680 }
+\DoxyCodeLine{686   \textcolor{keyword}{inline} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a327a02b17f491af168ab57569240af8f}{reset\_memory\_manager}}() \{}
+\DoxyCodeLine{687     \textcolor{keyword}{delete} MappedMemoryManager;}
+\DoxyCodeLine{688     MappedMemoryManager = \textcolor{keyword}{new} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_1_1ud__mapped__memory__t}{ud\_mapped\_memory\_t}}(this-\/>MachineConfig);}
+\DoxyCodeLine{689   \}}
+\DoxyCodeLine{690 }
+\DoxyCodeLine{691 \textcolor{keyword}{public}:}
+\DoxyCodeLine{692   \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t}{UDRuntime\_t}}() \{}
+\DoxyCodeLine{693     UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Initializing runtime"{}}); }
+\DoxyCodeLine{694     \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a53609a9bdbc8caae702ea49684c0ea64}{calc\_addrmap}}();}
+\DoxyCodeLine{695     MappedMemoryManager = \textcolor{keyword}{new} ud\_mapped\_memory\_t(this-\/>MachineConfig);}
+\DoxyCodeLine{696   \}}
+\DoxyCodeLine{697 }
+\DoxyCodeLine{698   UDRuntime\_t(ud\_machine\_t machineConfig) : \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}(machineConfig) \{}
+\DoxyCodeLine{699     UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Initializing runtime with custom machineConfig"{}}); }
+\DoxyCodeLine{700     \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a53609a9bdbc8caae702ea49684c0ea64}{calc\_addrmap}}();}
+\DoxyCodeLine{701     MappedMemoryManager = \textcolor{keyword}{new} ud\_mapped\_memory\_t(this-\/>MachineConfig);}
+\DoxyCodeLine{702   \}}
+\DoxyCodeLine{703 }
+\DoxyCodeLine{704   \string~UDRuntime\_t() \{ \textcolor{keyword}{delete} MappedMemoryManager; \}}
+\DoxyCodeLine{705 }
+\DoxyCodeLine{716   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_af58fb869d8558462617fa84bf83bb595}{send\_event}}(event\_t ev);}
+\DoxyCodeLine{717 }
+\DoxyCodeLine{724   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_af61e9f01022957944d9c74daf365c0a4}{start\_exec}}(uint8\_t ud\_id, uint8\_t lane\_num);}
+\DoxyCodeLine{725 }
+\DoxyCodeLine{741   \textcolor{keywordtype}{void} *\mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a3f6d1895e3d1ad7fc40b918154a027ad}{mm\_malloc}}(uint64\_t size);}
+\DoxyCodeLine{742 }
+\DoxyCodeLine{757   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_aa02ee38bf2166f297f40176c88485c1a}{mm\_free}}(\textcolor{keywordtype}{void} *ptr);}
+\DoxyCodeLine{758 }
+\DoxyCodeLine{773   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a20ee360e1a7946e6296a2dacca1b284f}{t2mm\_memcpy}}(uint64\_t offset, \textcolor{keywordtype}{void}* src, uint64\_t size = 1);}
+\DoxyCodeLine{774 }
+\DoxyCodeLine{789   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a63c5785ffbce1f5944b88346633e0a14}{mm2t\_memcpy}}(uint64\_t offset, \textcolor{keywordtype}{void}* dst, uint64\_t size = 1);}
+\DoxyCodeLine{790 }
+\DoxyCodeLine{804   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ae7831fce61c9c34db9043c63f0286ebf}{t2ud\_memcpy}}(\textcolor{keywordtype}{void}* data, uint64\_t size, uint8\_t ud\_id, uint8\_t lane\_num, uint32\_t offset);}
+\DoxyCodeLine{805 }
+\DoxyCodeLine{817   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a0bde0edbcb8ab5a7a5d5daabb5e75d49}{ud2t\_memcpy}}(\textcolor{keywordtype}{void}* data, uint64\_t size, uint8\_t ud\_id, uint8\_t lane\_num, uint32\_t offset);}
+\DoxyCodeLine{818 }
+\DoxyCodeLine{831   \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ab96599b352e42e823c692ecc4d3ee689}{test\_addr}}(uint8\_t ud\_id, uint8\_t lane\_num, uint32\_t offset,}
+\DoxyCodeLine{832                  word\_t expected = 1);}
+\DoxyCodeLine{833 }
+\DoxyCodeLine{845   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a7e41c8dae74b2b76e74c8a3d20324d15}{test\_wait\_addr}}(uint8\_t ud\_id, uint8\_t lane\_num, uint32\_t offset,}
+\DoxyCodeLine{846                       word\_t expected = 1);}
+\DoxyCodeLine{847 }
+\DoxyCodeLine{885   uint64\_t \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_aa3d126b94a4803a73a7bcbdb18707cb2}{get\_lane\_physical\_memory}}(uint8\_t ud\_id, uint8\_t lane\_num,}
+\DoxyCodeLine{886                                            uint32\_t offset = 0);}
+\DoxyCodeLine{887 }
+\DoxyCodeLine{888 }
+\DoxyCodeLine{895   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a206a9273dbdc8141741e7cd6b065a1fd}{dumpBaseAddrs}}() \{}
+\DoxyCodeLine{896     printf(\textcolor{stringliteral}{"{}  mmaddr     = 0x\%lX\(\backslash\)n"{}}}
+\DoxyCodeLine{897            \textcolor{stringliteral}{"{}  spaddr    = 0x\%lX\(\backslash\)n"{}}}
+\DoxyCodeLine{898            \textcolor{stringliteral}{"{}  ctrlAddr  = 0x\%lX\(\backslash\)n"{}},}
+\DoxyCodeLine{899            \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(\mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a84ed7807df12382d06ee8a09b172898f}{BaseAddrs}}.mmaddr),}
+\DoxyCodeLine{900            \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(\mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a84ed7807df12382d06ee8a09b172898f}{BaseAddrs}}.spaddr),}
+\DoxyCodeLine{901            \textcolor{keyword}{reinterpret\_cast<}uint64\_t\textcolor{keyword}{>}(\mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a84ed7807df12382d06ee8a09b172898f}{BaseAddrs}}.ctrlAddr));}
+\DoxyCodeLine{902   \}}
+\DoxyCodeLine{903 }
+\DoxyCodeLine{909   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a79ecb1814ceba28e24c404af732e073c}{dumpMachineConfig}}() \{}
+\DoxyCodeLine{910     printf(\textcolor{stringliteral}{"{}  MapMemBase          = 0x\%lX\(\backslash\)n"{}}}
+\DoxyCodeLine{911            \textcolor{stringliteral}{"{}  UDbase              = 0x\%lX\(\backslash\)n"{}}}
+\DoxyCodeLine{912            \textcolor{stringliteral}{"{}  SPMemBase           = 0x\%lX\(\backslash\)n"{}}}
+\DoxyCodeLine{913            \textcolor{stringliteral}{"{}  ControlBase         = 0x\%lX\(\backslash\)n"{}}}
+\DoxyCodeLine{914            \textcolor{stringliteral}{"{}  EventQueueOffset    = (0x\%lX)\%lu\(\backslash\)n"{}}}
+\DoxyCodeLine{915            \textcolor{stringliteral}{"{}  OperandQueueOffset  = (0x\%lX)\%lu\(\backslash\)n"{}}}
+\DoxyCodeLine{916            \textcolor{stringliteral}{"{}  StartExecOffset     = (0x\%lX)\%lu\(\backslash\)n"{}}}
+\DoxyCodeLine{917            \textcolor{stringliteral}{"{}  LockOffset          = (0x\%lX)\%lu\(\backslash\)n"{}}}
+\DoxyCodeLine{918            \textcolor{stringliteral}{"{}  CapNumUDs           = (0x\%lX)\%lu\(\backslash\)n"{}}}
+\DoxyCodeLine{919            \textcolor{stringliteral}{"{}  CapNumLanes         = (0x\%lX)\%lu\(\backslash\)n"{}}}
+\DoxyCodeLine{920            \textcolor{stringliteral}{"{}  CapSPmemPerLane     = (0x\%lX)\%lu\(\backslash\)n"{}}}
+\DoxyCodeLine{921            \textcolor{stringliteral}{"{}  CapControlPerLane   = (0x\%lX)\%lu\(\backslash\)n"{}}}
+\DoxyCodeLine{922            \textcolor{stringliteral}{"{}  NumUDs              = (0x\%lX)\%lu\(\backslash\)n"{}}}
+\DoxyCodeLine{923            \textcolor{stringliteral}{"{}  NumLanes            = (0x\%lX)\%lu\(\backslash\)n"{}}}
+\DoxyCodeLine{924            \textcolor{stringliteral}{"{}  MapMemSize          = (0x\%lX)\%lu\(\backslash\)n"{}}}
+\DoxyCodeLine{925            \textcolor{stringliteral}{"{}  SPBankSize          = (0x\%lX)\%lu\(\backslash\)n"{}}}
+\DoxyCodeLine{926            \textcolor{stringliteral}{"{}  SPBankSizeWords     = (0x\%lX)\%lu\(\backslash\)n"{}},}
+\DoxyCodeLine{927            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.MapMemBase, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.UDbase,}
+\DoxyCodeLine{928            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.SPMemBase, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.ControlBase,}
+\DoxyCodeLine{929            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.EventQueueOffset, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.EventQueueOffset,}
+\DoxyCodeLine{930            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.OperandQueueOffset, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.OperandQueueOffset,}
+\DoxyCodeLine{931            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.StartExecOffset, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.StartExecOffset,}
+\DoxyCodeLine{932            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.LockOffset, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.LockOffset,}
+\DoxyCodeLine{933            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.CapNumUDs, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.CapNumUDs,}
+\DoxyCodeLine{934            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.CapNumLanes, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.CapNumLanes,}
+\DoxyCodeLine{935            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.CapSPmemPerLane, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.CapSPmemPerLane,}
+\DoxyCodeLine{936            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.CapControlPerLane, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.CapControlPerLane,}
+\DoxyCodeLine{937            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.NumUDs, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.NumUDs, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.NumLanes,}
+\DoxyCodeLine{938            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.NumLanes, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.MapMemSize,}
+\DoxyCodeLine{939            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.MapMemSize, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.SPBankSize,}
+\DoxyCodeLine{940            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.SPBankSize, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.SPBankSizeWords,}
+\DoxyCodeLine{941            \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}{MachineConfig}}.SPBankSizeWords);}
+\DoxyCodeLine{942   \}}
+\DoxyCodeLine{943 \};}
+\DoxyCodeLine{944 }
+\DoxyCodeLine{945 \} \textcolor{comment}{// namespace UpDown}}
+\DoxyCodeLine{946 }
+\DoxyCodeLine{947 \textcolor{preprocessor}{\#endif}}
 
 \end{DoxyCode}

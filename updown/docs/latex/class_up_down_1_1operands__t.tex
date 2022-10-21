@@ -25,7 +25,13 @@ Class that holds information about the operands.
 ptr\+\_\+t \mbox{\hyperlink{class_up_down_1_1operands__t_a4f59ca5f7e3d814256818b7b74d791bc}{get\+\_\+\+Data}} ()
 \begin{DoxyCompactList}\small\item\em Get the pointer to Data. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{class_up_down_1_1operands__t_a549f45dfa5f6e439f94b295dc6a4a122}{set\+\_\+operand}} (uint32\+\_\+t op, word\+\_\+t val)
-\begin{DoxyCompactList}\small\item\em Set an operand. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Set an operand. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_up_down_1_1operands__t_acaaa965b8f9003feccb35257e37d8bf4}{set\+\_\+operands}} (uint32\+\_\+t op\+\_\+begin, uint32\+\_\+t op\+\_\+end, void $\ast$val)
+\begin{DoxyCompactList}\small\item\em Set multiple operands at once. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_up_down_1_1operands__t_a2c195c07c62074860cae11275adc99c1}{set\+\_\+cont}} (word\+\_\+t cont)
+\begin{DoxyCompactList}\small\item\em Set the Continuation. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{class_up_down_1_1operands__t_aa769b305fb95f01c74f1230386f6914c}{get\+\_\+\+Num\+Operands}} ()
+\begin{DoxyCompactList}\small\item\em Get the Num\+Operands. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -104,6 +110,10 @@ Construct a new \mbox{\hyperlink{class_up_down_1_1operands__t}{operands\+\_\+t}}
 \end{DoxyParams}
 \begin{DoxyRefDesc}{Todo}
 \item[\mbox{\hyperlink{todo__todo000002}{Todo}}]This should avoid using memcpy \end{DoxyRefDesc}
+
+
+References \mbox{\hyperlink{class_up_down_1_1operands__t_aa769b305fb95f01c74f1230386f6914c}{get\+\_\+\+Num\+Operands()}}.
+
 \mbox{\Hypertarget{class_up_down_1_1operands__t_a90604b735bc17d1136cbd32da1292496}\label{class_up_down_1_1operands__t_a90604b735bc17d1136cbd32da1292496}} 
 \index{UpDown::operands\_t@{UpDown::operands\_t}!operands\_t@{operands\_t}}
 \index{operands\_t@{operands\_t}!UpDown::operands\_t@{UpDown::operands\_t}}
@@ -139,6 +149,38 @@ Get the pointer to Data.
 \begin{DoxyReturn}{Returns}
 ptr\+\_\+t pointer to data 
 \end{DoxyReturn}
+\mbox{\Hypertarget{class_up_down_1_1operands__t_aa769b305fb95f01c74f1230386f6914c}\label{class_up_down_1_1operands__t_aa769b305fb95f01c74f1230386f6914c}} 
+\index{UpDown::operands\_t@{UpDown::operands\_t}!get\_NumOperands@{get\_NumOperands}}
+\index{get\_NumOperands@{get\_NumOperands}!UpDown::operands\_t@{UpDown::operands\_t}}
+\doxysubsubsection{\texorpdfstring{get\_NumOperands()}{get\_NumOperands()}}
+{\footnotesize\ttfamily uint8\+\_\+t Up\+Down\+::operands\+\_\+t\+::get\+\_\+\+Num\+Operands (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Get the Num\+Operands. 
+
+\begin{DoxyReturn}{Returns}
+uint8\+\_\+t number of operands 
+\end{DoxyReturn}
+
+
+Referenced by \mbox{\hyperlink{class_up_down_1_1event__t_a1136178568e8e060cd5878d5a06157cf}{Up\+Down\+::event\+\_\+t\+::event\+\_\+t()}}, \mbox{\hyperlink{class_up_down_1_1operands__t_ab85237b737f780d3985be56eec5067ff}{operands\+\_\+t()}}, and \mbox{\hyperlink{class_up_down_1_1event__t_a82bb035d6e694deee44a89eab676911a}{Up\+Down\+::event\+\_\+t\+::set\+\_\+event()}}.
+
+\mbox{\Hypertarget{class_up_down_1_1operands__t_a2c195c07c62074860cae11275adc99c1}\label{class_up_down_1_1operands__t_a2c195c07c62074860cae11275adc99c1}} 
+\index{UpDown::operands\_t@{UpDown::operands\_t}!set\_cont@{set\_cont}}
+\index{set\_cont@{set\_cont}!UpDown::operands\_t@{UpDown::operands\_t}}
+\doxysubsubsection{\texorpdfstring{set\_cont()}{set\_cont()}}
+{\footnotesize\ttfamily void Up\+Down\+::operands\+\_\+t\+::set\+\_\+cont (\begin{DoxyParamCaption}\item[{word\+\_\+t}]{cont }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Set the Continuation. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em cont} & \\
+\hline
+\end{DoxyParams}
 \mbox{\Hypertarget{class_up_down_1_1operands__t_a549f45dfa5f6e439f94b295dc6a4a122}\label{class_up_down_1_1operands__t_a549f45dfa5f6e439f94b295dc6a4a122}} 
 \index{UpDown::operands\_t@{UpDown::operands\_t}!set\_operand@{set\_operand}}
 \index{set\_operand@{set\_operand}!UpDown::operands\_t@{UpDown::operands\_t}}
@@ -154,6 +196,51 @@ Set an operand.
 {\em op} & operand number \\
 \hline
 {\em val} & value for the operand \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_up_down_1_1operands__t_acaaa965b8f9003feccb35257e37d8bf4}\label{class_up_down_1_1operands__t_acaaa965b8f9003feccb35257e37d8bf4}} 
+\index{UpDown::operands\_t@{UpDown::operands\_t}!set\_operands@{set\_operands}}
+\index{set\_operands@{set\_operands}!UpDown::operands\_t@{UpDown::operands\_t}}
+\doxysubsubsection{\texorpdfstring{set\_operands()}{set\_operands()}}
+{\footnotesize\ttfamily void Up\+Down\+::operands\+\_\+t\+::set\+\_\+operands (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{op\+\_\+begin,  }\item[{uint32\+\_\+t}]{op\+\_\+end,  }\item[{void $\ast$}]{val }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Set multiple operands at once. 
+
+Example\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{comment}{// Mapping a struct to different operands}}
+\DoxyCodeLine{\textcolor{comment}{// Assume no padding}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{struct }A \{}
+\DoxyCodeLine{ word\_t v1; \textcolor{comment}{// 4 bytes}}
+\DoxyCodeLine{ word\_t v2; \textcolor{comment}{// 4 bytes}}
+\DoxyCodeLine{ \textcolor{keywordtype}{int} * ptr; \textcolor{comment}{// 8 bytes}}
+\DoxyCodeLine{\};}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{comment}{// Assuming word\_t is 4 bytes, }}
+\DoxyCodeLine{\textcolor{comment}{// size of A should be 16 bytes, using}}
+\DoxyCodeLine{\textcolor{comment}{// 4 elements in the operand buffer}}
+\DoxyCodeLine{\textcolor{keywordtype}{int} anInt;}
+\DoxyCodeLine{A myStr = \{1, 2, \&anInt\};}
+\DoxyCodeLine{rt.set\_operands(0,4, \&myStr);}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{comment}{// the struct will be copied bit a bit, each}}
+\DoxyCodeLine{\textcolor{comment}{// operand in a different location.}}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyParams}{Parameters}
+{\em op\+\_\+begin} & Start operand inclusive \\
+\hline
+{\em op\+\_\+end} & End operand inclusive \\
+\hline
+{\em val} & pointer to the value to be copied \\
 \hline
 \end{DoxyParams}
 

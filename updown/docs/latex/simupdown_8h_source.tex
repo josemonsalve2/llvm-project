@@ -56,100 +56,108 @@
 \DoxyCodeLine{52 \textcolor{keyword}{class }\mbox{\hyperlink{class_upstream___py_intf}{Upstream\_PyIntf}};}
 \DoxyCodeLine{53 \textcolor{keyword}{namespace }UpDown \{}
 \DoxyCodeLine{54 }
-\DoxyCodeLine{68 \textcolor{keyword}{class }\mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t}{SimUDRuntime\_t}} : \textcolor{keyword}{public} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t}{UDRuntime\_t}} \{}
-\DoxyCodeLine{69 \textcolor{keyword}{private}:}
-\DoxyCodeLine{70   \textcolor{keyword}{const} std::string LogFileName = \textcolor{stringliteral}{"{}Perf.log"{}};}
-\DoxyCodeLine{71   uint8\_t *MappedMemory;}
-\DoxyCodeLine{72   uint8\_t *ScratchpadMemory;}
-\DoxyCodeLine{73   uint8\_t *ControlMemory;}
-\DoxyCodeLine{74 }
-\DoxyCodeLine{75   std::string programFile;}
-\DoxyCodeLine{76   std::string programName;}
-\DoxyCodeLine{77   std::string simulationDir;}
-\DoxyCodeLine{78   \mbox{\hyperlink{class_upstream___py_intf}{Upstream\_PyIntf}} *upstream\_pyintf;}
-\DoxyCodeLine{81   \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a2089ec0c8e5fa757176519f297924360}{python\_enabled}};}
-\DoxyCodeLine{82 }
-\DoxyCodeLine{85   uint32\_t **\mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_aba904005137a5c78d50491dbe7cc06aa}{sendmap}};}
-\DoxyCodeLine{86 }
-\DoxyCodeLine{99   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a7113c0fad105b40a81231139332c0061}{initMemoryArrays}}();}
-\DoxyCodeLine{100 }
-\DoxyCodeLine{110   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a2963b2da2e6f38e395f45558cc98438c}{initPythonInterface}}();}
-\DoxyCodeLine{111 }
-\DoxyCodeLine{112 }
-\DoxyCodeLine{113 \textcolor{keyword}{public}:}
-\DoxyCodeLine{121   \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a1af458c531ea3297c7991facbed758fa}{SimUDRuntime\_t}}() : \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t}{UDRuntime\_t}}(), \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a2089ec0c8e5fa757176519f297924360}{python\_enabled}}(false), \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_aba904005137a5c78d50491dbe7cc06aa}{sendmap}}(nullptr) \{}
-\DoxyCodeLine{122     UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Initializing Simulated Runtime with default params"{}});}
-\DoxyCodeLine{123     UPDOWN\_WARNING(\textcolor{stringliteral}{"{}No python program. Python will be disabled, only "{}}}
-\DoxyCodeLine{124                    \textcolor{stringliteral}{"{}simulating memory interactions"{}});}
-\DoxyCodeLine{125     \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a7113c0fad105b40a81231139332c0061}{initMemoryArrays}}();}
-\DoxyCodeLine{126     \textcolor{comment}{// Recalculate address map}}
-\DoxyCodeLine{127     \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a53609a9bdbc8caae702ea49684c0ea64}{calc\_addrmap}}();}
-\DoxyCodeLine{128   \}}
-\DoxyCodeLine{129 }
-\DoxyCodeLine{140   \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_adc38b9beb3dcfc1abd60e11869894a97}{SimUDRuntime\_t}}(\mbox{\hyperlink{struct_up_down_1_1ud__machine__t}{ud\_machine\_t}} machineConfig)}
-\DoxyCodeLine{141       : \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t}{UDRuntime\_t}}(machineConfig), \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a2089ec0c8e5fa757176519f297924360}{python\_enabled}}(false), \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_aba904005137a5c78d50491dbe7cc06aa}{sendmap}}(nullptr) \{}
-\DoxyCodeLine{142     UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Initializing runtime with custom machineConfig"{}});}
-\DoxyCodeLine{143     UPDOWN\_WARNING(\textcolor{stringliteral}{"{}No python program. Python will be disabled, only "{}}}
-\DoxyCodeLine{144                    \textcolor{stringliteral}{"{}simulating memory interactions"{}});}
-\DoxyCodeLine{145     \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a7113c0fad105b40a81231139332c0061}{initMemoryArrays}}();}
-\DoxyCodeLine{146     \textcolor{comment}{// Recalculate address map}}
-\DoxyCodeLine{147     \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a53609a9bdbc8caae702ea49684c0ea64}{calc\_addrmap}}();}
-\DoxyCodeLine{148   \}}
-\DoxyCodeLine{149 }
-\DoxyCodeLine{160   \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_aba1a646ad21fac8e9f491c03ff300be7}{SimUDRuntime\_t}}(std::string programFile,}
-\DoxyCodeLine{161                  std::string programName, std::string simulationDir)}
-\DoxyCodeLine{162       : \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t}{UDRuntime\_t}}(), programFile(programFile),}
-\DoxyCodeLine{163         programName(programName), simulationDir(simulationDir),}
-\DoxyCodeLine{164         \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a2089ec0c8e5fa757176519f297924360}{python\_enabled}}(true), \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_aba904005137a5c78d50491dbe7cc06aa}{sendmap}}(nullptr) \{}
-\DoxyCodeLine{165     UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Initializing runtime with custom machineConfig"{}});}
-\DoxyCodeLine{166     \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a7113c0fad105b40a81231139332c0061}{initMemoryArrays}}();}
-\DoxyCodeLine{167     UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Running file \%s Program \%s Dir \%s"{}}, programFile.c\_str(),}
-\DoxyCodeLine{168                    programName.c\_str(), simulationDir.c\_str());}
-\DoxyCodeLine{169     \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a2963b2da2e6f38e395f45558cc98438c}{initPythonInterface}}();}
-\DoxyCodeLine{170     \textcolor{comment}{// Recalculate address map}}
-\DoxyCodeLine{171     \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a53609a9bdbc8caae702ea49684c0ea64}{calc\_addrmap}}();}
-\DoxyCodeLine{172   \}}
-\DoxyCodeLine{173 }
-\DoxyCodeLine{184   \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a087189d925b5acd8ba3c9e799f038abf}{SimUDRuntime\_t}}(\mbox{\hyperlink{struct_up_down_1_1ud__machine__t}{ud\_machine\_t}} machineConfig, std::string programFile,}
-\DoxyCodeLine{185                  std::string programName, std::string simulationDir)}
-\DoxyCodeLine{186       : \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t}{UDRuntime\_t}}(machineConfig), programFile(programFile),}
-\DoxyCodeLine{187         programName(programName), simulationDir(simulationDir),}
-\DoxyCodeLine{188         \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a2089ec0c8e5fa757176519f297924360}{python\_enabled}}(true), \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_aba904005137a5c78d50491dbe7cc06aa}{sendmap}}(nullptr) \{}
-\DoxyCodeLine{189     UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Initializing runtime with custom machineConfig"{}});}
-\DoxyCodeLine{190     \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a7113c0fad105b40a81231139332c0061}{initMemoryArrays}}();}
-\DoxyCodeLine{191     UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Running file \%s Program \%s Dir \%s"{}}, programFile.c\_str(),}
-\DoxyCodeLine{192                    programName.c\_str(), simulationDir.c\_str());}
-\DoxyCodeLine{193     \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a2963b2da2e6f38e395f45558cc98438c}{initPythonInterface}}();}
-\DoxyCodeLine{194     \textcolor{comment}{// Recalculate address map}}
-\DoxyCodeLine{195     \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a53609a9bdbc8caae702ea49684c0ea64}{calc\_addrmap}}();}
-\DoxyCodeLine{196   \}}
-\DoxyCodeLine{197 }
-\DoxyCodeLine{203   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_af3aead899ca394be4048678a1769da4d}{send\_event}}(\mbox{\hyperlink{class_up_down_1_1event__t}{event\_t}} ev);}
-\DoxyCodeLine{204 }
-\DoxyCodeLine{210   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a4d07ad90b3cd6de2522c7e37ecdaf133}{start\_exec}}(uint8\_t ud\_id, uint8\_t lane\_num);}
-\DoxyCodeLine{211 }
-\DoxyCodeLine{222   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a41f1e94eecd23017d26f2a7ad9fe1ce5}{t2ud\_memcpy}}(ptr\_t data, uint64\_t size, uint8\_t ud\_id, uint8\_t lane\_num,}
-\DoxyCodeLine{223                    uint32\_t offset);}
-\DoxyCodeLine{224 }
-\DoxyCodeLine{239   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a8b07d604450dde8d4754aa24e6c0fca2}{ud2t\_memcpy}}(ptr\_t data, uint64\_t size, uint8\_t ud\_id, uint8\_t lane\_num,}
-\DoxyCodeLine{240                    uint32\_t offset);}
-\DoxyCodeLine{241 }
-\DoxyCodeLine{252   \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a112bba7e502827b810ab98efbf114298}{test\_addr}}(uint8\_t ud\_id, uint8\_t lane\_num, uint32\_t offset,}
-\DoxyCodeLine{253                  word\_t expected = 1);}
-\DoxyCodeLine{254 }
-\DoxyCodeLine{265   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a32ebe16466d123ae02b3f0a56f159e1d}{test\_wait\_addr}}(uint8\_t ud\_id, uint8\_t lane\_num, uint32\_t offset,}
-\DoxyCodeLine{266                       word\_t expected = 1);}
-\DoxyCodeLine{267 }
-\DoxyCodeLine{268   \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t}{\string~SimUDRuntime\_t}}() \{}
-\DoxyCodeLine{269     \textcolor{keyword}{delete} MappedMemory;}
-\DoxyCodeLine{270     \textcolor{keyword}{delete} ScratchpadMemory;}
-\DoxyCodeLine{271     \textcolor{keyword}{delete} ControlMemory;}
-\DoxyCodeLine{272     \textcolor{keyword}{delete} \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_aba904005137a5c78d50491dbe7cc06aa}{sendmap}};}
-\DoxyCodeLine{273   \}}
-\DoxyCodeLine{274 \};}
-\DoxyCodeLine{275 }
-\DoxyCodeLine{276 \} \textcolor{comment}{// namespace UpDown}}
-\DoxyCodeLine{277 }
-\DoxyCodeLine{278 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{61 \textcolor{keyword}{enum} EmulatorLogLevel \{}
+\DoxyCodeLine{62   FULL\_TRACE = 0,}
+\DoxyCodeLine{63   STAGE\_TRACE = 1,}
+\DoxyCodeLine{64   PROGRESS\_TRACE = 2,}
+\DoxyCodeLine{65   NONE = 5,}
+\DoxyCodeLine{66 \};}
+\DoxyCodeLine{67 }
+\DoxyCodeLine{81 \textcolor{keyword}{class }\mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t}{SimUDRuntime\_t}} : \textcolor{keyword}{public} \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t}{UDRuntime\_t}} \{}
+\DoxyCodeLine{82 \textcolor{keyword}{private}:}
+\DoxyCodeLine{83   \textcolor{keyword}{const} std::string LogFileName = \textcolor{stringliteral}{"{}Perf.log"{}};}
+\DoxyCodeLine{84   uint8\_t *MappedMemory;}
+\DoxyCodeLine{85   uint8\_t *ScratchpadMemory;}
+\DoxyCodeLine{86   uint8\_t *ControlMemory;}
+\DoxyCodeLine{87 }
+\DoxyCodeLine{88   std::string programFile;}
+\DoxyCodeLine{89   std::string programName;}
+\DoxyCodeLine{90   std::string simulationDir;}
+\DoxyCodeLine{91   \mbox{\hyperlink{class_upstream___py_intf}{Upstream\_PyIntf}} *upstream\_pyintf;}
+\DoxyCodeLine{94   \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a2089ec0c8e5fa757176519f297924360}{python\_enabled}};}
+\DoxyCodeLine{95 }
+\DoxyCodeLine{98   uint32\_t **\mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_aba904005137a5c78d50491dbe7cc06aa}{sendmap}};}
+\DoxyCodeLine{99 }
+\DoxyCodeLine{112   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a7113c0fad105b40a81231139332c0061}{initMemoryArrays}}();}
+\DoxyCodeLine{113 }
+\DoxyCodeLine{125   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a76423ee519101241d96a212a307d9d8e}{initPythonInterface}}(EmulatorLogLevel printLevel);}
+\DoxyCodeLine{126 }
+\DoxyCodeLine{127 \textcolor{keyword}{public}:}
+\DoxyCodeLine{135   \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a1af458c531ea3297c7991facbed758fa}{SimUDRuntime\_t}}() : \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t}{UDRuntime\_t}}(), \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a2089ec0c8e5fa757176519f297924360}{python\_enabled}}(false), \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_aba904005137a5c78d50491dbe7cc06aa}{sendmap}}(nullptr) \{}
+\DoxyCodeLine{136     UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Initializing Simulated Runtime with default params"{}});}
+\DoxyCodeLine{137     UPDOWN\_WARNING(\textcolor{stringliteral}{"{}No python program. Python will be disabled, only "{}}}
+\DoxyCodeLine{138                    \textcolor{stringliteral}{"{}simulating memory interactions"{}});}
+\DoxyCodeLine{139     \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a7113c0fad105b40a81231139332c0061}{initMemoryArrays}}();}
+\DoxyCodeLine{140     \textcolor{comment}{// Recalculate address map}}
+\DoxyCodeLine{141     \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a53609a9bdbc8caae702ea49684c0ea64}{calc\_addrmap}}();}
+\DoxyCodeLine{142   \}}
+\DoxyCodeLine{143 }
+\DoxyCodeLine{154   \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_adc38b9beb3dcfc1abd60e11869894a97}{SimUDRuntime\_t}}(\mbox{\hyperlink{struct_up_down_1_1ud__machine__t}{ud\_machine\_t}} machineConfig)}
+\DoxyCodeLine{155       : \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t}{UDRuntime\_t}}(machineConfig), \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a2089ec0c8e5fa757176519f297924360}{python\_enabled}}(false), \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_aba904005137a5c78d50491dbe7cc06aa}{sendmap}}(nullptr) \{}
+\DoxyCodeLine{156     UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Initializing runtime with custom machineConfig"{}});}
+\DoxyCodeLine{157     UPDOWN\_WARNING(\textcolor{stringliteral}{"{}No python program. Python will be disabled, only "{}}}
+\DoxyCodeLine{158                    \textcolor{stringliteral}{"{}simulating memory interactions"{}});}
+\DoxyCodeLine{159     \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a7113c0fad105b40a81231139332c0061}{initMemoryArrays}}();}
+\DoxyCodeLine{160     \textcolor{comment}{// Recalculate address map}}
+\DoxyCodeLine{161     \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a53609a9bdbc8caae702ea49684c0ea64}{calc\_addrmap}}();}
+\DoxyCodeLine{162   \}}
+\DoxyCodeLine{163 }
+\DoxyCodeLine{174   \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_ac200dff089c69a7f5e1f8a71a4e1601c}{SimUDRuntime\_t}}(std::string programFile,}
+\DoxyCodeLine{175                  std::string programName, std::string simulationDir,}
+\DoxyCodeLine{176                  EmulatorLogLevel printLvl = EmulatorLogLevel::NONE)}
+\DoxyCodeLine{177       : \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t}{UDRuntime\_t}}(), programFile(programFile),}
+\DoxyCodeLine{178         programName(programName), simulationDir(simulationDir),}
+\DoxyCodeLine{179         \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a2089ec0c8e5fa757176519f297924360}{python\_enabled}}(true), \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_aba904005137a5c78d50491dbe7cc06aa}{sendmap}}(nullptr) \{}
+\DoxyCodeLine{180     UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Initializing runtime with custom machineConfig"{}});}
+\DoxyCodeLine{181     \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a7113c0fad105b40a81231139332c0061}{initMemoryArrays}}();}
+\DoxyCodeLine{182     UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Running file \%s Program \%s Dir \%s"{}}, programFile.c\_str(),}
+\DoxyCodeLine{183                    programName.c\_str(), simulationDir.c\_str());}
+\DoxyCodeLine{184     \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a76423ee519101241d96a212a307d9d8e}{initPythonInterface}}(printLvl);}
+\DoxyCodeLine{185     \textcolor{comment}{// Recalculate address map}}
+\DoxyCodeLine{186     \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a53609a9bdbc8caae702ea49684c0ea64}{calc\_addrmap}}();}
+\DoxyCodeLine{187   \}}
+\DoxyCodeLine{188 }
+\DoxyCodeLine{199   \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a3173647c4905f9eefd115f610a9e25bf}{SimUDRuntime\_t}}(\mbox{\hyperlink{struct_up_down_1_1ud__machine__t}{ud\_machine\_t}} machineConfig, std::string programFile,}
+\DoxyCodeLine{200                  std::string programName, std::string simulationDir,}
+\DoxyCodeLine{201                  EmulatorLogLevel printLvl = EmulatorLogLevel::NONE)}
+\DoxyCodeLine{202       : \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t}{UDRuntime\_t}}(machineConfig), programFile(programFile),}
+\DoxyCodeLine{203         programName(programName), simulationDir(simulationDir),}
+\DoxyCodeLine{204         \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a2089ec0c8e5fa757176519f297924360}{python\_enabled}}(true), \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_aba904005137a5c78d50491dbe7cc06aa}{sendmap}}(nullptr) \{}
+\DoxyCodeLine{205     UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Initializing runtime with custom machineConfig"{}});}
+\DoxyCodeLine{206     \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a7113c0fad105b40a81231139332c0061}{initMemoryArrays}}();}
+\DoxyCodeLine{207     UPDOWN\_INFOMSG(\textcolor{stringliteral}{"{}Running file \%s Program \%s Dir \%s"{}}, programFile.c\_str(),}
+\DoxyCodeLine{208                    programName.c\_str(), simulationDir.c\_str());}
+\DoxyCodeLine{209     \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a76423ee519101241d96a212a307d9d8e}{initPythonInterface}}(printLvl);}
+\DoxyCodeLine{210     \textcolor{comment}{// Recalculate address map}}
+\DoxyCodeLine{211     \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a53609a9bdbc8caae702ea49684c0ea64}{calc\_addrmap}}();}
+\DoxyCodeLine{212   \}}
+\DoxyCodeLine{213 }
+\DoxyCodeLine{219   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_af3aead899ca394be4048678a1769da4d}{send\_event}}(\mbox{\hyperlink{class_up_down_1_1event__t}{event\_t}} ev);}
+\DoxyCodeLine{220 }
+\DoxyCodeLine{226   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a4d07ad90b3cd6de2522c7e37ecdaf133}{start\_exec}}(uint8\_t ud\_id, uint8\_t lane\_num);}
+\DoxyCodeLine{227 }
+\DoxyCodeLine{238   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a811c0050b3d1ce0e696bddb853017972}{t2ud\_memcpy}}(\textcolor{keywordtype}{void}* data, uint64\_t size, uint8\_t ud\_id, uint8\_t lane\_num,}
+\DoxyCodeLine{239                    uint32\_t offset);}
+\DoxyCodeLine{240 }
+\DoxyCodeLine{255   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a42d83d235215dc1897eca7a5ee09fc7d}{ud2t\_memcpy}}(\textcolor{keywordtype}{void}* data, uint64\_t size, uint8\_t ud\_id, uint8\_t lane\_num,}
+\DoxyCodeLine{256                    uint32\_t offset);}
+\DoxyCodeLine{257 }
+\DoxyCodeLine{268   \textcolor{keywordtype}{bool} \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a112bba7e502827b810ab98efbf114298}{test\_addr}}(uint8\_t ud\_id, uint8\_t lane\_num, uint32\_t offset,}
+\DoxyCodeLine{269                  word\_t expected = 1);}
+\DoxyCodeLine{270 }
+\DoxyCodeLine{281   \textcolor{keywordtype}{void} \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a32ebe16466d123ae02b3f0a56f159e1d}{test\_wait\_addr}}(uint8\_t ud\_id, uint8\_t lane\_num, uint32\_t offset,}
+\DoxyCodeLine{282                       word\_t expected = 1);}
+\DoxyCodeLine{283 }
+\DoxyCodeLine{284   \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t}{\string~SimUDRuntime\_t}}() \{}
+\DoxyCodeLine{285     \textcolor{keyword}{delete} MappedMemory;}
+\DoxyCodeLine{286     \textcolor{keyword}{delete} ScratchpadMemory;}
+\DoxyCodeLine{287     \textcolor{keyword}{delete} ControlMemory;}
+\DoxyCodeLine{288     \textcolor{keyword}{delete} \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_aba904005137a5c78d50491dbe7cc06aa}{sendmap}};}
+\DoxyCodeLine{289   \}}
+\DoxyCodeLine{290 \};}
+\DoxyCodeLine{291 }
+\DoxyCodeLine{292 \} \textcolor{comment}{// namespace UpDown}}
+\DoxyCodeLine{293 }
+\DoxyCodeLine{294 \textcolor{preprocessor}{\#endif}}
 
 \end{DoxyCode}

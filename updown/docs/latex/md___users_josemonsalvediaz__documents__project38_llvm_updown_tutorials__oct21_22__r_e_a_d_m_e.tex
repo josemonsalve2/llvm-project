@@ -1,0 +1,235 @@
+The purpose of this document is to summarize the hello world tutorial to be presented in the first quick off meeting of the Up\+Down Runtime Emulator. This tutorial will likely be out of date in the future, so be warned that this may be outdated if you read it beyond October 21st 2022. The content of this document is as follows\+:
+
+
+\begin{DoxyEnumerate}
+\item Building the runtime in standalone mode
+\item Small terminology reminder
+\item Creating a hello world program
+\end{DoxyEnumerate}\hypertarget{md___users_josemonsalvediaz__documents__project38_llvm_updown_tutorials__oct21_22__r_e_a_d_m_e_autotoc_md15}{}\doxysection{Building the runtime system in standalone mode}\label{md___users_josemonsalvediaz__documents__project38_llvm_updown_tutorials__oct21_22__r_e_a_d_m_e_autotoc_md15}
+In the long term, the purpose of this runtime system is to be part of the backend of more interesting ideas to be explored with the help of compilers. However, for now it is possible to build the runtime in stand alone mode, generating both a static and dynamic versions of these libraries.
+
+The runtime has two parts. A {\ttfamily runtime} that is meant to be used with a simulator or the real hardware (e.\+g. pointers are accessed directly), and a {\ttfamily simruntime} that creates a wrapper around a python emulator, and which should be API compatible with the {\ttfamily runtime}. Furthermore, this repository hosts a set of microbenchmarks, and some experimental elements to be used with compilers in the future.
+
+In order to build the runtime in stand alone we will use cmake. We will use two locations\+: {\ttfamily UPDOWN\+\_\+\+SOURCE\+\_\+\+CODE} and {\ttfamily UPDOWN\+\_\+\+INSTALL\+\_\+\+DIR}. Change these accordingly. Let\textquotesingle{}s begin by creating the work environment.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\# Create a work folder. Set env variables}
+\DoxyCodeLine{mkdir updown\_tutorial}
+\DoxyCodeLine{cd updown\_tutorial}
+\DoxyCodeLine{git clone git@bitbucket.org:achien7242/llvm.git}
+\DoxyCodeLine{mkdir build}
+\DoxyCodeLine{mkdir install}
+\DoxyCodeLine{mkdir exercises}
+\DoxyCodeLine{export UPDOWN\_SOURCE\_CODE=`pwd`/llvm/updown}
+\DoxyCodeLine{export UPDOWN\_INSTALL\_DIR=`pwd`/install}
+
+\end{DoxyCode}
+
+
+Now let\textquotesingle{}s begin the compilation. This assumes you\textquotesingle{}re in the updown\+\_\+tutorial folder, as described above
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\# Let's build things}
+\DoxyCodeLine{cd build}
+\DoxyCodeLine{cmake \$UPDOWN\_SOURCE\_CODE -\/DUPDOWNRT\_ENABLE\_TESTS=ON -\/DUPDOWNRT\_ENABLE\_UBENCH=ON -\/DUPDOWN\_ENABLE\_DEBUG=ON -\/DCMAKE\_INSTALL\_PREFIX=\$UPDOWN\_INSTALL\_DIR}
+\DoxyCodeLine{make -\/j}
+\DoxyCodeLine{make install}
+
+\end{DoxyCode}
+
+
+In this step we are using the following flags\+:
+
+
+\begin{DoxyItemize}
+\item {\bfseries{UPDOWNRT\+\_\+\+ENABLE\+\_\+\+TESTS=ON}} -\/ This enables compilation of the different runtime tests (e.\+g. chech {\itshape simupdown/tests} folder). These are good resources for examples on how to use the runtime API, but also it help us see if there are any mistakes.
+\item {\bfseries{UPDOWNRT\+\_\+\+ENABLE\+\_\+\+UBENCH=ON}} -\/ This enables compilation of the different microbenchmarks (e.\+g. chech {\itshape ubenchmarks} folder). These were created to stress the runtime. While in the emulator mode they do not really faithfully measure performance (i.\+e. functional simulator), these are useful for verifying behavior and learning.
+\item {\bfseries{UPDOWN\+\_\+\+ENABLE\+\_\+\+DEBUG=ON}} -\/ This enables debug messages in the runtime. When running programs, you will see a lot of lines that read {\ttfamily \mbox{[}UPDOWN\+\_\+\+INFO\+: file.\+cpp\+:line\+\_\+number\mbox{]}}. Some messages are information, others are errors or warnings. These are useful to understand the interaction with the system. For long runs, you should build the runtime without debug mode.
+\item {\bfseries{UPDOWN\+\_\+\+INSTALL\+\_\+\+DIR=...}} -\/ This flag is necessary to be able to create a distributable runtime library.
+\end{DoxyItemize}\hypertarget{md___users_josemonsalvediaz__documents__project38_llvm_updown_tutorials__oct21_22__r_e_a_d_m_e_autotoc_md16}{}\doxysubsection{Notes}\label{md___users_josemonsalvediaz__documents__project38_llvm_updown_tutorials__oct21_22__r_e_a_d_m_e_autotoc_md16}
+At the moment of writing this tutorial, the tests do not properly verify results, so these are verified by eyeballing the output. This is to be solved in the future.\hypertarget{md___users_josemonsalvediaz__documents__project38_llvm_updown_tutorials__oct21_22__r_e_a_d_m_e_autotoc_md17}{}\doxysection{Small terminology reminder}\label{md___users_josemonsalvediaz__documents__project38_llvm_updown_tutorials__oct21_22__r_e_a_d_m_e_autotoc_md17}
+This is just a quick remider of the updown terminology.\hypertarget{md___users_josemonsalvediaz__documents__project38_llvm_updown_tutorials__oct21_22__r_e_a_d_m_e_autotoc_md18}{}\doxysubsection{Up\+Downs, lanes and threads}\label{md___users_josemonsalvediaz__documents__project38_llvm_updown_tutorials__oct21_22__r_e_a_d_m_e_autotoc_md18}
+The updown hardware is divided into Up\+Down units that contain multiple Lanes (e.\+g. 64 lanes). See the following picture for a representation of the updown lane.
+
+
+
+Each lane has an operand queue and an event queue. In order to send an updown event we need to set both separately. In the API runtime, we will see that the {\ttfamily \mbox{\hyperlink{class_up_down_1_1operands__t}{Up\+Down\+::operands\+\_\+t}}} class is used for creating the operands, and the {\ttfamily \mbox{\hyperlink{class_up_down_1_1event__t}{Up\+Down\+::event\+\_\+t}}} is used to create an event. This event receives the {\ttfamily operands\+\_\+t} as part of the arguments.
+
+Each updown lane can have multiple activations. Currently, we refer to these activations as threads (See register contexts in the figure above). These \char`\"{}threads\char`\"{} execute concurrently, and they are switched upon execution of a {\ttfamily yield} or {\ttfamily yield\+\_\+terminate} operation by another thread, and the arrival of a new event that \char`\"{}wakes up\char`\"{} a thread.
+
+Each updown has access to some scratchpad memory.\hypertarget{md___users_josemonsalvediaz__documents__project38_llvm_updown_tutorials__oct21_22__r_e_a_d_m_e_autotoc_md19}{}\doxysubsection{Up\+Down memory address space}\label{md___users_josemonsalvediaz__documents__project38_llvm_updown_tutorials__oct21_22__r_e_a_d_m_e_autotoc_md19}
+From the perspective of the top it is possible to access the updown scratchpad and control signals. Each updown has a set of memory regions that is parametrized according to some values.
+
+The following figure represents the address space for the scratchpad memory, as seen from the top, considering multiple updowns.
+
+
+
+The following figure represents the address space for the control signals for the different updowns, as seen from the top.
+
+
+
+It is important to understand these signals\+:
+
+
+\begin{DoxyItemize}
+\item {\bfseries{Queues}} These represent the location of the operand and event queues. It is used by the send event to submit a new event and its operands to the queue
+\item {\bfseries{Start exec}} This signal is necessary because as of right now, the top does not perform an atomic operation to add events and operands. Therefore, it needs to signal the lane that a new event is ready for consumption. This may change in the future, but it is the mechanism we currently have in place
+\item {\bfseries{Locks}} Since these operations are not atomic, in order to guarantee atomic access from other events (i.\+e. that operands and events that are related to each other are inserted in the right order), this signal is needed to lock the queues. This will be set and unset by the send event mechanism
+\end{DoxyItemize}\hypertarget{md___users_josemonsalvediaz__documents__project38_llvm_updown_tutorials__oct21_22__r_e_a_d_m_e_autotoc_md20}{}\doxysubsection{Notes}\label{md___users_josemonsalvediaz__documents__project38_llvm_updown_tutorials__oct21_22__r_e_a_d_m_e_autotoc_md20}
+At the moment of writing this tutorial, the updown runtime is not thread safe. Avoid calling updown runtime methods from multiple top threads, or use required critical regions.\hypertarget{md___users_josemonsalvediaz__documents__project38_llvm_updown_tutorials__oct21_22__r_e_a_d_m_e_autotoc_md21}{}\doxysection{Creating a hello world program}\label{md___users_josemonsalvediaz__documents__project38_llvm_updown_tutorials__oct21_22__r_e_a_d_m_e_autotoc_md21}
+Now let\textquotesingle{}s create our first hello world program. this program will receive a number in an event operand, and it will send that number back with its value incremented by 1.
+
+The Top code will look like this\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include "{}simupdown.h"{}}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keywordtype}{int} main() \{}
+\DoxyCodeLine{  \textcolor{comment}{// Default configurations runtime}}
+\DoxyCodeLine{  \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t}{UpDown::SimUDRuntime\_t}} *test\_rt = \textcolor{keyword}{new} \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t}{UpDown::SimUDRuntime\_t}}(\textcolor{stringliteral}{"{}addOneEFA"{}}, \textcolor{stringliteral}{"{}AddOne"{}}, \textcolor{stringliteral}{"{}./"{}});}
+\DoxyCodeLine{}
+\DoxyCodeLine{  printf(\textcolor{stringliteral}{"{}=== Base Addresses ===\(\backslash\)n"{}});}
+\DoxyCodeLine{  test\_rt-\/>\mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a206a9273dbdc8141741e7cd6b065a1fd}{dumpBaseAddrs}}();}
+\DoxyCodeLine{  printf(\textcolor{stringliteral}{"{}\(\backslash\)n=== Machine Config ===\(\backslash\)n"{}});}
+\DoxyCodeLine{  test\_rt-\/>\mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a79ecb1814ceba28e24c404af732e073c}{dumpMachineConfig}}();}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{// Help operands}}
+\DoxyCodeLine{  UpDown::word\_t ops\_data[] = \{99\};}
+\DoxyCodeLine{  \mbox{\hyperlink{class_up_down_1_1operands__t}{UpDown::operands\_t}} ops(1, ops\_data);}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{comment}{// Events with operands}}
+\DoxyCodeLine{  \mbox{\hyperlink{class_up_down_1_1event__t}{UpDown::event\_t}} evnt\_ops(0 \textcolor{comment}{/*Event Label*/},}
+\DoxyCodeLine{                           0 \textcolor{comment}{/*UD ID*/},}
+\DoxyCodeLine{                           0 \textcolor{comment}{/*Lane ID*/},}
+\DoxyCodeLine{                           UpDown::ANY\_THREAD \textcolor{comment}{/*Thread ID*/},}
+\DoxyCodeLine{                           \&ops \textcolor{comment}{/*Operands*/});}
+\DoxyCodeLine{}
+\DoxyCodeLine{  test\_rt-\/>\mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_af3aead899ca394be4048678a1769da4d}{send\_event}}(evnt\_ops);}
+\DoxyCodeLine{  test\_rt-\/>\mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a4d07ad90b3cd6de2522c7e37ecdaf133}{start\_exec}}(0,0);}
+\DoxyCodeLine{}
+\DoxyCodeLine{  test\_rt-\/>\mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a32ebe16466d123ae02b3f0a56f159e1d}{test\_wait\_addr}}(0,0,0,100);}
+\DoxyCodeLine{}
+\DoxyCodeLine{  \textcolor{keywordflow}{return} 0;}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+The Up\+Down program
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{from} EFA \textcolor{keyword}{import} *}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keyword}{def }AddOne():}
+\DoxyCodeLine{    efa = \mbox{\hyperlink{namespace_e_f_a}{EFA}}([])}
+\DoxyCodeLine{    efa.code\_level = \textcolor{stringliteral}{'machine'}}
+\DoxyCodeLine{    }
+\DoxyCodeLine{    state0 = State() \textcolor{comment}{\#Initial State? }}
+\DoxyCodeLine{    efa.add\_initId(state0.state\_id)}
+\DoxyCodeLine{    efa.add\_state(state0)}
+\DoxyCodeLine{    state1 = State() \textcolor{comment}{\#Initial State? }}
+\DoxyCodeLine{}
+\DoxyCodeLine{    \textcolor{comment}{\#Add events to dictionary }}
+\DoxyCodeLine{    event\_map = \{}
+\DoxyCodeLine{        \textcolor{stringliteral}{'add\_1'}:0}
+\DoxyCodeLine{    \}}
+\DoxyCodeLine{}
+\DoxyCodeLine{    tran0 = state0.writeTransition(\textcolor{stringliteral}{"{}eventCarry"{}}, state0, state1, event\_map[\textcolor{stringliteral}{'add\_1'}])}
+\DoxyCodeLine{    tran0.writeAction(\textcolor{stringliteral}{"{}mov\_ob2reg OB\_0 UDPR\_1"{}})}
+\DoxyCodeLine{    tran0.writeAction(\textcolor{stringliteral}{"{}addi UDPR\_1 UDPR\_1 1"{}})}
+\DoxyCodeLine{    tran0.writeAction(\textcolor{stringliteral}{"{}mov\_imm2reg UDPR\_2 0"{}})}
+\DoxyCodeLine{    tran0.writeAction(\textcolor{stringliteral}{"{}mov\_reg2lm UDPR\_1 UDPR\_2 4"{}})}
+\DoxyCodeLine{    tran0.writeAction(\textcolor{stringliteral}{"{}yield\_terminate 2"{}} )}
+\DoxyCodeLine{    \textcolor{keywordflow}{return} efa}
+
+\end{DoxyCode}
+
+
+Let\textquotesingle{}s add these files to the exercises folder we created earlier, and copy and paste the content of each of the code segments above. Then we should be able to compile it with the following command
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{g++ mainAddOne.cpp -\/I\$UPDOWN\_INSTALL\_DIR/updown/include -\/L\$UPDOWN\_INSTALL\_DIR/updown/lib -\/lUpDownSimRuntime -\/lUpDownRuntime /usr/lib64/libpython3.6m.so -\/o mainAddOne.exe}
+\DoxyCodeLine{\# Before running make sure LD\_LIBRARY\_PATH contains the lib folder from the installation above}
+\DoxyCodeLine{export LD\_LIBRARY\_PATH=\$UPDOWN\_INSTALL\_DIR/updown/lib}
+\DoxyCodeLine{./mainAddOne.exe}
+
+\end{DoxyCode}
+\hypertarget{md___users_josemonsalvediaz__documents__project38_llvm_updown_tutorials__oct21_22__r_e_a_d_m_e_autotoc_md22}{}\doxysubsection{Output\+:}\label{md___users_josemonsalvediaz__documents__project38_llvm_updown_tutorials__oct21_22__r_e_a_d_m_e_autotoc_md22}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{[UPDOWN\_INFO: updown.cpp:16] calc\_addrmap: maddr: 0x80000000 spaddr: 0x200000000 ctrlAddr: 0x600000000}
+\DoxyCodeLine{[UPDOWN\_INFO: simupdown.cpp:15] Allocating 4294967296 bytes for mapped memory}
+\DoxyCodeLine{[UPDOWN\_INFO: simupdown.cpp:20] Allocating 2147483648 bytes for Scratchpad memory}
+\DoxyCodeLine{[UPDOWN\_INFO: simupdown.cpp:26] Allocating 2097152 bytes for control}
+\DoxyCodeLine{[UPDOWN\_INFO: simupdown.cpp:31] MapMemBase changed to 0x7F861DEF7010}
+\DoxyCodeLine{[UPDOWN\_INFO: simupdown.cpp:35] SPMemBase and UDbase changed to 0x7F859DEF6010}
+\DoxyCodeLine{[UPDOWN\_INFO: simupdown.cpp:38] ControlBase changed to 0x7F859DCF5010}
+\DoxyCodeLine{[UPDOWN\_INFO: upstream\_pyintf.cc:56] Adding system paths: "{}./emulator:/home/jmonsalvediaz/tmp/updown\_tutorial/install/updown/lib/emulator:/home/jmonsalvediaz/tmp/updown\_tutorial/llvm/updown/simruntime/src/emulator"{}}
+\DoxyCodeLine{[UPDOWN\_INFO: upstream\_pyintf.cc:82] Creating UpStream PyIntf with 1 lanes 65536 banksize}
+\DoxyCodeLine{DataStore Size:65536}
+\DoxyCodeLine{[UPDOWN\_INFO: upstream\_pyintf.cc:97] Initialized UpStream Python Interface with addOneEFA and AddOne}
+\DoxyCodeLine{[UPDOWN\_INFO: upstream\_pyintf.cc:110] UpStream PyIntf, EFA created }
+\DoxyCodeLine{[UPDOWN\_INFO: upstream\_pyintf.cc:116] UpStream Processor Setup\_Sim done }
+\DoxyCodeLine{[UPDOWN\_INFO: updown.cpp:16] calc\_addrmap: maddr: 0x7F861DEF7010 spaddr: 0x7F859DEF6010 ctrlAddr: 0x7F859DCF5010}
+\DoxyCodeLine{=== Base Addresses ===}
+\DoxyCodeLine{  mmaddr     = 0x7F861DEF7010}
+\DoxyCodeLine{  spaddr    = 0x7F859DEF6010}
+\DoxyCodeLine{  ctrlAddr  = 0x7F859DCF5010}
+\DoxyCodeLine{}
+\DoxyCodeLine{=== Machine Config ===}
+\DoxyCodeLine{  MapMemBase          = 0x7F861DEF7010}
+\DoxyCodeLine{  UDbase              = 0x7F859DEF6010}
+\DoxyCodeLine{  SPMemBase           = 0x7F859DEF6010}
+\DoxyCodeLine{  ControlBase         = 0x7F859DCF5010}
+\DoxyCodeLine{  EventQueueOffset    = (0x0)0}
+\DoxyCodeLine{  OperandQueueOffset  = (0x1)1}
+\DoxyCodeLine{  StartExecOffset     = (0x2)2}
+\DoxyCodeLine{  LockOffset          = (0x3)3}
+\DoxyCodeLine{  CapNumUDs           = (0x80)128}
+\DoxyCodeLine{  CapNumLanes         = (0x80)128}
+\DoxyCodeLine{  CapSPmemPerLane     = (0x20000)131072}
+\DoxyCodeLine{  CapControlPerLane   = (0x80)128}
+\DoxyCodeLine{  NumUDs              = (0x1)1}
+\DoxyCodeLine{  NumLanes            = (0x1)1}
+\DoxyCodeLine{  MapMemSize          = (0x100000000)4294967296}
+\DoxyCodeLine{  SPBankSize          = (0x10000)65536}
+\DoxyCodeLine{  SPBankSizeWords     = (0x40000)262144}
+\DoxyCodeLine{[UPDOWN\_INFO: updown.cpp:27] Locking 0x7F859DCF501C}
+\DoxyCodeLine{[UPDOWN\_INFO: updown.cpp:34] Sending Event:0 to [0,0,255] to queue at  0x7F859DCF5010}
+\DoxyCodeLine{[UPDOWN\_INFO: updown.cpp:39] Using Operands Queue 0x7F859DCF5014}
+\DoxyCodeLine{[UPDOWN\_INFO: updown.cpp:44] OB[0]: 0 (0x0)}
+\DoxyCodeLine{[UPDOWN\_INFO: updown.cpp:44] OB[1]: 99 (0x63)}
+\DoxyCodeLine{[UPDOWN\_INFO: updown.cpp:46] Unlocking 0x7F859DCF501C}
+\DoxyCodeLine{[UPDOWN\_INFO: upstream\_pyintf.cc:151] Lane:0 Pushed into Operand Buffer: 0}
+\DoxyCodeLine{[UPDOWN\_INFO: upstream\_pyintf.cc:151] Lane:0 Pushed into Operand Buffer: 99}
+\DoxyCodeLine{[UPDOWN\_INFO: upstream\_pyintf.cc:139] Pushed Event:0, lane:0, tid:255 numop:1 }
+\DoxyCodeLine{[UPDOWN\_INFO: updown.cpp:62] Starting execution UD 0, Lane 0. Signal in  0x7F859DCF5018}
+\DoxyCodeLine{[UPDOWN\_INFO: upstream\_pyintf.cc:293] EFA execute output, LaneID:0, Return State:-\/1, Num Sends: 0                            Exec\_cycles:6, Actcnt:5 }
+\DoxyCodeLine{[UPDOWN\_INFO: simupdown.cpp:104] C++ Process executed python process -\/ Returned -\/1}
+\DoxyCodeLine{[UPDOWN\_INFO: simupdown.cpp:263] Lane: 0 Yielded and Terminated -\/ Writing result now}
+\DoxyCodeLine{[UPDOWN\_INFO: updown.cpp:139] Testing UD 0, Lane 0 to Top, offset 0. Addr 0x7F859DEF6010. Expected = 100, read = 100}
+\DoxyCodeLine{[UPDOWN\_INFO: updown.cpp:153] Testing UD 0, Lane 0 to Top, offset 0. Addr 0x7F859DEF6010. Expected = 100, read = 100. (Returning)}
+
+\end{DoxyCode}
+
+
+You can now play with the code above. An example is changing the debug level of the emulator itself through the interface\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{ \{C++\}}
+\DoxyCodeLine{// Change the following line for:}
+\DoxyCodeLine{//UpDown::SimUDRuntime\_t *test\_rt = new UpDown::SimUDRuntime\_t("{}addOneEFA"{}, "{}AddOne"{}, "{}./"{});}
+\DoxyCodeLine{UpDown::SimUDRuntime\_t *test\_rt = new UpDown::SimUDRuntime\_t("{}addOneEFA"{}, "{}AddOne"{}, "{}./"{}, UpDown::EmulatorLogLevel::FULL\_TRACE);}
+
+\end{DoxyCode}
+
+
+Build again and execute, you should be able to see each Up\+Down instruction being executed. 

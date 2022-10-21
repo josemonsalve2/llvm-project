@@ -36,13 +36,13 @@ void $\ast$ \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a3f6d1895e3d1ad7fc
 \begin{DoxyCompactList}\small\item\em Memory allocator for the mapped memory. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_aa02ee38bf2166f297f40176c88485c1a}{mm\+\_\+free}} (void $\ast$ptr)
 \begin{DoxyCompactList}\small\item\em Free an already existing memory allocation. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_afc78cfc10527725c84302dbe3e2f7e07}{t2mm\+\_\+memcpy}} (uint64\+\_\+t offset, ptr\+\_\+t src, uint64\+\_\+t size=1)
+void \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a20ee360e1a7946e6296a2dacca1b284f}{t2mm\+\_\+memcpy}} (uint64\+\_\+t offset, void $\ast$src, uint64\+\_\+t size=1)
 \begin{DoxyCompactList}\small\item\em Copy to mapped memory from top. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a27b3b73d185c6590aff7cf9c514a5430}{mm2t\+\_\+memcpy}} (uint64\+\_\+t offset, ptr\+\_\+t dst, uint64\+\_\+t size=1)
+void \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a63c5785ffbce1f5944b88346633e0a14}{mm2t\+\_\+memcpy}} (uint64\+\_\+t offset, void $\ast$dst, uint64\+\_\+t size=1)
 \begin{DoxyCompactList}\small\item\em Copy from mapped memory to top. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a5085f1a2175bd89c266a85f4f551130b}{t2ud\+\_\+memcpy}} (ptr\+\_\+t data, uint64\+\_\+t size, uint8\+\_\+t ud\+\_\+id, uint8\+\_\+t lane\+\_\+num, uint32\+\_\+t offset)
+void \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ae7831fce61c9c34db9043c63f0286ebf}{t2ud\+\_\+memcpy}} (void $\ast$data, uint64\+\_\+t size, uint8\+\_\+t ud\+\_\+id, uint8\+\_\+t lane\+\_\+num, uint32\+\_\+t offset)
 \begin{DoxyCompactList}\small\item\em Copy data from the top to the scratchpad memory. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a52e14f5cd03e1c7c79697ce15f47abb5}{ud2t\+\_\+memcpy}} (ptr\+\_\+t data, uint64\+\_\+t size, uint8\+\_\+t ud\+\_\+id, uint8\+\_\+t lane\+\_\+num, uint32\+\_\+t offset)
+void \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a0bde0edbcb8ab5a7a5d5daabb5e75d49}{ud2t\+\_\+memcpy}} (void $\ast$data, uint64\+\_\+t size, uint8\+\_\+t ud\+\_\+id, uint8\+\_\+t lane\+\_\+num, uint32\+\_\+t offset)
 \begin{DoxyCompactList}\small\item\em Copy data from the scratchpad memory to the top. \end{DoxyCompactList}\item 
 bool \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ab96599b352e42e823c692ecc4d3ee689}{test\+\_\+addr}} (uint8\+\_\+t ud\+\_\+id, uint8\+\_\+t lane\+\_\+num, uint32\+\_\+t offset, word\+\_\+t expected=1)
 \begin{DoxyCompactList}\small\item\em Test a memory location in the updwon bank for the expected value. \end{DoxyCompactList}\item 
@@ -155,7 +155,7 @@ References \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48
 
 
 
-Referenced by \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a5085f1a2175bd89c266a85f4f551130b}{t2ud\+\_\+memcpy()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ab96599b352e42e823c692ecc4d3ee689}{test\+\_\+addr()}}, \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a112bba7e502827b810ab98efbf114298}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::test\+\_\+addr()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a7e41c8dae74b2b76e74c8a3d20324d15}{test\+\_\+wait\+\_\+addr()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a52e14f5cd03e1c7c79697ce15f47abb5}{ud2t\+\_\+memcpy()}}, and \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a8b07d604450dde8d4754aa24e6c0fca2}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::ud2t\+\_\+memcpy()}}.
+Referenced by \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ae7831fce61c9c34db9043c63f0286ebf}{t2ud\+\_\+memcpy()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ab96599b352e42e823c692ecc4d3ee689}{test\+\_\+addr()}}, \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a112bba7e502827b810ab98efbf114298}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::test\+\_\+addr()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a7e41c8dae74b2b76e74c8a3d20324d15}{test\+\_\+wait\+\_\+addr()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a0bde0edbcb8ab5a7a5d5daabb5e75d49}{ud2t\+\_\+memcpy()}}, and \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a42d83d235215dc1897eca7a5ee09fc7d}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::ud2t\+\_\+memcpy()}}.
 
 \mbox{\Hypertarget{class_up_down_1_1_u_d_runtime__t_aa3d126b94a4803a73a7bcbdb18707cb2}\label{class_up_down_1_1_u_d_runtime__t_aa3d126b94a4803a73a7bcbdb18707cb2}} 
 \index{UpDown::UDRuntime\_t@{UpDown::UDRuntime\_t}!get\_lane\_physical\_memory@{get\_lane\_physical\_memory}}
@@ -207,13 +207,13 @@ References \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48
 
 
 
-Referenced by \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a41f1e94eecd23017d26f2a7ad9fe1ce5}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::t2ud\+\_\+memcpy()}}, \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a112bba7e502827b810ab98efbf114298}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::test\+\_\+addr()}}, and \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a8b07d604450dde8d4754aa24e6c0fca2}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::ud2t\+\_\+memcpy()}}.
+Referenced by \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a811c0050b3d1ce0e696bddb853017972}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::t2ud\+\_\+memcpy()}}, \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a112bba7e502827b810ab98efbf114298}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::test\+\_\+addr()}}, and \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a42d83d235215dc1897eca7a5ee09fc7d}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::ud2t\+\_\+memcpy()}}.
 
-\mbox{\Hypertarget{class_up_down_1_1_u_d_runtime__t_a27b3b73d185c6590aff7cf9c514a5430}\label{class_up_down_1_1_u_d_runtime__t_a27b3b73d185c6590aff7cf9c514a5430}} 
+\mbox{\Hypertarget{class_up_down_1_1_u_d_runtime__t_a63c5785ffbce1f5944b88346633e0a14}\label{class_up_down_1_1_u_d_runtime__t_a63c5785ffbce1f5944b88346633e0a14}} 
 \index{UpDown::UDRuntime\_t@{UpDown::UDRuntime\_t}!mm2t\_memcpy@{mm2t\_memcpy}}
 \index{mm2t\_memcpy@{mm2t\_memcpy}!UpDown::UDRuntime\_t@{UpDown::UDRuntime\_t}}
 \doxysubsubsection{\texorpdfstring{mm2t\_memcpy()}{mm2t\_memcpy()}}
-{\footnotesize\ttfamily void Up\+Down\+::\+UDRuntime\+\_\+t\+::mm2t\+\_\+memcpy (\begin{DoxyParamCaption}\item[{uint64\+\_\+t}]{offset,  }\item[{ptr\+\_\+t}]{dst,  }\item[{uint64\+\_\+t}]{size = {\ttfamily 1} }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void Up\+Down\+::\+UDRuntime\+\_\+t\+::mm2t\+\_\+memcpy (\begin{DoxyParamCaption}\item[{uint64\+\_\+t}]{offset,  }\item[{void $\ast$}]{dst,  }\item[{uint64\+\_\+t}]{size = {\ttfamily 1} }\end{DoxyParamCaption})}
 
 
 
@@ -227,7 +227,7 @@ Mapped memory is a region in DRAM that can be accessed from updown. This is nece
 \hline
 {\em dst} & Source pointer \\
 \hline
-{\em size} & size in words \\
+{\em size} & size in bytes \\
 \hline
 \end{DoxyParams}
 
@@ -351,11 +351,11 @@ References \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a84ed7807df12382d06
 
 Referenced by \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a4d07ad90b3cd6de2522c7e37ecdaf133}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::start\+\_\+exec()}}.
 
-\mbox{\Hypertarget{class_up_down_1_1_u_d_runtime__t_afc78cfc10527725c84302dbe3e2f7e07}\label{class_up_down_1_1_u_d_runtime__t_afc78cfc10527725c84302dbe3e2f7e07}} 
+\mbox{\Hypertarget{class_up_down_1_1_u_d_runtime__t_a20ee360e1a7946e6296a2dacca1b284f}\label{class_up_down_1_1_u_d_runtime__t_a20ee360e1a7946e6296a2dacca1b284f}} 
 \index{UpDown::UDRuntime\_t@{UpDown::UDRuntime\_t}!t2mm\_memcpy@{t2mm\_memcpy}}
 \index{t2mm\_memcpy@{t2mm\_memcpy}!UpDown::UDRuntime\_t@{UpDown::UDRuntime\_t}}
 \doxysubsubsection{\texorpdfstring{t2mm\_memcpy()}{t2mm\_memcpy()}}
-{\footnotesize\ttfamily void Up\+Down\+::\+UDRuntime\+\_\+t\+::t2mm\+\_\+memcpy (\begin{DoxyParamCaption}\item[{uint64\+\_\+t}]{offset,  }\item[{ptr\+\_\+t}]{src,  }\item[{uint64\+\_\+t}]{size = {\ttfamily 1} }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void Up\+Down\+::\+UDRuntime\+\_\+t\+::t2mm\+\_\+memcpy (\begin{DoxyParamCaption}\item[{uint64\+\_\+t}]{offset,  }\item[{void $\ast$}]{src,  }\item[{uint64\+\_\+t}]{size = {\ttfamily 1} }\end{DoxyParamCaption})}
 
 
 
@@ -369,18 +369,18 @@ Mapped memory is a region in DRAM that can be accessed from updown. This is nece
 \hline
 {\em src} & Source pointer \\
 \hline
-{\em size} & size in words \\
+{\em size} & size in bytes \\
 \hline
 \end{DoxyParams}
 
 
 References \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a84ed7807df12382d06ee8a09b172898f}{Base\+Addrs}}.
 
-\mbox{\Hypertarget{class_up_down_1_1_u_d_runtime__t_a5085f1a2175bd89c266a85f4f551130b}\label{class_up_down_1_1_u_d_runtime__t_a5085f1a2175bd89c266a85f4f551130b}} 
+\mbox{\Hypertarget{class_up_down_1_1_u_d_runtime__t_ae7831fce61c9c34db9043c63f0286ebf}\label{class_up_down_1_1_u_d_runtime__t_ae7831fce61c9c34db9043c63f0286ebf}} 
 \index{UpDown::UDRuntime\_t@{UpDown::UDRuntime\_t}!t2ud\_memcpy@{t2ud\_memcpy}}
 \index{t2ud\_memcpy@{t2ud\_memcpy}!UpDown::UDRuntime\_t@{UpDown::UDRuntime\_t}}
 \doxysubsubsection{\texorpdfstring{t2ud\_memcpy()}{t2ud\_memcpy()}}
-{\footnotesize\ttfamily void Up\+Down\+::\+UDRuntime\+\_\+t\+::t2ud\+\_\+memcpy (\begin{DoxyParamCaption}\item[{ptr\+\_\+t}]{data,  }\item[{uint64\+\_\+t}]{size,  }\item[{uint8\+\_\+t}]{ud\+\_\+id,  }\item[{uint8\+\_\+t}]{lane\+\_\+num,  }\item[{uint32\+\_\+t}]{offset }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void Up\+Down\+::\+UDRuntime\+\_\+t\+::t2ud\+\_\+memcpy (\begin{DoxyParamCaption}\item[{void $\ast$}]{data,  }\item[{uint64\+\_\+t}]{size,  }\item[{uint8\+\_\+t}]{ud\+\_\+id,  }\item[{uint8\+\_\+t}]{lane\+\_\+num,  }\item[{uint32\+\_\+t}]{offset }\end{DoxyParamCaption})}
 
 
 
@@ -392,7 +392,7 @@ This function sends data to the bank associated with the lane\+\_\+num The addre
 \begin{DoxyParams}{Parameters}
 {\em data} & pointer to the top data to be copied over to the lane \\
 \hline
-{\em size} & The number of words to be copied to the scratchpad memory \\
+{\em size} & The number of bytes to be copied to the scratchpad memory \\
 \hline
 {\em ud\+\_\+id} & Up\+Down number \\
 \hline
@@ -407,7 +407,7 @@ References \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a84ed7807df12382d06
 
 
 
-Referenced by \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a41f1e94eecd23017d26f2a7ad9fe1ce5}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::t2ud\+\_\+memcpy()}}.
+Referenced by \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a811c0050b3d1ce0e696bddb853017972}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::t2ud\+\_\+memcpy()}}.
 
 \mbox{\Hypertarget{class_up_down_1_1_u_d_runtime__t_ab96599b352e42e823c692ecc4d3ee689}\label{class_up_down_1_1_u_d_runtime__t_ab96599b352e42e823c692ecc4d3ee689}} 
 \index{UpDown::UDRuntime\_t@{UpDown::UDRuntime\_t}!test\_addr@{test\_addr}}
@@ -472,11 +472,11 @@ References \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a84ed7807df12382d06
 
 Referenced by \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a32ebe16466d123ae02b3f0a56f159e1d}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::test\+\_\+wait\+\_\+addr()}}.
 
-\mbox{\Hypertarget{class_up_down_1_1_u_d_runtime__t_a52e14f5cd03e1c7c79697ce15f47abb5}\label{class_up_down_1_1_u_d_runtime__t_a52e14f5cd03e1c7c79697ce15f47abb5}} 
+\mbox{\Hypertarget{class_up_down_1_1_u_d_runtime__t_a0bde0edbcb8ab5a7a5d5daabb5e75d49}\label{class_up_down_1_1_u_d_runtime__t_a0bde0edbcb8ab5a7a5d5daabb5e75d49}} 
 \index{UpDown::UDRuntime\_t@{UpDown::UDRuntime\_t}!ud2t\_memcpy@{ud2t\_memcpy}}
 \index{ud2t\_memcpy@{ud2t\_memcpy}!UpDown::UDRuntime\_t@{UpDown::UDRuntime\_t}}
 \doxysubsubsection{\texorpdfstring{ud2t\_memcpy()}{ud2t\_memcpy()}}
-{\footnotesize\ttfamily void Up\+Down\+::\+UDRuntime\+\_\+t\+::ud2t\+\_\+memcpy (\begin{DoxyParamCaption}\item[{ptr\+\_\+t}]{data,  }\item[{uint64\+\_\+t}]{size,  }\item[{uint8\+\_\+t}]{ud\+\_\+id,  }\item[{uint8\+\_\+t}]{lane\+\_\+num,  }\item[{uint32\+\_\+t}]{offset }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily void Up\+Down\+::\+UDRuntime\+\_\+t\+::ud2t\+\_\+memcpy (\begin{DoxyParamCaption}\item[{void $\ast$}]{data,  }\item[{uint64\+\_\+t}]{size,  }\item[{uint8\+\_\+t}]{ud\+\_\+id,  }\item[{uint8\+\_\+t}]{lane\+\_\+num,  }\item[{uint32\+\_\+t}]{offset }\end{DoxyParamCaption})}
 
 
 
@@ -486,7 +486,7 @@ Copy data from the scratchpad memory to the top.
 \begin{DoxyParams}{Parameters}
 {\em data} & pointer to the top data to be contain values from the scratchpad memory \\
 \hline
-{\em size} & The number of words to be copied from the scratchpad memory \\
+{\em size} & The number of bytes to be copied from the scratchpad memory \\
 \hline
 {\em ud\+\_\+id} & Up\+Down number \\
 \hline
@@ -501,7 +501,7 @@ References \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a84ed7807df12382d06
 
 
 
-Referenced by \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a8b07d604450dde8d4754aa24e6c0fca2}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::ud2t\+\_\+memcpy()}}.
+Referenced by \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a42d83d235215dc1897eca7a5ee09fc7d}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::ud2t\+\_\+memcpy()}}.
 
 
 
@@ -518,7 +518,7 @@ container for all base addresses
 
 
 
-Referenced by \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a53609a9bdbc8caae702ea49684c0ea64}{calc\+\_\+addrmap()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a206a9273dbdc8141741e7cd6b065a1fd}{dump\+Base\+Addrs()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a27b3b73d185c6590aff7cf9c514a5430}{mm2t\+\_\+memcpy()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_af58fb869d8558462617fa84bf83bb595}{send\+\_\+event()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_af61e9f01022957944d9c74daf365c0a4}{start\+\_\+exec()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_afc78cfc10527725c84302dbe3e2f7e07}{t2mm\+\_\+memcpy()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a5085f1a2175bd89c266a85f4f551130b}{t2ud\+\_\+memcpy()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ab96599b352e42e823c692ecc4d3ee689}{test\+\_\+addr()}}, \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a112bba7e502827b810ab98efbf114298}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::test\+\_\+addr()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a7e41c8dae74b2b76e74c8a3d20324d15}{test\+\_\+wait\+\_\+addr()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a52e14f5cd03e1c7c79697ce15f47abb5}{ud2t\+\_\+memcpy()}}, and \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a8b07d604450dde8d4754aa24e6c0fca2}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::ud2t\+\_\+memcpy()}}.
+Referenced by \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a53609a9bdbc8caae702ea49684c0ea64}{calc\+\_\+addrmap()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a206a9273dbdc8141741e7cd6b065a1fd}{dump\+Base\+Addrs()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a63c5785ffbce1f5944b88346633e0a14}{mm2t\+\_\+memcpy()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_af58fb869d8558462617fa84bf83bb595}{send\+\_\+event()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_af61e9f01022957944d9c74daf365c0a4}{start\+\_\+exec()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a20ee360e1a7946e6296a2dacca1b284f}{t2mm\+\_\+memcpy()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ae7831fce61c9c34db9043c63f0286ebf}{t2ud\+\_\+memcpy()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_ab96599b352e42e823c692ecc4d3ee689}{test\+\_\+addr()}}, \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a112bba7e502827b810ab98efbf114298}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::test\+\_\+addr()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a7e41c8dae74b2b76e74c8a3d20324d15}{test\+\_\+wait\+\_\+addr()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a0bde0edbcb8ab5a7a5d5daabb5e75d49}{ud2t\+\_\+memcpy()}}, and \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a42d83d235215dc1897eca7a5ee09fc7d}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::ud2t\+\_\+memcpy()}}.
 
 \mbox{\Hypertarget{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}\label{class_up_down_1_1_u_d_runtime__t_ac550f02506c21c5e48b6648c2e8c3dd6}} 
 \index{UpDown::UDRuntime\_t@{UpDown::UDRuntime\_t}!MachineConfig@{MachineConfig}}
@@ -532,7 +532,7 @@ Contains configuration parameters of the machine abstraction.
 
 
 
-Referenced by \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a53609a9bdbc8caae702ea49684c0ea64}{calc\+\_\+addrmap()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a79ecb1814ceba28e24c404af732e073c}{dump\+Machine\+Config()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a33fce78b89238e7f2b21fd9e08bf4a2a}{get\+\_\+lane\+\_\+aligned\+\_\+offset()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_aa3d126b94a4803a73a7bcbdb18707cb2}{get\+\_\+lane\+\_\+physical\+\_\+memory()}}, \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a7113c0fad105b40a81231139332c0061}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::init\+Memory\+Arrays()}}, \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a2963b2da2e6f38e395f45558cc98438c}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::init\+Python\+Interface()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_af58fb869d8558462617fa84bf83bb595}{send\+\_\+event()}}, and \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_af61e9f01022957944d9c74daf365c0a4}{start\+\_\+exec()}}.
+Referenced by \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a53609a9bdbc8caae702ea49684c0ea64}{calc\+\_\+addrmap()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a79ecb1814ceba28e24c404af732e073c}{dump\+Machine\+Config()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_a33fce78b89238e7f2b21fd9e08bf4a2a}{get\+\_\+lane\+\_\+aligned\+\_\+offset()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_aa3d126b94a4803a73a7bcbdb18707cb2}{get\+\_\+lane\+\_\+physical\+\_\+memory()}}, \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a7113c0fad105b40a81231139332c0061}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::init\+Memory\+Arrays()}}, \mbox{\hyperlink{class_up_down_1_1_sim_u_d_runtime__t_a76423ee519101241d96a212a307d9d8e}{Up\+Down\+::\+Sim\+UDRuntime\+\_\+t\+::init\+Python\+Interface()}}, \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_af58fb869d8558462617fa84bf83bb595}{send\+\_\+event()}}, and \mbox{\hyperlink{class_up_down_1_1_u_d_runtime__t_af61e9f01022957944d9c74daf365c0a4}{start\+\_\+exec()}}.
 
 
 

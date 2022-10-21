@@ -1,8 +1,11 @@
 var searchData=
 [
-  ['t2mm_5fmemcpy_0',['t2mm_memcpy',['../class_up_down_1_1_u_d_runtime__t.html#afc78cfc10527725c84302dbe3e2f7e07',1,'UpDown::UDRuntime_t']]],
-  ['t2ud_5fmemcpy_1',['t2ud_memcpy',['../class_up_down_1_1_u_d_runtime__t.html#a5085f1a2175bd89c266a85f4f551130b',1,'UpDown::UDRuntime_t::t2ud_memcpy()'],['../class_up_down_1_1_sim_u_d_runtime__t.html#a41f1e94eecd23017d26f2a7ad9fe1ce5',1,'UpDown::SimUDRuntime_t::t2ud_memcpy()']]],
-  ['test_5faddr_2',['test_addr',['../class_up_down_1_1_u_d_runtime__t.html#ab96599b352e42e823c692ecc4d3ee689',1,'UpDown::UDRuntime_t::test_addr()'],['../class_up_down_1_1_sim_u_d_runtime__t.html#a112bba7e502827b810ab98efbf114298',1,'UpDown::SimUDRuntime_t::test_addr()']]],
-  ['test_5fwait_5faddr_3',['test_wait_addr',['../class_up_down_1_1_u_d_runtime__t.html#a7e41c8dae74b2b76e74c8a3d20324d15',1,'UpDown::UDRuntime_t::test_wait_addr()'],['../class_up_down_1_1_sim_u_d_runtime__t.html#a32ebe16466d123ae02b3f0a56f159e1d',1,'UpDown::SimUDRuntime_t::test_wait_addr()']]],
-  ['todo_20list_4',['Todo List',['../todo.html',1,'']]]
+  ['send_5fevent_0',['send_event',['../class_up_down_1_1_u_d_runtime__t.html#af58fb869d8558462617fa84bf83bb595',1,'UpDown::UDRuntime_t::send_event()'],['../class_up_down_1_1_sim_u_d_runtime__t.html#af3aead899ca394be4048678a1769da4d',1,'UpDown::SimUDRuntime_t::send_event(event_t ev)']]],
+  ['sendmap_1',['sendmap',['../class_up_down_1_1_sim_u_d_runtime__t.html#aba904005137a5c78d50491dbe7cc06aa',1,'UpDown::SimUDRuntime_t']]],
+  ['set_5fcont_2',['set_cont',['../class_up_down_1_1operands__t.html#a2c195c07c62074860cae11275adc99c1',1,'UpDown::operands_t']]],
+  ['set_5fevent_3',['set_event',['../class_up_down_1_1event__t.html#a82bb035d6e694deee44a89eab676911a',1,'UpDown::event_t']]],
+  ['set_5foperand_4',['set_operand',['../class_up_down_1_1operands__t.html#a549f45dfa5f6e439f94b295dc6a4a122',1,'UpDown::operands_t']]],
+  ['set_5foperands_5',['set_operands',['../class_up_down_1_1operands__t.html#acaaa965b8f9003feccb35257e37d8bf4',1,'UpDown::operands_t']]],
+  ['simudruntime_5ft_6',['SimUDRuntime_t',['../class_up_down_1_1_sim_u_d_runtime__t.html#a1af458c531ea3297c7991facbed758fa',1,'UpDown::SimUDRuntime_t::SimUDRuntime_t()'],['../class_up_down_1_1_sim_u_d_runtime__t.html#adc38b9beb3dcfc1abd60e11869894a97',1,'UpDown::SimUDRuntime_t::SimUDRuntime_t(ud_machine_t machineConfig)'],['../class_up_down_1_1_sim_u_d_runtime__t.html#ac200dff089c69a7f5e1f8a71a4e1601c',1,'UpDown::SimUDRuntime_t::SimUDRuntime_t(std::string programFile, std::string programName, std::string simulationDir, EmulatorLogLevel printLvl=EmulatorLogLevel::NONE)'],['../class_up_down_1_1_sim_u_d_runtime__t.html#a3173647c4905f9eefd115f610a9e25bf',1,'UpDown::SimUDRuntime_t::SimUDRuntime_t(ud_machine_t machineConfig, std::string programFile, std::string programName, std::string simulationDir, EmulatorLogLevel printLvl=EmulatorLogLevel::NONE)'],['../class_up_down_1_1_sim_u_d_runtime__t.html',1,'UpDown::SimUDRuntime_t']]],
+  ['start_5fexec_7',['start_exec',['../class_up_down_1_1_u_d_runtime__t.html#af61e9f01022957944d9c74daf365c0a4',1,'UpDown::UDRuntime_t::start_exec()'],['../class_up_down_1_1_sim_u_d_runtime__t.html#a4d07ad90b3cd6de2522c7e37ecdaf133',1,'UpDown::SimUDRuntime_t::start_exec()']]]
 ];
