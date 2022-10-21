@@ -27,5 +27,35 @@ In order to execute this microbenchmark, use:
 ./launchLatency <numoperands> <numlanes> <numthreadsperlane> <mode> [<num_cores>] [<num_uds>]
 ```
 
-## Note: 
+### Note: 
+Currently only the first two parameters are used. No multiprocessing on top, and no multi up down support yet 
+
+## DRAM Read Bandwidth 
+
+Create multiple reads from different UpDown lanes. In order to saturate the bandwidth, each read message sends 
+64 bytes at once. This means, the return event contains 64/4 operands. It is possible to control the overall memory movement
+as long as it is a multiple of 64, and it is possible to control how many lanes will be part of the computation.
+
+In order to execute this microbenchmark, use:
+
+```
+./updownDRAMReadBW <sizemovement> <numlanes> <numthreadsperlane> <mode> [<num_cores>] [<num_uds>]
+```
+
+### Note: 
+Currently only the first two parameters are used. No multiprocessing on top, and no multi up down support yet 
+
+## DRAM Write Bandwidth 
+
+Create multiple writes from different UpDown lanes. In order to saturate the bandwidth, each write message sends 
+64 bytes at once. This means, the return event contains 64/4 operands. It is possible to control the overall memory movement
+as long as it is a multiple of 64, and it is possible to control how many lanes will be part of the computation.
+
+In order to execute this microbenchmark, use:
+
+```
+./updownDRAMReadBW <sizemovement> <numlanes> <numthreadsperlane> <mode> [<num_cores>] [<num_uds>]
+```
+
+### Note: 
 Currently only the first two parameters are used. No multiprocessing on top, and no multi up down support yet 

@@ -5,11 +5,15 @@ if (UPDOWNRT_ENABLE_UBENCH)
     set(UPDOWNSIMRT_UBENCH_SRC 
         eventrate/eventRate.cpp
         launchLatency/launchLatency.cpp
+        updownDRAMReadBW/updownDRAMReadBW.cpp
+        updownDRAMWriteBW/updownDRAMWriteBW.cpp
     )
 
     set(UPDOWNSIMRT_PYTHON_UBENCH_SRC
         eventrate/eventRateEFA.py
         launchLatency/launchLatencyEFA.py
+        updownDRAMReadBW/updownDRAMReadBWEFA.py
+        updownDRAMWriteBW/updownDRAMWriteBWEFA.py
     )
         set(UPDOWN_RUNTIME_UBENCH_INSTALL_PATH "${UPDOWN_RUNTIME_INSTALL_DIR}/ubenchmarks")
 
