@@ -767,10 +767,10 @@ public:
    *
    * @param offset Destination offset within the memory mapped region
    * @param src Source pointer
-   * @param size size in words
+   * @param size size in bytes
    */
 
-  void t2mm_memcpy(uint64_t offset, ptr_t src, uint64_t size = 1);
+  void t2mm_memcpy(uint64_t offset, void* src, uint64_t size = 1);
 
   /**
    * @brief Copy from mapped memory to top
@@ -783,10 +783,10 @@ public:
    *
    * @param offset Destination offset within the memory mapped region
    * @param dst Source pointer
-   * @param size size in words
+   * @param size size in bytes
    */
 
-  void mm2t_memcpy(uint64_t offset, ptr_t dst, uint64_t size = 1);
+  void mm2t_memcpy(uint64_t offset, void* dst, uint64_t size = 1);
 
   /**
    * @brief Copy data from the top to the scratchpad memory
@@ -795,26 +795,26 @@ public:
    * The address is calculated based on the offset.
    *
    * @param data pointer to the top data to be copied over to the lane
-   * @param size The number of words to be copied to the scratchpad
+   * @param size The number of bytes to be copied to the scratchpad
    * memory
    * @param ud_id UpDown number
    * @param lane_num lane bank
    * @param offset offset within bank in bytes
    */
-  void t2ud_memcpy(ptr_t data, uint64_t size, uint8_t ud_id, uint8_t lane_num, uint32_t offset);
+  void t2ud_memcpy(void* data, uint64_t size, uint8_t ud_id, uint8_t lane_num, uint32_t offset);
 
   /**
    * @brief Copy data from the scratchpad memory to the top
    *
    * @param data pointer to the top data to be contain values from the
    * scratchpad memory
-   * @param size The number of words to be copied from the scratchpad
+   * @param size The number of bytes to be copied from the scratchpad
    * memory
    * @param ud_id UpDown number
    * @param lane_num lane bank
    * @param offset offset within bank in bytes
    */
-  void ud2t_memcpy(ptr_t data, uint64_t size, uint8_t ud_id, uint8_t lane_num, uint32_t offset);
+  void ud2t_memcpy(void* data, uint64_t size, uint8_t ud_id, uint8_t lane_num, uint32_t offset);
 
   /**
    * @brief Test a memory location in the updwon bank for the expected value

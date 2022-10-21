@@ -21,11 +21,11 @@ int main() {
   // 1 element at a time
   printf("\nCopying from top to updown\n");
   for (int i = 0; i < N; i++)
-    test_rt->t2mm_memcpy(i, anArray + i, 1);
+    test_rt->t2mm_memcpy(i, anArray + i, sizeof(UpDown::word_t));
 
   printf("\nCopying from updown to top\n");
   for (int i = 0; i < N; i++)
-    test_rt->mm2t_memcpy(i,anArray2 + i, 1);
+    test_rt->mm2t_memcpy(i,anArray2 + i, sizeof(UpDown::word_t));
 
   for (int i = 0; i < N; i++)
     printf("AnArray2[%d] = %d\n", i, anArray2[i]);
@@ -35,9 +35,9 @@ int main() {
     anArray[i] = -i;
 
   printf("\nCopying from top to updown\n");
-  test_rt->t2mm_memcpy(N,anArray, N);
+  test_rt->t2mm_memcpy(N,anArray, N*sizeof(UpDown::word_t));
   printf("\nCopying from updown to top\n");
-  test_rt->mm2t_memcpy(N,anArray2, N);
+  test_rt->mm2t_memcpy(N,anArray2, N*sizeof(UpDown::word_t));
 
   for (int i = 0; i < N; i++)
     printf("AnArray2[%d] = %d\n", i, anArray2[i]);

@@ -235,7 +235,7 @@ public:
    * a way to express this? The runtime is doing some heavy lifting here that
    * is translating things to physical memory
    */
-  void t2ud_memcpy(ptr_t data, uint64_t size, uint8_t ud_id, uint8_t lane_num,
+  void t2ud_memcpy(void* data, uint64_t size, uint8_t ud_id, uint8_t lane_num,
                    uint32_t offset);
 
   /**
@@ -252,7 +252,7 @@ public:
    * a way to express this? The runtime is doing some heavy lifting here that
    * is translating things to physical memory
    */
-  void ud2t_memcpy(ptr_t data, uint64_t size, uint8_t ud_id, uint8_t lane_num,
+  void ud2t_memcpy(void* data, uint64_t size, uint8_t ud_id, uint8_t lane_num,
                    uint32_t offset);
 
   /**

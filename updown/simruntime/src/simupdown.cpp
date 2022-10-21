@@ -69,7 +69,7 @@ void SimUDRuntime_t::initPythonInterface(EmulatorLogLevel printLevel) {
     }
   }
   upstream_pyintf->set_print_level(printLevel);
-  
+
   delete fd;
 }
 
@@ -271,27 +271,28 @@ void SimUDRuntime_t::start_exec(uint8_t ud_id, uint8_t lane_num) {
     start_exec(other_lane.first, other_lane.second);
 }
 
-void SimUDRuntime_t::t2ud_memcpy(ptr_t data, uint64_t size, uint8_t ud_id,
+void SimUDRuntime_t::t2ud_memcpy(void* data, uint64_t size, uint8_t ud_id,
                                  uint8_t lane_num, uint32_t offset) {
   UDRuntime_t::t2ud_memcpy(data, size, ud_id, lane_num, offset);
   if (!python_enabled) return;
   uint64_t addr = UDRuntime_t::get_lane_physical_memory(ud_id, lane_num, offset);
-  for (int i = 0; i < size; i++) {
+  ptr_t data_ptr = reinterpret_cast<word_t*>(data);
+  for (int i = 0; i < size/sizeof(word_t); i++) {
     // Address is local
-    upstream_pyintf->insert_scratch(addr, *data);
+    upstream_pyintf->insert_scratch(addr, *data_ptr);
     addr += sizeof(word_t);
-    data++;
+    data_ptr++;
   }
 }
 
-void SimUDRuntime_t::ud2t_memcpy(ptr_t data, uint64_t size, uint8_t ud_id,
+void SimUDRuntime_t::ud2t_memcpy(void* data, uint64_t size, uint8_t ud_id,
                                  uint8_t lane_num, uint32_t offset) {
   uint64_t addr = UDRuntime_t::get_lane_physical_memory(ud_id, lane_num, offset);
   uint64_t apply_offset = UDRuntime_t::get_lane_aligned_offset(ud_id, lane_num, offset);
   apply_offset /= sizeof(word_t);
   ptr_t base = BaseAddrs.spaddr + apply_offset;
   if (python_enabled)
-    upstream_pyintf->read_scratch(addr, reinterpret_cast<uint8_t *>(base), size);
+    upstream_pyintf->read_scratch(addr, reinterpret_cast<uint8_t *>(base), size/sizeof(word_t));
   UDRuntime_t::ud2t_memcpy(data, size, ud_id, lane_num, offset);
 }
 

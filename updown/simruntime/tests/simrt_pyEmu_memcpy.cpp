@@ -16,14 +16,14 @@ int main() {
 
   // Copy element to [0,0,0]
   test_rt->t2ud_memcpy(data /*ptr*/, 
-                       N*sizeof(UpDown::word_t) /*size*/, 
+                       N*sizeof(uint32_t) /*size*/, 
                        0 /*ud_id*/, 
                        0 /*lane_num*/, 
                        0 /*offset*/);
   
   // Copy element from [0,0,0]
   test_rt->ud2t_memcpy(data /*ptr*/, 
-                       N*sizeof(UpDown::word_t) /*size*/, 
+                       N*sizeof(uint32_t) /*size*/, 
                        0 /*ud_id*/, 
                        0 /*lane_num*/, 
                        0 /*offset*/);
@@ -33,7 +33,7 @@ int main() {
 
   // Copy element to [0,16,16]
   test_rt->t2ud_memcpy(data /*ptr*/,
-                       N*sizeof(UpDown::word_t) /*size*/,
+                       N*sizeof(uint32_t) /*size*/,
                        0 /*ud_id*/,
                        0 /*lane_num*/,
                        16 /*offset*/);
