@@ -620,36 +620,36 @@ class LM_scratchpad:
     def read_2bytes(self, byte_addr):
         word = self.DataStore[byte_addr >> 2]
         next_word = self.DataStore[(byte_addr >> 2) + 1]
-        self.metric.up_lm_read_bytes += 2
+        # self.metric.up_lm_read_bytes += 2
         if byte_addr % 4 == 0:
-            self.metric.cycle += 1
+            # self.metric.cycle += 1
             return uint16((word & 0xFFFF0000) >> 16)
         elif byte_addr % 4 == 2:
-            self.metric.cycle += 1
+            # self.metric.cycle += 1
             return uint16(word & 0x0000FFFF)
         elif byte_addr % 4 == 1:
-            self.metric.cycle += 1
+            # self.metric.cycle += 1
             return uint16((word & 0x00FFFF00) >> 8)
         else:
-            self.metric.cycle += 2
+            # self.metric.cycle += 2
             return uint16((word & 0xFF) << 8 | (next_word & 0xFF000000) >> 24)
 
     def write_2bytes(self, byte_addr, byte_data):
         wd_old_data = self.DataStore[byte_addr >> 2]
         wd_next_data = self.DataStore[(byte_addr >> 2) + 1]
-        self.metric.up_lm_write_bytes += 2
+        # self.metric.up_lm_write_bytes += 2
 
         if byte_addr % 4 == 0:
-            self.metric.cycle += 1
+            # self.metric.cycle += 1
             wd_new_data = (byte_data & 0x0000FFFF) << 16 | (wd_old_data & 0xFFFF)
         elif byte_addr % 4 == 2:
-            self.metric.cycle += 1
+            # self.metric.cycle += 1
             wd_new_data = byte_data & 0xFFFF | (wd_old_data & 0xFFFF0000)
         elif byte_addr % 4 == 1:
-            self.metric.cycle += 1
+            # self.metric.cycle += 1
             wd_new_data = (byte_data & 0xFFFF) << 8 | (wd_old_data & 0xFF0000FF)
         else:
-            self.metric.cycle += 2
+            # self.metric.cycle += 2
             wd_new_data = (byte_data & 0xFFFF) >> 8 | (wd_old_data & 0xFFFFFF00)
             wd_next_data = (byte_data & 0xFF) << 24 | (wd_next_data & 0x00FFFFFF)
             self.DataStore[(byte_addr >> 2) + 1] = uint32(wd_next_data)
@@ -658,8 +658,8 @@ class LM_scratchpad:
 
     def read_byte(self, byte_addr):
         word = self.DataStore[byte_addr >> 2]
-        self.metric.cycle += 1
-        self.metric.up_lm_read_bytes += 1
+        # self.metric.cycle += 1
+        # self.metric.up_lm_read_bytes += 1
         if byte_addr % 4 == 0:
             return uint8((word & 0xFF000000) >> 24)
         elif byte_addr % 4 == 1:
@@ -671,8 +671,8 @@ class LM_scratchpad:
 
     def write_byte(self, byte_addr, byte_data):
         wd_old_data = self.DataStore[byte_addr >> 2]
-        self.metric.cycle += 1
-        self.metric.up_lm_write_bytes += 1
+        # self.metric.cycle += 1
+        # self.metric.up_lm_write_bytes += 1
         if byte_addr % 4 == 0:
             wd_new_data = (byte_data & 0x000000FF) << 24 | wd_old_data & 0x00FFFFFF
         elif byte_addr % 4 == 1:

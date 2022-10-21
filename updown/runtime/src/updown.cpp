@@ -98,14 +98,14 @@ void UDRuntime_t::mm_free(void *ptr) {
 
 void UDRuntime_t::mm2t_memcpy(uint64_t offset, void* dst, uint64_t size) {
   ptr_t src = BaseAddrs.mmaddr + offset;
-  UPDOWN_INFOMSG("Copying %lu words from mapped memory (%lX = %d) to top (%lX = %d)",
+  UPDOWN_INFOMSG("Copying %lu bytes from mapped memory (%lX = %d) to top (%lX = %d)",
                  size, reinterpret_cast<uint64_t>(src), *src, reinterpret_cast<uint64_t>(dst), *reinterpret_cast<word_t*>(dst));
   std::memcpy(dst, src, size);
 }
 
 void UDRuntime_t::t2mm_memcpy(uint64_t offset, void* src, uint64_t size) {
   ptr_t dst = BaseAddrs.mmaddr + offset;
-  UPDOWN_INFOMSG("Copying %lu words from top (%lX = %d) to mapped memory (%lX = %d)",
+  UPDOWN_INFOMSG("Copying %lu bytes from top (%lX = %d) to mapped memory (%lX = %d)",
                  size, reinterpret_cast<uint64_t>(src), *reinterpret_cast<word_t*>(src), reinterpret_cast<uint64_t>(dst), *dst);
   std::memcpy(dst, src, size);
 }
@@ -114,7 +114,7 @@ void UDRuntime_t::t2ud_memcpy(void* data, uint64_t size,  uint8_t ud_id, uint8_t
   uint64_t apply_offset = get_lane_aligned_offset(ud_id, lane_num, offset);
   apply_offset /= sizeof(word_t);
   std::memcpy(BaseAddrs.spaddr + apply_offset, data, size);
-  UPDOWN_INFOMSG("Copying %lu words from Top to UD %u, Lane %u, offset %u. Signal in 0x%lX",
+  UPDOWN_INFOMSG("Copying %lu bytes from Top to UD %u, Lane %u, offset %u. Signal in 0x%lX",
                  size, ud_id, lane_num, offset,
                  reinterpret_cast<uint64_t>(BaseAddrs.spaddr + apply_offset));
 }
@@ -123,7 +123,7 @@ void UDRuntime_t::ud2t_memcpy(void* data, uint64_t size, uint8_t ud_id, uint8_t 
   uint64_t apply_offset = get_lane_aligned_offset(ud_id, lane_num, offset);
   apply_offset /= sizeof(word_t);
   std::memcpy(data, BaseAddrs.spaddr + apply_offset, size);
-  UPDOWN_INFOMSG("Copying %lu words from UD %u, Lane %u to Top, offset %u. Signal in 0x%lX",
+  UPDOWN_INFOMSG("Copying %lu bytes from UD %u, Lane %u to Top, offset %u. Signal in 0x%lX",
                  size, ud_id, lane_num, offset,
                  reinterpret_cast<uint64_t>(BaseAddrs.spaddr + apply_offset));
 }
