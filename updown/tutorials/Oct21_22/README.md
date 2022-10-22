@@ -231,3 +231,287 @@ UpDown::SimUDRuntime_t *test_rt = new UpDown::SimUDRuntime_t("addOneEFA", "AddOn
 Build again and execute, you should be able to see each UpDown instruction being executed.
 
 
+## Gather program
+
+This is another fun program that demonstrates the flexibility of UpDown. In this program we would like to change the view that the top has of a data structure in DRAM. Instead of fetching the whole data structure, we gather the elements we want from DRAM into an array representation into the scratchpad memory, such that it can be read by the top directly. 
+
+In the code below, the first thing we do is modify the machine configuration to consider up to 64 lanes. 
+
+The top program allocates an array into the mapped memory `mm_malloc`. This address corresponds to a DRAM pointer. Mapped memory is necessary because the lack of support for virtual address translation in the UpDown. Therefore, we get a pointer that can be used by both the top and the downstream to read directly.
+
+Following we initialize the first position of the scratchpad memory of each UpDown lane. This is later on used to determine when the program has finished.
+
+An event is created per lane. Each lane is assigned a chunk of the original array. The event has the following five operands:
+
+* **DRAM Pointer in Operands 0 and 1:** Since top pointers are 64 bits, and updown operands are 32 bits, we need 2 operands to hold pointers.
+* **Initial pointer to memeory in Operand 2:** Each lane will be in charge of a chunk. This pointer refers to the beginning of the chunk, bypassing the elements of the struct that are not to be copied. 
+* **Distance between elements in Operand 3:** Since we want to skip elements, we can use this operand to know how many elements we need to skip. This is the size of the struct.
+* **Chunk size in Operand 4:** This is how many elements to fetch for each lane. This is, the size of the chunk that each lane is assigned. 
+
+We send an event to each lane that takes place in the computation, initialize the execution, wait for it to complete, and finally fetch one element at from scratchpad memory into the top (i.e. `ud2t_memcpy`).
+
+Following is the code for the top:
+
+```C++
+//// Copy and paste this to a file name mainStructArray.cpp
+#include "simupdown.h"
+
+#define N 100
+#define CHUNK 10
+
+struct myStruct {
+  int a;
+  int b;
+  int c;
+  int d;
+};
+
+int main() {
+  // Set up machine parameters
+  UpDown::ud_machine_t machine;
+  machine.NumLanes = 64;
+
+  // Default configurations runtime
+  UpDown::SimUDRuntime_t *test_rt = new UpDown::SimUDRuntime_t(machine, "structArrayEFA", "structArray", "./", UpDown::EmulatorLogLevel::NONE);
+
+  printf("=== Base Addresses ===\n");
+  test_rt->dumpBaseAddrs();
+  printf("\n=== Machine Config ===\n");
+  test_rt->dumpMachineConfig();
+
+  // Allocate the array where the top and updown can see it:
+  myStruct* str = reinterpret_cast<myStruct*>(test_rt->mm_malloc(N*sizeof(myStruct)));
+
+  // Populate the array of structs
+  for (int i = 0; i < N; i++)
+    str[i].c = i+1;
+
+  // Initialize Scratchpad memory
+  // The first location of each lane will be used to check completion of code
+  for (int i = 0; i < N/CHUNK; i++) {
+    UpDown::word_t value = 0;
+    test_rt->t2ud_memcpy(&value /*Pointer to top data*/, 
+                         sizeof(UpDown::word_t) /*Size in bytes*/,
+                         0 /*UD ID*/,
+                         i /*Lane ID*/,
+                         0 /*Offset*/);
+  }
+
+  // operands
+  // 0 and 1: Pointer to DRAM (operands are 32 bits, pointers are 64 bits)
+  // 2: Initial Offset to memory
+  // 3: Distance between elements
+  // 4: Number of elements to fetch
+  UpDown::word_t ops_data[5];
+  UpDown::operands_t ops(5, ops_data);
+  ops.set_operands(0,2,&str);
+  ops.set_operand(3, sizeof(myStruct)); // Assume N divisible by CHUNK
+  ops.set_operand(4, CHUNK);
+
+  for (int i = 0; i < N/CHUNK; i++) {
+    // We will fetch c, which is offset by a, and b. Pointer arithmetic may be better here
+    ops.set_operand(2, sizeof(myStruct)*i*CHUNK + sizeof(int)*2);
+    // Events with operands
+    UpDown::event_t evnt_ops(0 /*Event Label*/,
+                             0 /*UD ID*/,
+                             i /*Lane ID*/,
+                             UpDown::ANY_THREAD /*Thread ID*/,
+                             &ops /*Operands*/);
+    test_rt->send_event(evnt_ops);
+    test_rt->start_exec(0,i);
+  }
+
+  for (int i = 0; i < N/CHUNK; i++) {
+    test_rt->test_wait_addr(0,i,0,1);
+    for (int j = 0; j < CHUNK; j++) {
+      int val;
+      // Skip the first element since it is our termination signal
+      // Access the other elements one by one
+      uint32_t offset = sizeof(UpDown::word_t) + j*sizeof(int);
+      test_rt->ud2t_memcpy(&val, sizeof(int), 0, i, offset);
+      printf("str[%d].c = %d\n", i*CHUNK + j, val);
+    }
+  }
+
+  return 0;
+}
+
+```
+The updown program obtains the elements from the operand buffer and save them into registers. After a yield operation, the operand buffer is emptied. Only those operands that need to be saved are stored into a register (i.e. `mov_ob2reg`). Other elements are accessed directly through the corresponding operand buffer register (e.g. `OB_3` in line `add OB_3 UDPR_2 UDPR_2`). Multiple read events are sent to DRAM (i.e. `send_dmlm_ld_wret`). All of them are associated with the *read_return* transition. Once a read comes back, the `tran1` transition is executed. The actions of this transition will store the value read from DRAM into LM (Local memory == scratchpad memory) by using `mov_reg2lm OB_0 UDPR_6 4`. When all the *CHUNK* elements have been fetch, a `yield_terminate` action is executed. Otherwise, a `yield` is executed, such that we wait for the other read events. Per lane, there are *CHUNK+1* number of events: The initial event created by the top, and *CHUNK* other events created by reading DRAM. 
+
+And the UpDown program:
+
+```Python
+from EFA import *
+
+def structArray():
+    efa = EFA([])
+    efa.code_level = 'machine'
+    
+    state0 = State() #Initial State
+    efa.add_initId(state0.state_id)
+    efa.add_state(state0)
+
+    #Add events to dictionary 
+    event_map = {
+        'gather':0,
+        'read_return':1,
+    }
+
+    tran0 = state0.writeTransition("eventCarry", state0, state0, event_map['gather'])
+    tran0.writeAction("mov_ob2ear OB_0_1 EAR_0")                        #0 DRAM src addr
+    tran0.writeAction("mov_ob2reg OB_2 UDPR_2")                         #2 Initial offset to memory
+    tran0.writeAction("mov_ob2reg OB_4 UDPR_4")                         #4 Number of elements to fetch
+    tran0.writeAction("mov_imm2reg UDPR_5 0")                           # Initialize loop counter
+
+    tran0.writeAction("send_loop: ble UDPR_4 UDPR_5 reads_done")                       # Loop comparison
+    tran0.writeAction(f"send_dmlm_ld_wret UDPR_2 {event_map['read_return']} 4 0")      # Read 4 bytes from EAR_0 plus UDPR_2 offset
+    tran0.writeAction("add OB_3 UDPR_2 UDPR_2")                                         # Increment offset by distance between elements
+    tran0.writeAction("addi UDPR_5 UDPR_5 1")                                          # Increment iteration variable
+    tran0.writeAction("jmp send_loop")                                                 # Back to beginning of loop
+    tran0.writeAction("reads_done: mov_imm2reg UDPR_5 0")                              # Reset iteration variable for when reads come back
+    tran0.writeAction("lshift_add_imm LID UDPR_6 16 4")                                # Set memory location to store elements in SPmemory. Skip first element, it is a flag
+    tran0.writeAction("yield 5")                                                       # Yield and consume 5 elements from the Operand buffer
+
+    tran1 = state0.writeTransition("eventCarry", state0, state0, event_map['read_return'])
+    
+    tran1.writeAction("mov_reg2lm OB_0 UDPR_6 4")                       # Store value to local memory
+    tran1.writeAction("addi UDPR_5 UDPR_5 1")                           # Increment read counter
+    tran1.writeAction("addi UDPR_6 UDPR_6 4")                           # Increment local memory pointer
+    tran1.writeAction("bge UDPR_5 UDPR_4 reads_done")                   # Check if we are done receiving elements
+    tran1.writeAction("yield 1")                                        # We have not finished. Yield for next event
+    tran1.writeAction("reads_done: lshift_add_imm LID UDPR_1 16 0")     # We are finished, set pointer to beginning of local memory
+    tran1.writeAction("mov_imm2reg UDPR_2 1")                           # Set register to 1
+    tran1.writeAction("mov_reg2lm UDPR_2 UDPR_1 4")                     # Set flag to 1
+    tran1.writeAction("yield_terminate 1")                              # Terminate event
+
+    return efa
+```
+
+Without debug information, the output is as follows:
+
+```
+=== Base Addresses ===
+  mmaddr     = 0x7F5C68C7A010
+  spaddr    = 0x7F5BE8C79010
+  ctrlAddr  = 0x7F5BE8A78010
+
+=== Machine Config ===
+  MapMemBase          = 0x7F5C68C7A010
+  UDbase              = 0x7F5BE8C79010
+  SPMemBase           = 0x7F5BE8C79010
+  ControlBase         = 0x7F5BE8A78010
+  EventQueueOffset    = (0x0)0
+  OperandQueueOffset  = (0x1)1
+  StartExecOffset     = (0x2)2
+  LockOffset          = (0x3)3
+  CapNumUDs           = (0x80)128
+  CapNumLanes         = (0x80)128
+  CapSPmemPerLane     = (0x20000)131072
+  CapControlPerLane   = (0x80)128
+  NumUDs              = (0x1)1
+  NumLanes            = (0x40)64
+  MapMemSize          = (0x100000000)4294967296
+  SPBankSize          = (0x10000)65536
+  SPBankSizeWords     = (0x40000)262144
+str[0].c = 1
+str[1].c = 2
+str[2].c = 3
+str[3].c = 4
+str[4].c = 5
+str[5].c = 6
+str[6].c = 7
+str[7].c = 8
+str[8].c = 9
+str[9].c = 10
+str[10].c = 11
+str[11].c = 12
+str[12].c = 13
+str[13].c = 14
+str[14].c = 15
+str[15].c = 16
+str[16].c = 17
+str[17].c = 18
+str[18].c = 19
+str[19].c = 20
+str[20].c = 21
+str[21].c = 22
+str[22].c = 23
+str[23].c = 24
+str[24].c = 25
+str[25].c = 26
+str[26].c = 27
+str[27].c = 28
+str[28].c = 29
+str[29].c = 30
+str[30].c = 31
+str[31].c = 32
+str[32].c = 33
+str[33].c = 34
+str[34].c = 35
+str[35].c = 36
+str[36].c = 37
+str[37].c = 38
+str[38].c = 39
+str[39].c = 40
+str[40].c = 41
+str[41].c = 42
+str[42].c = 43
+str[43].c = 44
+str[44].c = 45
+str[45].c = 46
+str[46].c = 47
+str[47].c = 48
+str[48].c = 49
+str[49].c = 50
+str[50].c = 51
+str[51].c = 52
+str[52].c = 53
+str[53].c = 54
+str[54].c = 55
+str[55].c = 56
+str[56].c = 57
+str[57].c = 58
+str[58].c = 59
+str[59].c = 60
+str[60].c = 61
+str[61].c = 62
+str[62].c = 63
+str[63].c = 64
+str[64].c = 65
+str[65].c = 66
+str[66].c = 67
+str[67].c = 68
+str[68].c = 69
+str[69].c = 70
+str[70].c = 71
+str[71].c = 72
+str[72].c = 73
+str[73].c = 74
+str[74].c = 75
+str[75].c = 76
+str[76].c = 77
+str[77].c = 78
+str[78].c = 79
+str[79].c = 80
+str[80].c = 81
+str[81].c = 82
+str[82].c = 83
+str[83].c = 84
+str[84].c = 85
+str[85].c = 86
+str[86].c = 87
+str[87].c = 88
+str[88].c = 89
+str[89].c = 90
+str[90].c = 91
+str[91].c = 92
+str[92].c = 93
+str[93].c = 94
+str[94].c = 95
+str[95].c = 96
+str[96].c = 97
+str[97].c = 98
+str[98].c = 99
+str[99].c = 100
+```
