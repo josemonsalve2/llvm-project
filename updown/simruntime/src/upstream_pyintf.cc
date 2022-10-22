@@ -169,6 +169,8 @@ void Upstream_PyIntf::insert_scratch(uint32_t saddr, uint32_t sdata) {
 void Upstream_PyIntf::read_scratch(uint32_t saddr, uint8_t *data,
                                    uint32_t size) {
   PyObject *res_scratch;
+  UPDOWN_INFOMSG("Reading %d bytes, from address (%u)0x%X, into pointer 0x%lX",
+                  size, saddr, saddr, reinterpret_cast<uint64_t>(data));
   if (size == 1) {
     // data = new uint8_t[1];
     res_scratch =

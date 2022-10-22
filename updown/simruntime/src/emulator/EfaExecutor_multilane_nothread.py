@@ -760,12 +760,12 @@ class VirtualEngine:
 
     def read_scratch(self, addr, size):
         # pdb.set_trace()
+        printd("read_scratch:%d:%d" % (addr, self.LM.read_word(addr)), stage_trace)
         if size == 1:
             return self.LM.read_byte(addr)
         elif size == 2:
             return self.LM.read_2bytes(addr)
         elif size == 4:
-            printd("read_scratch:%d:%d" % (addr, self.LM.read_word(addr)), stage_trace)
             return self.LM.read_word(addr)
 
     def read_sbuffer(self, addr, size, lane_id):

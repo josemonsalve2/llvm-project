@@ -292,7 +292,7 @@ void SimUDRuntime_t::ud2t_memcpy(void* data, uint64_t size, uint8_t ud_id,
   apply_offset /= sizeof(word_t);
   ptr_t base = BaseAddrs.spaddr + apply_offset;
   if (python_enabled)
-    upstream_pyintf->read_scratch(addr, reinterpret_cast<uint8_t *>(base), size/sizeof(word_t));
+    upstream_pyintf->read_scratch(addr, reinterpret_cast<uint8_t *>(base), size);
   UDRuntime_t::ud2t_memcpy(data, size, ud_id, lane_num, offset);
 }
 
