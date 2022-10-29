@@ -45,12 +45,16 @@
   {                                                                            \
     printf("[UPDOWN_WARNING: %s:%i] " message "\n", __FILENAME__, __LINE__,    \
            ##__VA_ARGS__);                                                     \
+    fflush(stderr);                                                            \
+    fflush(stdout);                                                            \
   }
 #define UPDOWN_WARNING_IF(condition, message, ...)                             \
   {                                                                            \
     if (condition) {                                                           \
       printf("[UPDOWN_WARNING: %s:%i] " message "\n", __FILENAME__, __LINE__,  \
              ##__VA_ARGS__);                                                   \
+      fflush(stderr);                                                          \
+      fflush(stdout);                                                          \
     }                                                                          \
   }
 
@@ -67,9 +71,9 @@
     if (condition) {                                                           \
       fprintf(stderr, "[UPDOWN_ERROR: %s:%i] " message "\n", __FILENAME__,     \
               __LINE__, ##__VA_ARGS__);                                        \
-    fflush(stderr);                                                            \
-    fflush(stdout);                                                            \
-    assert(0 && message);                                                      \
+      fflush(stderr);                                                          \
+      fflush(stdout);                                                          \
+      assert(0 && message);                                                    \
     }                                                                          \
   }
 
@@ -77,12 +81,16 @@
   {                                                                            \
     printf("[UPDOWN_INFO: %s:%i] " message "\n", __FILENAME__, __LINE__,       \
            ##__VA_ARGS__);                                                     \
+    fflush(stderr);                                                            \
+    fflush(stdout);                                                            \
   }
 #define UPDOWN_INFOMSG_IF(condition, message, ...)                             \
   {                                                                            \
     if (condition) {                                                           \
       printf("[UPDOWN_INFO: %s:%i] " message "\n", __FILENAME__, __LINE__,     \
              ##__VA_ARGS__);                                                   \
+      fflush(stderr);                                                          \
+      fflush(stdout);                                                          \
     }                                                                          \
   }
 #else

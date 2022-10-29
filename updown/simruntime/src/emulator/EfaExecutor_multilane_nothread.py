@@ -823,6 +823,11 @@ class VirtualEngine:
         # pdb.set_trace()
         return self.lanes[lane_id].EvQ.getOccup()
 
+    def dumpEventQ(self, lane_id):
+        # pdb.set_trace()
+        for ev in self.lanes[lane_id].EvQ.events:
+            ev.printOut(stage_trace)
+
 
 # ======  UDP Lane Logical Architecture Class ======
 class VirtualEngineLane:

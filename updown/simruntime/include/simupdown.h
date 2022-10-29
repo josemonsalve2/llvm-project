@@ -124,6 +124,8 @@ private:
    */
   void initPythonInterface(EmulatorLogLevel printLevel);
 
+  void executeSingleLane(uint8_t ud_id, uint8_t lane_num);
+
 public:
   /**
    * @brief Construct a new SimUDRuntime_t object

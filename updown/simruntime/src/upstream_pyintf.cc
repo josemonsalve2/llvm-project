@@ -242,6 +242,10 @@ uint32_t Upstream_PyIntf::getEventQ_Size(int lane_id) {
   return evq_size;
 }
 
+void Upstream_PyIntf::dumpEventQueue(int lane_id) {
+  PyObject_CallMethod(pVirtEngine, "dumpEventQ", "(i)", lane_id);
+}
+
 int Upstream_PyIntf::execute(int cont_state, struct emulator_stats *em_stats,
                              int lane_id) {
   const char *arg = "O";

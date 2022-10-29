@@ -69,6 +69,7 @@ public:
   void read_scratch(uint32_t saddr, uint8_t *data, uint32_t size);
 
   uint32_t getEventQ_Size(int lane_id);
+  void dumpEventQueue(int lane_id);
 
   /*
    * Simple Wrapper for upstream emulator Virtual engine
