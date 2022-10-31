@@ -202,7 +202,7 @@ void SimUDRuntime_t::executeSingleLane(uint8_t ud_id, uint8_t lane_num) {
 
           ptr_t src = reinterpret_cast<ptr_t>(sdest);
           ptr_t dst = reinterpret_cast<ptr_t>(sdata);
-          std::memcpy(dst, src, ssize/4);
+          std::memcpy(dst, src, ssize);
           uint32_t edata = 0;
           uint32_t fake_cont = 0xffffffff;
           upstream_pyintf->insert_operand(
@@ -224,7 +224,7 @@ void SimUDRuntime_t::executeSingleLane(uint8_t ud_id, uint8_t lane_num) {
 
           ptr_t src = reinterpret_cast<ptr_t>(sdata);
           ptr_t dst = reinterpret_cast<ptr_t>(sdest);
-          std::memcpy(dst, src, ssize/4);
+          std::memcpy(dst, src, ssize);
 
           uint32_t fake_cont = 0xffffffff;
           upstream_pyintf->insert_operand(
