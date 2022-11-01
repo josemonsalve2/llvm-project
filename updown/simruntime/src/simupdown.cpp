@@ -93,8 +93,8 @@ void SimUDRuntime_t::executeSingleLane(uint8_t ud_id, uint8_t lane_num) {
   UPDOWN_INFOMSG("Executing a new event in lane %d. events left = %d", lane_num,
                   upstream_pyintf->getEventQ_Size(lane_num));
 
-  emulator_stats useless_stats;
-  int exec_state = upstream_pyintf->execute(0, &useless_stats, lane_num);
+  emulator_stats stats;
+  int exec_state = upstream_pyintf->execute(0, &stats, lane_num);
   UPDOWN_INFOMSG("C++ Process executed python process - Returned %d - events left %d",
                   exec_state, upstream_pyintf->getEventQ_Size(lane_num));
 
@@ -104,7 +104,7 @@ void SimUDRuntime_t::executeSingleLane(uint8_t ud_id, uint8_t lane_num) {
   //   0     -> Yeld without messages to send
   //   N > 0 -> Yeld with N messages to send. (N also available in
   //   sendmap[lane][0] below)
-  if (exec_state > 0) {
+  if (exec_state > 0 || ((exec_state == -1) && (stats.num_sends > 0))) {
     uint32_t numsend = sendmap[lane_num][0];
     UPDOWN_INFOMSG("Lane: %d Messages to be sent - numMessages :%d",
                     lane_num, numsend);
@@ -246,7 +246,8 @@ void SimUDRuntime_t::executeSingleLane(uint8_t ud_id, uint8_t lane_num) {
                                       sdest); // insert all collected operands
       }
     }
-  } else if (exec_state == -1) {
+  }
+  if (exec_state == -1) {
     UPDOWN_INFOMSG("Lane: %d Yielded and Terminated - Writing result now",
                     lane_num);
   }
