@@ -28,7 +28,7 @@ int main() {
 
   UpDown::operands_t op(5, ops);
 
-  UpDown::event_t ev(0,0,0,UpDown::ANY_THREAD, &op);
+  UpDown::event_t ev(0,0,0,UpDown::CREATE_THREAD, &op);
 
   test_rt->send_event(ev);
 

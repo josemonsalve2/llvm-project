@@ -53,7 +53,7 @@ typedef uint64_t word_t;
 #endif
 
 typedef word_t *ptr_t;
-static constexpr uint8_t ANY_THREAD = 0xFF;
+static constexpr uint8_t CREATE_THREAD = 0xFF;
 
 /**
  * @brief Class that holds information about the operands.
@@ -223,7 +223,7 @@ class event_t {
 private:
   uint8_t UdId;       // UpDown ID
   uint8_t LaneId;     // Lane ID
-  uint8_t ThreadId;   // Thread ID. ANY_THREAD for any thread
+  uint8_t ThreadId;   // Thread ID. CREATE_THREAD for any thread
   uint8_t EventLabel; // Number representing the event label
 
   operands_t *Operands; // Operands to be sent with this event
@@ -255,7 +255,7 @@ public:
    * @param operands Pointer to operands. Must be pre-initialized
    */
   event_t(uint8_t e_label, uint8_t udid, uint8_t lid = 0,
-          uint8_t tid = ANY_THREAD, operands_t *operands = nullptr)
+          uint8_t tid = CREATE_THREAD, operands_t *operands = nullptr)
       : UdId(udid), LaneId(lid), ThreadId(tid), EventLabel(e_label),
         Operands(operands),
         EventWord(
@@ -279,7 +279,7 @@ public:
    * @param tid Thread ID
    */
   void set_event(uint8_t e_label, uint8_t udid, uint8_t lid = 0,
-                 uint8_t tid = ANY_THREAD, operands_t *operands = nullptr) {
+                 uint8_t tid = CREATE_THREAD, operands_t *operands = nullptr) {
     EventLabel = e_label;
     LaneId = lid;
     UdId = udid;

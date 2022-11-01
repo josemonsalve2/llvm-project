@@ -59,7 +59,7 @@ int main() {
     UpDown::event_t evnt_ops(0 /*Event Label*/,
                              0 /*UD ID*/,
                              i /*Lane ID*/,
-                             UpDown::ANY_THREAD /*Thread ID*/,
+                             UpDown::CREATE_THREAD /*Thread ID*/,
                              &ops /*Operands*/);
     test_rt->send_event(evnt_ops);
     test_rt->start_exec(0,i);

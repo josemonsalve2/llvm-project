@@ -258,9 +258,6 @@ void SimUDRuntime_t::start_exec(uint8_t ud_id, uint8_t lane_num) {
   UDRuntime_t::start_exec(ud_id, lane_num);
   if (!python_enabled) return;
 
-  // Execute these after finishing all the events in this lane
-  std::vector<std::pair<uint8_t, uint8_t>> other_lanes_exec;
-
   // First we give priority to the event that was requested.
   executeSingleLane(ud_id, lane_num);
 

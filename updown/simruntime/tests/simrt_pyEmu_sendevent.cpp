@@ -25,7 +25,7 @@ int main() {
   UpDown::event_t evnt_ops(0 /*Event Label*/,
                            0 /*UD ID*/,
                            0 /*Lane ID*/,
-                           UpDown::ANY_THREAD /*Thread ID*/,
+                           UpDown::CREATE_THREAD /*Thread ID*/,
                            &ops /*Operands*/);
 
   printEvent(evnt_ops);

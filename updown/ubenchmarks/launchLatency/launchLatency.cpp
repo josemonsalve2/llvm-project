@@ -42,7 +42,7 @@ void launch(int total_cores, int core_num, int num_lanes, int num_threads,
     // Events with operands
     UpDown::event_t evnt_ops(
         0 /*Event Label*/, 0 /*UD ID*/, lane_num /*Lane ID*/,
-        UpDown::ANY_THREAD /*Thread ID*/, &ops /*Operands*/);
+        UpDown::CREATE_THREAD /*Thread ID*/, &ops /*Operands*/);
     rt.send_event(evnt_ops);
   }
 

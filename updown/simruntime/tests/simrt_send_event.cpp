@@ -32,7 +32,7 @@ int main() {
   UpDown::event_t evnt_ops2(1 /*Event Label*/,
                            0 /*UD ID*/,
                            16 /*Lane ID*/,
-                           UpDown::ANY_THREAD /*Thread ID*/,
+                           UpDown::CREATE_THREAD /*Thread ID*/,
                            &ops /*Operands*/);
   rt.send_event(evnt_ops2);
   rt.start_exec(0,16);
