@@ -80,10 +80,13 @@ void SimUDRuntime_t::send_event(event_t ev) {
   UDRuntime_t::send_event(ev);
   if (!python_enabled) return;
 
-  if (ev.get_NumOperands() != 0)
+  if (ev.get_NumOperands() != 0) {
     for (uint8_t i = 0; i < ev.get_NumOperands() + 1; i++)
       upstream_pyintf->insert_operand(ev.get_OperandsData()[i],
                                       ev.get_LaneId());
+  } else {
+    upstream_pyintf->insert_operand(0, ev.get_LaneId());
+  }
   upstream_pyintf->insert_event(ev.get_EventWord(), ev.get_NumOperands(),
                                 ev.get_LaneId());
 }
@@ -259,12 +262,10 @@ void SimUDRuntime_t::start_exec(uint8_t ud_id, uint8_t lane_num) {
   UDRuntime_t::start_exec(ud_id, lane_num);
   if (!python_enabled) return;
 
-  // First we give priority to the event that was requested.
-  executeSingleLane(ud_id, lane_num);
-
   // Then we do a round robin execution of all the lanes while
   // there is something executing
   bool something_exec;
+  uint64_t num_iterations = 0;
   do {
     something_exec = false;
     for (int ud = 0; ud < this->MachineConfig.NumUDs; ud++) {
@@ -277,7 +278,7 @@ void SimUDRuntime_t::start_exec(uint8_t ud_id, uint8_t lane_num) {
         }
       }
     }
-  } while(something_exec);
+  } while(something_exec && ++num_iterations < max_sim_iterations);
 }
 
 void SimUDRuntime_t::t2ud_memcpy(void* data, uint64_t size, uint8_t ud_id,
@@ -311,8 +312,10 @@ bool SimUDRuntime_t::test_addr(uint8_t ud_id, uint8_t lane_num, uint32_t offset,
   uint64_t apply_offset = UDRuntime_t::get_lane_aligned_offset(ud_id, lane_num, offset);
   apply_offset /= sizeof(word_t);
   ptr_t base = BaseAddrs.spaddr + apply_offset;
-  if (python_enabled)
+  if (python_enabled) {
+    start_exec(ud_id, lane_num);
     upstream_pyintf->read_scratch(addr, reinterpret_cast<uint8_t *>(base), sizeof(word_t));
+  }
   UDRuntime_t::test_addr(ud_id, lane_num, offset, expected);
 }
 

@@ -85,6 +85,10 @@ private:
   uint8_t *ScratchpadMemory;
   uint8_t *ControlMemory;
 
+  /// This controls how many iterations of UDP can progress before
+  /// the control is return to the top thread
+  uint64_t max_sim_iterations = 100;
+
   std::string programFile;
   std::string programName;
   std::string simulationDir;

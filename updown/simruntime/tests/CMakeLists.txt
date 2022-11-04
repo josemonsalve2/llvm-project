@@ -5,6 +5,7 @@ if (UPDOWNRT_ENABLE_TESTS)
         simrt_pyEmu_memcpy.cpp
         simrt_pyEmu_mm_memcpy.cpp
         simrt_pyEmu_sendevent.cpp
+        simrt_pyEmu_t2ud_signal.cpp
         simrt_memcpy.cpp
         simrt_mm_memcpy.cpp
         simrt_gather_dram.cpp
@@ -14,6 +15,7 @@ if (UPDOWNRT_ENABLE_TESTS)
         simpleEFA.py
         memcpyEFA.py
         gatherEFA.py
+        t2ud_signalEFA.py
     )
         set(UPDOWN_RUNTIME_TESTS_INSTALL_PATH "${UPDOWN_RUNTIME_INSTALL_DIR}/tests")
 

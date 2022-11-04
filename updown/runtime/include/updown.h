@@ -77,7 +77,10 @@ public:
    *
    * Set the Data pointer to null and NumOperands to 0
    */
-  operands_t() : NumOperands(0), Data(nullptr) {}
+  operands_t() : NumOperands(0),
+    Data((ptr_t)malloc(sizeof(word_t))) {
+      Data[0];
+    }
 
   /**
    * @brief Copy Constructor
