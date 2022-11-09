@@ -77,5 +77,7 @@ int main() {
     }
   }
 
+  delete test_rt;
+
   return 0;
 }

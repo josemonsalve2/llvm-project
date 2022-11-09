@@ -39,5 +39,6 @@ int main() {
   for (int i = 0; i < N; i++)
     printf("AnArray2[%d] = %d\n", i, mmArray2[i]);
 
+  delete test_rt;
   return 0;
 }

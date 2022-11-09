@@ -34,5 +34,6 @@ int main() {
 
   test_rt->test_wait_addr(0,0,0,100);
 
+  delete test_rt;
   return 0;
 }

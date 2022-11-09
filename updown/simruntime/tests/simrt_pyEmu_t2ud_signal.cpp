@@ -31,5 +31,6 @@ int main() {
 
   rt->test_addr(0,0,0,1);
 
+  delete rt;
   return 0;
 }

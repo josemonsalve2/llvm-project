@@ -292,6 +292,15 @@ public:
     delete ScratchpadMemory;
     delete ControlMemory;
     delete sendmap;
+    if (!python_enabled) return;
+    //remove temp files for python communication
+    for (unsigned int i = 0; i < MachineConfig.NumLanes; i++) {
+      std::string file_name = "./lane" + std::to_string(i) + "_send.txt";
+      UPDOWN_INFOMSG("Removing file %s", file_name.c_str());
+      if (remove(file_name.c_str()) != 0) {
+        UPDOWN_ERROR("unable to remove file %s", file_name.c_str());
+      }
+    }
   }
 };
 

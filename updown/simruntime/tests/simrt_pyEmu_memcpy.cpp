@@ -47,5 +47,6 @@ int main() {
   for (int i = 0; i < N; i++)
     test_rt->test_wait_addr(0,0,16+i*sizeof(UpDown::word_t),i);
 
+  delete test_rt;
   return 0;
 }
