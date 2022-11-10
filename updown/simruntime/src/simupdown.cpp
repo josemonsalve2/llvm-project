@@ -45,6 +45,11 @@ void SimUDRuntime_t::initPythonInterface(EmulatorLogLevel printLevel) {
                                         programName, simulationDir, 0,
                                         MachineConfig.SPBankSize, LogFileName);
 
+  // Get UPDOWN_SIM_ITERATIONS from env variable
+  if (char *EnvStr = getenv("UPDOWN_SIM_ITERATIONS"))
+      max_sim_iterations = std::stoi(EnvStr);
+  UPDOWN_INFOMSG("Running with UPDOWN_SIM_ITERATIONS = %d", max_sim_iterations);
+
   // This creates a set of files used to communicate with the python word
   // Each lane must have a file. The emulator class uses the same files to
   // read and write data.
@@ -278,7 +283,7 @@ void SimUDRuntime_t::start_exec(uint8_t ud_id, uint8_t lane_num) {
         }
       }
     }
-  } while(something_exec && ++num_iterations < max_sim_iterations);
+  } while(something_exec && (!max_sim_iterations || ++num_iterations < max_sim_iterations));
 }
 
 void SimUDRuntime_t::t2ud_memcpy(void* data, uint64_t size, uint8_t ud_id,
