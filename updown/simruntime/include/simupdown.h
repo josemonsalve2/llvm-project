@@ -37,6 +37,7 @@
 #include <cstring>
 #include <map>
 #include <utility>
+#include <string>
 
 #include "debug.h"
 #include "updown.h"
