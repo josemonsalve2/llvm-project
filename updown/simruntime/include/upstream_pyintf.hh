@@ -54,10 +54,10 @@ private:
 
 public:
   Upstream_PyIntf();
-  Upstream_PyIntf(int numlanes, std::string progfile, std::string efaname,
+  Upstream_PyIntf(int ud_id, int numlanes, std::string progfile, std::string efaname,
                   std::string simdir, int lm_mode, uint32_t lmsize,
                   std::string perf_log_file);
-  void insert_event(uint32_t edata, int numOb, int lane_id);
+  void insert_event(uint32_t edata, int numOb, int ud_id, int lane_id);
   void insert_operand(uint32_t odata, int lane_id);
 
   void set_print_level(int printLvl);

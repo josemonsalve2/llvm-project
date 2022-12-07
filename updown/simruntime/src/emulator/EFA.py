@@ -19,7 +19,6 @@ class PerfLogPayload(Enum):
     UD_QUEUE_STATS = auto()
     UD_LOCAL_MEM_STATS = auto()
     UD_MEM_INTF_STATS = auto()
-    SYS_MEM_INTF_STATS = auto()
 
 
 # ====== internal helper function ======
@@ -62,14 +61,12 @@ def GetAction(asm_inst):
         )
     elif ActionClass == "SPAction":
         action = SPAction(
-            operand.opcode, operand.event, operand.dst, operand.cont, operand.op1, operand.reglist, operand.addr_mode, operand.label
+            operand.opcode, operand.event, operand.dst, operand.cont, operand.op1, operand.reglist, operand.label
         )
     elif ActionClass == "PAction":
         action = PAction(operand.opcode, operand.formatstr, operand.reglist, operand.label)
     elif ActionClass == "PerflogAction":
         action = PerflogAction(operand.opcode, operand.perflog_mode, operand.perflog_payload_list, operand.perflog_msg_id, operand.formatstr, operand.reglist, operand.label)
-    elif ActionClass == "UserCounterAction":
-        action = UserCounterAction(operand.opcode, operand.userctr_mode, operand.userctr_num, operand.userctr_arg, operand.label)
     elif ActionClass == "YAction":
         action = YAction(operand.opcode, operand.imm, operand.label)
     else:
@@ -94,19 +91,22 @@ class Event:
         self.event_base = 0
         self.pthread_id = 0
         self.lane_num = 0
+        self.udid = 0
         self.thread_id = 0xFF  # to be assigned later
         self.cycle = 0
         # event_word - PTID[31:24]|TID[23:16]|EBASE[15:8]|ELABEL[7:0]
         self.event_word = (
-            ((int(self.lane_num) << 24) & 0xFF000000)
+            ((int(self.udid) << 30) & 0xC0000000)
+            | ((int(self.lane_num) << 24) & 0x3F000000)
             | ((int(self.thread_id) << 16) & 0x00FF0000)
             | ((int(self.event_base) << 8) & 0x0000FF00)
             | (int(self.event_label) & 0x000000FF)
         )
 
-    def setlanenum(self, lane_num):
-        self.lane_num = lane_num
-        self.event_word = (self.event_word & 0x00FFFFFF) | ((int(self.lane_num) << 24) & 0xFF000000)
+    def setlanenum(self, lane_num, udid):
+        self.lane_num = lane_num  & 0x3F
+        self.udid = udid & 0x3
+        self.event_word = (self.event_word & 0x00FFFFFF) |((int(self.udid) << 30) & 0xC0000000)   | ((int(self.lane_num) << 24) & 0x3F000000)
 
     def setthreadid(self, thread_id):
         self.thread_id = thread_id
@@ -115,6 +115,7 @@ class Event:
     def printOut(self, LEVEL):
         printd(
             "Event( ID: " + str(self.event_id)
+            + ", UDID:" + str(self.udid)
             + ", LaneID:" + str(self.lane_num)
             + ", ThreadID:" + str(self.thread_id)
             + ", eventLabel: " + str(self.event_label)
@@ -417,6 +418,9 @@ class EFA:
                 return s
         return None
 
+    def get_init_state(self):
+        return self.init_state_id
+
     def get_tran(self, trans_id):
         for s in self.states:
             for tr in s.trans:
@@ -476,8 +480,8 @@ class EFA:
         return self.udpsize
 
     def fixlabels(self):
-        # import pdb
-        # pdb.set_trace()
+        #import pdb
+        #pdb.set_trace()
         for state in self.states:
             for tran in state.trans:
                 for action in tran.actions:
@@ -489,22 +493,6 @@ class EFA:
                 if type(action).__name__ == "BAction":
                     if action.dst_issb == 2:
                         action.dst = self.sharedBlocklabels[k][action.dst]  # Assign seq num to dst
-
-    def fixlabels(self):
-        # import pdb
-        # pdb.set_trace()
-        for state in self.states:
-            for tran in state.trans:
-                for action in tran.actions:
-                    if type(action).__name__ == "BAction":
-                        if action.dst_issb == 2:
-                            action.dst = tran.labeldict[action.dst]  # Assign seq num to dst
-        for k, v in self.sharedBlock.items():
-            for action in v:
-                if type(action).__name__ == "BAction":
-                    if action.dst_issb == 2:
-                        action.dst = self.sharedBlocklabels[k][action.dst]  # Assign seq num to dst
-
 
 class Action(object):
     def __init__(self, opcode, dst, src, imm, label, last):
@@ -733,14 +721,14 @@ class SAction(object):
 
 
 class SPAction(object):
-    def __init__(self, opcode, event, dst, cont, op1, reglist, addr_mode):
+    def __init__(self, opcode, event, dst, cont, op1, reglist, label):
         self.opcode = opcode
         self.event = event
         self.dst = dst
         self.cont = cont
         self.op1 = op1
         self.reglist = reglist
-        self.addr_mode = addr_mode
+        self.label = label
 
     def printOut(self, LEVEL):
         printd(
@@ -748,7 +736,7 @@ class SPAction(object):
             + self.opcode + " "
             + str(self.event) + ","
             + str(self.dst) + ","
-            + str(self.addr_mode) + ","
+            + str(self.label) + ","
             + str(self.cont) + ","
             + str(self.op1)
             + ", RegNum:" + str(len(self.reglist)) + ","
@@ -762,7 +750,7 @@ class SPAction(object):
             and self.dst == ref.dst
             and self.cont == ref.cont
             and self.reglist == ref.reglist
-            and self.addr_mode == ref.addr_mode
+            and self.label == ref.label
             and self.event == ref.event
         ):
             return True
@@ -803,18 +791,6 @@ class PerflogAction(object):
         elif self.mode == 2:
             regstrlist = ",".join(self.reglist)
             printd("[" + self.opcode + "," + str(self.mode) + "," + str(self.payload_list) + "," + str(self.msg_id) + "," + str(self.fmtstr) + "," + str(regstrlist) + "]", LEVEL)
-
-
-class UserCounterAction(object):
-    def __init__(self, opcode, userctr_mode, userctr_num, userctr_arg, label):
-        self.opcode = opcode
-        self.mode = userctr_mode
-        self.ctr_num = userctr_num
-        self.arg = userctr_arg
-        self.label = label
-
-    def printOut(self, LEVEL):
-        printd("[" + self.opcode + "," + str(self.mode) + "," + str(self.ctr_num) + "," + str(self.arg) + "]", LEVEL)
 
 
 class YAction(object):

@@ -9,6 +9,7 @@ import struct
 import sys
 import threading
 import time
+import copy
 
 from bitstring import BitArray
 from numpy import *
@@ -19,7 +20,12 @@ from MachineCode import *
 from StattestsEFA import *
 
 # Import perf_logger
-# from _m5.perf_log import writePerfLogUpdownV2
+# from perf_log.perf_logger import PerfLogger
+# import perf_log.perf_log_packet_pb2 as perf_log_packet_pb2
+
+# sys.path.insert(1, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../perf_log')))
+# from perf_logger import PerfLogger
+# import perf_log_packet_pb2
 
 # ====== select  printing level ======
 # efa_util.printLevel(stage_trace)
@@ -83,7 +89,6 @@ class Metric:
         self.op_buff_util = []
         self.perf_file = None
         self.cycle = 0
-        self.curr_event_scyc = 0
         self.start_ticks = 0
         self.up_lm_read_bytes = 0
         self.up_lm_write_bytes = 0
@@ -108,31 +113,10 @@ class Metric:
         self.idle_cycles = 0
         self.last_exec_cycle = 0
         self.cmpswp_ins = 0
-        self.cmp_fail_count = 0
-        self.cmp_succ_count = 0
-        self.base_ins = 0
-        self.ins_for_iter = 0
-        self.vertex_per_lane = 0
-        self.edge_per_lane = 0
-        self.max_edge_per_lane = 0
-        self.frontier_edit_ins = 0
-        self.enqueue_num = 0
-        self.num_collision = 0
-        self.num_update = 0
-        self.num_send_rd = 0
-        self.num_hit = 0
         self.cycles_bins = [0] * 500
         self.cycles_bin_step = 200000
         self.event_q_len = 0
-        self.event_q_max = 0
-        self.event_q_mean = 0.0
-        self.event_q_sample_cnt = 0
         self.operand_q_len = 0
-        self.operand_q_max = 0
-        self.operand_q_mean = 0.0
-        self.operand_q_sample_cnt = 0
-        self.perf_log_enable = False
-        self.user_counters = [0] * 16
 
     
     def initMetrics(self):
@@ -261,20 +245,6 @@ class Metric:
             f.write("UpDRAMReadBytes:%d\n" % self.up_dram_read_bytes)
             f.write("UpDRAMWriteBytes:%d\n" % self.up_dram_write_bytes)
 
-            if sum(self.cmp_fail_count != 0):
-                f.write("NumOfCmpswpFail:%d\n" % self.cmp_fail_count)
-                f.write("NumOfCmpswpSucceed:%d\n" % self.cmp_succ_count)
-            f.write("NumOfVertex:%d\n" % self.vertex_per_lane)
-            f.write("NumOfEdge:%d\n" % self.edge_per_lane)
-            f.write("MaxDegree:%d\n" % self.max_edge_per_lane)
-            f.write("NumOfUpdate:%d\n" % self.num_update)
-            f.write("NumOfHit:%d\n" % self.num_hit)
-            f.write("NumOfCollision:%d\n" % self.num_collision)
-            f.write("NumOfSendRd:%d\n" % (self.num_send_rd))
-            f.write("NumOfSendEnqueue:%d\n" % self.enqueue_num)
-            f.write("FrontierEditIns:%d\n" % self.frontier_edit_ins)
-            f.write("CyclesForBaseOperations:%d\n" % (self.base_ins))
-            f.write("CyclesForInnerLoop:%d\n" % (self.ins_for_iter + self.base_ins))
             f.write("Histograms\n")
             f.write("ActionsPerEvent:")
             for key in sorted(self.ins_per_event):
@@ -296,60 +266,54 @@ class Metric:
             f.write("\n")
             f.close()
 
-    def write_perf_log(self, updown_id, lane_id, thread_id, event_base, event_label, payloads=set(), msg_id=None, msg_fmtstr="", msg_reglist=[]):
-        if not self.perf_log_enable:
+    def log_perf_stats(self, logger, cycle, updown_id, lane_id, thread_id, event_base, event_label, payloads=set(), msg_id=None, msg_fmtstr="", msg_reglist=[]):
+        if logger is None or len(payloads) == 0:
             return
-
-        en_msg = False
-        en_cycle = False
-        en_action = False
-        en_trans = False
-        en_queue = False
-        en_lm = False
-        en_dram = False
-        en_sys_dram = False
+        pkt = perf_log_packet_pb2.PerfLogPacket()
+        pkt.sim_timestamp = int(cycle * 500 + self.start_ticks)
+        cur_updown = pkt.updown.add()
+        cur_updown.updown_id = updown_id
+        cur_updown.lane_id = lane_id
+        cur_updown.thread_id = thread_id
+        cur_updown.event_base = event_base
+        cur_updown.event_label = event_label
         for cur_pl in payloads:
-            if int(cur_pl) == PerfLogPayload.UD_CYCLE_STATS.value:
-                en_cycle = True
-            elif int(cur_pl) == PerfLogPayload.UD_ACTION_STATS.value:
-                en_action = True
-            elif int(cur_pl) == PerfLogPayload.UD_TRANS_STATS.value:
-                en_trans = True
-            elif int(cur_pl) == PerfLogPayload.UD_QUEUE_STATS.value:
-                en_queue = True
-            elif int(cur_pl) == PerfLogPayload.UD_LOCAL_MEM_STATS.value:
-                en_lm = True
-            elif int(cur_pl) == PerfLogPayload.UD_MEM_INTF_STATS.value:
-                en_dram = True
-            elif int(cur_pl) == PerfLogPayload.SYS_MEM_INTF_STATS.value:
-                en_sys_dram = True
-        msg_str = ""
+            if cur_pl == PerfLogPayload.UD_CYCLE_STATS.value:
+                # cur_updown.cycle_stats.cycles = self.cycle
+                # cur_updown.cycle_stats.exec_cycles = self.exec_cycles
+                # cur_updown.cycle_stats.idle_cycles = self.idle_cycles
+                # cur_updown.cycle_stats.last_exec_cycles = self.last_exec_cycle
+                pass
+            elif cur_pl == PerfLogPayload.UD_ACTION_STATS.value:
+                cur_updown.action_stats.total_actions = self.total_acts
+                cur_updown.action_stats.message_actions = self.msg_ins
+                cur_updown.action_stats.move_actions = self.mov_ins
+                cur_updown.action_stats.alu_actions = self.al_ins
+                cur_updown.action_stats.branch_actions = self.branch_ins
+                cur_updown.action_stats.yield_actions = self.yld_ins
+                cur_updown.action_stats.cmpswp_actions = self.cmpswp_ins
+            elif cur_pl == PerfLogPayload.UD_TRANS_STATS.value:
+                cur_updown.trans_stats.total_trans = self.total_trans
+            elif cur_pl == PerfLogPayload.UD_QUEUE_STATS.value:
+                cur_updown.queue_stats.operand_q_len = self.operand_q_len
+                cur_updown.queue_stats.event_q_len = self.event_q_len
+            elif cur_pl == PerfLogPayload.UD_LOCAL_MEM_STATS.value:
+                cur_updown.local_mem_stats.read_bytes = self.up_lm_read_bytes
+                cur_updown.local_mem_stats.write_bytes = self.up_lm_write_bytes
+            elif cur_pl == PerfLogPayload.UD_MEM_INTF_STATS.value:
+                cur_updown.mem_intf_stats.read_bytes = self.up_dram_read_bytes
+                cur_updown.mem_intf_stats.write_bytes = self.up_dram_write_bytes
         if msg_id is not None:
-            en_msg = True
+            cur_updown.msg.id = msg_id
             regval = []
             for reg in msg_reglist:
+                cur_reg = cur_updown.msg.int_regs.add()
+                cur_reg.name = reg[0]
+                cur_reg.value = reg[1]
                 regval.append(reg[1])
-            msg_str = msg_fmtstr % (tuple(regval))
-
-        writePerfLogUpdownV2(
-           updown_id, lane_id, thread_id,  # IDs
-           event_base, event_label,  # event
-           # payloads
-           en_msg, en_cycle, en_action, en_trans, en_queue, en_lm, en_dram, en_sys_dram,
-           # message
-           (msg_id if isinstance(msg_id, int) else 0xFFFFFFFF), msg_str, msg_reglist,
-           # cycles
-           self.cycle - self.curr_event_scyc, 
-           # trans
-           self.total_trans,
-           # actions
-           self.total_acts, self.msg_ins, self.mov_ins, self.branch_ins,
-           self.al_ins, self.yld_ins, self.comp_ins, self.cmpswp_ins,
-           # queues
-           self.operand_q_len, self.event_q_len,
-           # local memory
-           self.up_lm_read_bytes, self.up_lm_write_bytes,
-        )
+            cur_updown.msg.msg = msg_fmtstr % (tuple(regval))
+        logger.write(pkt)
+        # print('!!!DEBUG!!!', file=sys.stderr)
 
 
 # ====== Activation Class is the basic unit of each stage ======
@@ -374,14 +338,13 @@ class Paction:
 
 
 class EventQueue:
-    def __init__(self, buffSize, metric):
+    def __init__(self, buffSize):
         self.size = buffSize
         self.events = []
         # for i in range(self.size):
         #    self.events.append(None)
         self.top = 0
         self.bottom = 0
-        self.metric = metric
 
     def isEmpty(self):
         return len(self.events) == 0
@@ -394,29 +357,11 @@ class EventQueue:
         # self.events[self.bottom]=event
         # self.bottom=(self.bottom+1) % self.size
         self.events.append(event)
-        self.metric.event_q_len = len(self.events)
-        # Update max
-        if self.metric.event_q_len > self.metric.event_q_max:
-            self.metric.event_q_max = self.metric.event_q_len
-        # Update mean
-        # use estimation to avoid exceeding max float
-        self.metric.event_q_mean = self.metric.event_q_mean + (self.metric.event_q_len - self.metric.event_q_mean) / (self.metric.event_q_sample_cnt + 1)
-        # self.metric.event_q_mean = (self.metric.event_q_mean * self.metric.event_q_sample_cnt + self.metric.event_q_len) / (self.metric.event_q_sample_cnt + 1)
-        self.metric.event_q_sample_cnt += 1
 
     def popEvent(self):
         # event = self.events[self.top]
         # self.top = (self.top+1) % self.size
-        if len(self.events) == 0:
-            printd("EventQ: removing more elements than available?", error)
-        event_out = self.events.pop(0)
-        self.metric.event_q_len = len(self.events)
-        # Update mean
-        # use estimation to avoid exceeding max float
-        self.metric.event_q_mean = self.metric.event_q_mean + (self.metric.event_q_len - self.metric.event_q_mean) / (self.metric.event_q_sample_cnt + 1)
-        # self.metric.event_q_mean = (self.metric.event_q_mean * self.metric.event_q_sample_cnt + self.metric.event_q_len) / (self.metric.event_q_sample_cnt + 1)
-        self.metric.event_q_sample_cnt += 1
-        return event_out
+        return self.events.pop(0)
 
     def getOccup(self):
         return len(self.events)
@@ -424,47 +369,29 @@ class EventQueue:
 
 
 class OpBuffer:
-    def __init__(self, buffSize, metric):
+    def __init__(self, buffSize):
         # self.size = buffSize
         self.operands = []
         self.operands_inuse = []
         self.base = 0
         self.last = 0
-        self.metric = metric
 
     def getOp(self, index):
-        # printd("RD_OBBUFER:base:%d, index:%d" % (self.base, index), progress_trace)
-        # return self.operands[self.base+index]
         return self.operands[index]
 
     def setOp(self, value):
         self.operands.append(value)
-        self.metric.operand_q_len = len(self.operands)
-        # Update max
-        if self.metric.operand_q_len > self.metric.operand_q_max:
-            self.metric.operand_q_max = self.metric.operand_q_len
-        # Update mean
-        # use estimation to avoid exceeding max float
-        self.metric.operand_q_mean = self.metric.operand_q_mean + (self.metric.operand_q_len - self.metric.operand_q_mean) / (self.metric.operand_q_sample_cnt + 1)
-        # self.metric.operand_q_mean = (self.metric.operand_q_mean * self.metric.operand_q_sample_cnt + self.metric.operand_q_len) / (self.metric.operand_q_sample_cnt + 1)
-        self.metric.operand_q_sample_cnt += 1
-        printd("OperandSize:%d, Value:%d" % (len(self.operands), value), stage_trace)
+        printd("OperandSize:%d, Value:%d" % (len(self.operands), value), full_trace)
 
     def clearOp(self, size):
         # self.operands_inuse[self.base+index]=0
-        printd("OperandSize:%d, ClearSize:%d" % (len(self.operands), size), stage_trace)
-        if size <= len(self.operands):
-            self.operands = self.operands[size :]
-            self.metric.operand_q_len = len(self.operands)
-        else:
-            self.operands.clear()
-            self.metric.operand_q_len = len(self.operands)
-            printd("OperandQ: removing more elements than available?", error)
-        # Update mean
-        # use estimation to avoid exceeding max float
-        self.metric.operand_q_mean = self.metric.operand_q_mean + (self.metric.operand_q_len - self.metric.operand_q_mean) / (self.metric.operand_q_sample_cnt + 1)
-        # self.metric.operand_q_mean = (self.metric.operand_q_mean * self.metric.operand_q_sample_cnt + self.metric.operand_q_len) / (self.metric.operand_q_sample_cnt + 1)
-        self.metric.operand_q_sample_cnt += 1
+        printd("OperandSize:%d, ClearSize:%d" % (len(self.operands), size), full_trace)
+        for i in range(int(size)):
+            if len(self.operands) > 0:
+                rem = self.operands.pop(0)
+                # print("Remove:%d" % rem)
+            else:
+                return
 
     @deprecate
     def isAvail(self, size):  # This has potential for different policies
@@ -494,6 +421,7 @@ class Thread:
         self.opbase = 0
         self.ret_tid = None
         self.ret_lane_id = None
+        self.ret_ud_id = None
         self.ret_event = None
         self.current_states = []
         self.ear = [0 for i in range(4)]
@@ -558,6 +486,9 @@ class ThreadStateTable:
 
     def getThread(self, tid):
         return self.threads[tid]
+    
+    def getActiveThreadCnt(self):
+        return len(self.usedtids)
 
 
 class LM_scratchpad:
@@ -692,29 +623,41 @@ class LM_scratchpad:
 # ====== UDP Processor with multiple lanes =========
 class VirtualEngine:
     # def __init__(self, num_lanes, dram_mem, top, perf_file):
-    def __init__(self, num_lanes, perf_file, sim, lmbanksize, tick_freq, perf_log_enable=0, perf_log_internal_enable=0):
-        # pdb.set_trace()
+    def __init__(self, udid, num_lanes, perf_file, sim, lmbanksize, tick_freq, perf_log_path=None, perf_log_internal=0):
         self.dram_mem = None
         self.top = None
         self.sim = sim
+        self.udid = udid
         self.outstanding_events = 0
         self.perf_file = perf_file
 
         self.tick_freq = tick_freq
-
+        # log_file_name = 'updown-perf-log-{}.bin'.format(datetime.now().isoformat())
+        # self.perf_logger = PerfLogger(os.path.join(os.environ.get('SIMPATH'), log_file_name), write=True)
+        self.perf_logger = None
+        if perf_log_path is not None:
+            self.perf_logger = PerfLogger(perf_log_path, write=True)
+            hdr = perf_log_packet_pb2.PerfLogHeader()
+            hdr.obj_id = 'updown-perf-log-{}'.format(datetime.now().isoformat())
+            hdr.tick_freq = self.tick_freq
+            self.perf_logger.write(hdr)
+            self.perf_logger.flush()
         self.perf_log_internal_enable = False
-        if perf_log_internal_enable > 0:
+        if perf_log_internal > 0:
             self.perf_log_internal_enable = True
 
         # self.LM = LM_scratchpad(65536*num_lanes)
         self.LM = LM_scratchpad(lmbanksize * num_lanes)
         self.num_lanes = num_lanes
         # self.lanes = [VirtualEngineLane(i, 1000, 5000, 32, self.dram_mem, self.top, self.LM, self.perf_file, self) for i in range(num_lanes)]
-        self.lanes = [VirtualEngineLane(i, 1000, self.LM, self.perf_file, perf_log_enable, self) for i in range(num_lanes)]
+        printd("Setting up %d lanes on UDID:%d"%(num_lanes, udid), stage_trace)
+        self.lanes = [VirtualEngineLane(self.udid, i, 4096, self.LM, self.perf_file, self) for i in range(num_lanes)]
         self.active_lanes = []
         self.lane_num_sends = {x: 0 for x in range(num_lanes)}
 
     def __del__(self):
+        if self.perf_logger is not None:
+            self.perf_logger.close()
         for ln in self.lanes:
             ln.send_mm.close()
 
@@ -748,7 +691,7 @@ class VirtualEngine:
             # print("All Lane Status: self.outstanding_events == %d" % self.outstanding_events)
             # pass
         # pdb.set_trace()
-        # print("self.outstanding_events == %d" % self.outstanding_events)
+        print("efa udpsize %d" % efa.udpsize)
         for i, l in enumerate(self.lanes):
             l.all_lanes_done = 1
 
@@ -760,12 +703,12 @@ class VirtualEngine:
 
     def read_scratch(self, addr, size):
         # pdb.set_trace()
-        printd("read_scratch:%d:%d" % (addr, self.LM.read_word(addr)), stage_trace)
         if size == 1:
             return self.LM.read_byte(addr)
         elif size == 2:
             return self.LM.read_2bytes(addr)
         elif size == 4:
+            printd("UDID:%d read_scratch:%d:%d" % (self.udid, addr, self.LM.read_word(addr)), stage_trace)
             return self.LM.read_word(addr)
 
     def read_sbuffer(self, addr, size, lane_id):
@@ -778,14 +721,16 @@ class VirtualEngine:
         self.lanes[lane_id].set_instream_bytes(addr, data)
 
     def write_scratch(self, addr, data):
-        printd("write_scratch:%d:%d" % (addr, data), stage_trace)
+        printd("UDID:%d write_scratch:%d:%d" % (self.udid, addr, data), stage_trace)
         self.LM.write_word(addr, data)
 
     def insert_event(self, lane_id, event):
         self.lanes[lane_id].EvQ.pushEvent(event)
+        self.lanes[lane_id].metric.event_q_len += 1
 
     def insert_operand(self, lane_id, opval):
         self.lanes[lane_id].OpBuffer.setOp(opval)
+        self.lanes[lane_id].metric.operand_q_len += 1
 
     # def setup_sim(self, efa, property_vec, SBPB_BEGIN=0, initID=[0], lane_id=-1):
     def setup_sim(self, efa, simdir, lm_addr_mode=0, SBPB_BEGIN=0, initID=[0], lane_id=-1):
@@ -805,7 +750,7 @@ class VirtualEngine:
             self.lanes[lane_id].all_lanes_done = 0
             self.lanes[lane_id].lane_state = "lane_init"
             self.lanes[lane_id].setAllLanes(self.lanes)
-            self.lanes[lane_id].setup_sim(efa, property_vec, simdir, lm_addr_mode, SBPB_BEGIN, initID)
+            self.lanes[lane_id].setup_sim(efa, simdir, lm_addr_mode, SBPB_BEGIN, initID)
 
     def executeEFA_simAPI(self, lane_id, start_timestamp):
         # pdb.set_trace()
@@ -832,28 +777,31 @@ class VirtualEngine:
 # ======  UDP Lane Logical Architecture Class ======
 class VirtualEngineLane:
     # def __init__(self, lane_id, numOfGpr, numOfOpBuffer, numOfEvQ, dram_mem, top, LM, perf_file, up):
-    def __init__(self, lane_id, numOfGpr, LM, perf_file, perf_log_enable, up):
+    def __init__(self, udid, lane_id, numOfGpr, LM, perf_file, up):
         self.clearStore(numOfGpr)
-        self.metric = Metric(lane_id)
-        self.metric.perf_log_enable = perf_log_enable
         self.laneudprsize = numOfGpr
         self.maxudpbase = 0
         self.udpthreadallocs = []
-        self.OpBuffer = OpBuffer(100, self.metric)
-        self.EvQ = EventQueue(100, self.metric)
+        self.OpBuffer = OpBuffer(100)
+        self.EvQ = EventQueue(100)
         self.curr_event = None
         self.curr_thread = None
         self.upproc = up
+        self.curr_event_scyc = None
         self.curr_event_sins = None
         self.fetch_event_sins = None
         self.match_event_sins = None
         self.dram = None
         self.all_lanes = []
         self.top = None
+        self.metric = Metric(lane_id)
+        # self.metric = None  # Metric(lane_id)
+        # self.metric = Metric(perf_file, lane_id)
         self.program = None
         self.SBPB_BEGIN = 0
         self.initID = [0]
         self.init_prop = None
+        self.udid = udid
         self.lane_id = lane_id
         self.tstable = ThreadStateTable(self.lane_id)
         self.LM = LM
@@ -989,7 +937,7 @@ class VirtualEngineLane:
             printd("Performing UDPR compaction! too many threads?", stage_trace)
             upbase = 0
             newlist = []
-            # printd(self.udpthreadallocs, stage_trace)
+            printd("UDID:%d Lane:%d Number of allocated threads:%d" % (self.udid, self.lane_id,self.tstable.getActiveThreadCnt()), stage_trace)
             for ubase, length, tid in self.udpthreadallocs:
                 if ubase > upbase:
                     # move registers
@@ -1046,22 +994,22 @@ class VirtualEngineLane:
 
     # def setup_sim(self, efa, property_vec, SBPB_BEGIN=0, initID=[0]):
     def setup_sim(self, efa, simdir, lm_addr_mode, SBPB_BEGIN=0, initID=[0]):
-        # pdb.set_trace()
-        self.program = efa
+        #pdb.set_trace()
+        self.program = copy.deepcopy(efa)
         self.SBPB_BEGIN = SBPB_BEGIN
-        self.initID = initID
+        self.initID = self.program.get_init_state()
         self.init_prop = [Property("event", None)]
         assert len(self.init_prop) == len(initID), "# of property must equal # of init states"
         self.pc = 0
         self.sim = 1
-        self.pname = "./" + simdir + "/lane" + str(self.lane_id) + "_send.txt"
+        self.pname = "./" + simdir + "/" + str(self.upproc.udid) + "_lane" + str(self.lane_id) + "_send.txt"
         with open(self.pname, "w+b") as fd:
-            for _ in range(262144):
+            for _ in range(64*262144):
                 val = struct.pack("i", 0)
                 fd.write(val)
         fd.close()
         with open(self.pname, "r+b") as fd:
-            self.send_mm = mmap.mmap(fd.fileno(), 1048576, access=mmap.ACCESS_WRITE, offset=0)
+            self.send_mm = mmap.mmap(fd.fileno(), 64*1048576, access=mmap.ACCESS_WRITE, offset=0)
             self.send_mm.seek(0)
             self.mm_offset = self.send_mm.tell() + 4
         if lm_addr_mode == 1:
@@ -1069,7 +1017,7 @@ class VirtualEngineLane:
         else:
             self.ds_base = 0
         self.program.calcUdpSize()
-        printd("Program UdpSize:%d" % self.program.getUdpSizeonly(), stage_trace)
+        #printd("Program UdpSize:%d" % self.program.getUdpSizeonly(), stage_trace)
 
         # self.metric = Metric(perf_file, lane_id)
 
@@ -1079,37 +1027,33 @@ class VirtualEngineLane:
         # state > 0 for num_sends
         # state = 0 if yielded and no sends
         # ====== efa program loaded to UpDown
+        #pdb.set_trace()
         self.metric.Setup(self.perf_file, self.lane_id, self.sim)
         self.metric.initMetrics()
         self.metric.start_ticks = start_timestamp
-        printd("Lane_Num:%d Lane State:%s, EvQ:%d" % (self.lane_id, self.lane_state, self.EvQ.getOccup()), stage_trace)
+        printd("UDID:%d Lane_Num:%d Lane State:%s, EvQ:%d" % (self.udid, self.lane_id, self.lane_state, self.EvQ.getOccup()), stage_trace)
 
         if self.upproc.perf_log_internal_enable:
-            self.metric.write_perf_log(0, self.lane_id, 0,
+            self.metric.log_perf_stats(self.upproc.perf_logger, self.metric.cycle,
+                                       0, self.lane_id, 0,
                                        # 0, self.lane_id, self.curr_thread.tid,
                                        0, 0,
                                        # self.curr_event.event_base, self.curr_event.event_label,
                                        set([PerfLogPayload.UD_QUEUE_STATS.value]))
 
-        self.metric.curr_event_scyc = self.metric.cycle
-        # if init:
-        #    SBPB_BEGIN=self.SBPB_BEGIN
-        #    property_vec = self.init_prop
-        #    initID=self.initID
-        #    init_state = []
+        self.curr_event_scyc = self.metric.cycle
         self.num_sends = 0
         self.mm_offset = 4
         self.actcount = self.metric.total_acts
-        # self.program = efa
         if self.EvQ.getOccup() == 0:
             # Lane has nothing to do
             # highly unlikely!
             self.return_state = 0
-            # return self.num_sends, self.return_state, (self.metric.cycle - self.metric.curr_event_scyc), (self.metric.total_acts - self.actcount)
+            # return self.num_sends, self.return_state, (self.metric.cycle - self.curr_event_scyc), (self.metric.total_acts - self.actcount)
             return (
                 self.num_sends,
                 self.return_state,
-                self.metric.cycle - self.metric.curr_event_scyc,
+                self.metric.cycle - self.curr_event_scyc,
                 self.metric.total_acts,
                 self.metric.idle_cycles,
                 self.metric.up_lm_read_bytes,
@@ -1122,26 +1066,6 @@ class VirtualEngineLane:
                 self.metric.comp_ins,
                 self.metric.cmpswp_ins,
                 self.metric.total_trans,
-                self.metric.event_q_max,
-                self.metric.event_q_mean,
-                self.metric.operand_q_max,
-                self.metric.operand_q_mean,
-                self.metric.user_counters[0],
-                self.metric.user_counters[1],
-                self.metric.user_counters[2],
-                self.metric.user_counters[3],
-                self.metric.user_counters[4],
-                self.metric.user_counters[5],
-                self.metric.user_counters[6],
-                self.metric.user_counters[7],
-                self.metric.user_counters[8],
-                self.metric.user_counters[9],
-                self.metric.user_counters[10],
-                self.metric.user_counters[11],
-                self.metric.user_counters[12],
-                self.metric.user_counters[13],
-                self.metric.user_counters[14],
-                self.metric.user_counters[15],
             )
         else:
             # Setup the execution state from the thread and start execution
@@ -1153,7 +1077,7 @@ class VirtualEngineLane:
                 # Create a new thread and set the states
                 newtid = self.tstable.getTID()
                 # pdb.set_trace()
-                printd("Lane:%d: Thread:%d" % (self.lane_id, newtid), stage_trace)
+                printd("UDID:%d Lane:%d: Thread:%d" % (self.udid, self.lane_id, newtid), stage_trace)
                 # Update event thread ID
                 # event.setthreadid(newtid)
                 # Do we need to compact Register file for slots?
@@ -1237,7 +1161,7 @@ class VirtualEngineLane:
             for activation in self.curr_thread.current_states:
                 next_activations, yield_term, yield_exec = self.executeActivation(activation, issue_data)
                 next_states = concatSet(next_states, next_activations)
-            printd("%d:finish stage:yield_term:%d, yield_exec:%d\n" % (self.lane_id, yield_term, yield_exec), stage_trace)
+            printd("UDID:%d Lane:%d:finish stage:yield_term:%d, yield_exec:%d\n" % (self.udid, self.lane_id, yield_term, yield_exec), stage_trace)
             self.printUDPR(full_trace)
             self.curr_thread.current_states = next_states
             for idx in range(len(self.UDPR)):
@@ -1246,11 +1170,11 @@ class VirtualEngineLane:
                 self.lane_state = "lane_term"
                 if self.EvQ.getOccup() == 0:
                     self.return_state = -1
-                    # return self.num_sends, self.return_state, (self.metric.cycle - self.metric.curr_event_scyc), (self.metric.total_acts - self.actcount)
+                    # return self.num_sends, self.return_state, (self.metric.cycle - self.curr_event_scyc), (self.metric.total_acts - self.actcount)
                     return (
                         self.num_sends,
                         self.return_state,
-                        self.metric.cycle - self.metric.curr_event_scyc,
+                        self.metric.cycle - self.curr_event_scyc,
                         self.metric.total_acts,
                         self.metric.idle_cycles,
                         self.metric.up_lm_read_bytes,
@@ -1263,36 +1187,16 @@ class VirtualEngineLane:
                         self.metric.comp_ins,
                         self.metric.cmpswp_ins,
                         self.metric.total_trans,
-                        self.metric.event_q_max,
-                        self.metric.event_q_mean,
-                        self.metric.operand_q_max,
-                        self.metric.operand_q_mean,
-                        self.metric.user_counters[0],
-                        self.metric.user_counters[1],
-                        self.metric.user_counters[2],
-                        self.metric.user_counters[3],
-                        self.metric.user_counters[4],
-                        self.metric.user_counters[5],
-                        self.metric.user_counters[6],
-                        self.metric.user_counters[7],
-                        self.metric.user_counters[8],
-                        self.metric.user_counters[9],
-                        self.metric.user_counters[10],
-                        self.metric.user_counters[11],
-                        self.metric.user_counters[12],
-                        self.metric.user_counters[13],
-                        self.metric.user_counters[14],
-                        self.metric.user_counters[15],
                     )
             if yield_exec == 1:
                 self.lane_state = "lane_yield"
                 if self.EvQ.getOccup() == 0:
                     self.return_state = 0 if self.num_sends == 0 else self.num_sends
-                    # return self.num_sends, self.return_state, (self.metric.cycle - self.metric.curr_event_scyc), (self.metric.total_acts - self.actcount)
+                    # return self.num_sends, self.return_state, (self.metric.cycle - self.curr_event_scyc), (self.metric.total_acts - self.actcount)
                     return (
                         self.num_sends,
                         self.return_state,
-                        self.metric.cycle - self.metric.curr_event_scyc,
+                        self.metric.cycle - self.curr_event_scyc,
                         self.metric.total_acts,
                         self.metric.idle_cycles,
                         self.metric.up_lm_read_bytes,
@@ -1305,26 +1209,6 @@ class VirtualEngineLane:
                         self.metric.comp_ins,
                         self.metric.cmpswp_ins,
                         self.metric.total_trans,
-                        self.metric.event_q_max,
-                        self.metric.event_q_mean,
-                        self.metric.operand_q_max,
-                        self.metric.operand_q_mean,
-                        self.metric.user_counters[0],
-                        self.metric.user_counters[1],
-                        self.metric.user_counters[2],
-                        self.metric.user_counters[3],
-                        self.metric.user_counters[4],
-                        self.metric.user_counters[5],
-                        self.metric.user_counters[6],
-                        self.metric.user_counters[7],
-                        self.metric.user_counters[8],
-                        self.metric.user_counters[9],
-                        self.metric.user_counters[10],
-                        self.metric.user_counters[11],
-                        self.metric.user_counters[12],
-                        self.metric.user_counters[13],
-                        self.metric.user_counters[14],
-                        self.metric.user_counters[15],
                     )
             else:
                 self.lane_state = "lane_init"
@@ -1336,7 +1220,7 @@ class VirtualEngineLane:
                 if top_event_tid == 0xFF or not self.tstable.threadexists(top_event_tid):
                     # Create a new thread and set the states
                     newtid = self.tstable.getTID()
-                    printd("Lane:%d: Thread:%d" % (self.lane_id, newtid), stage_trace)
+                    printd("UDID:%d Lane:%d: Thread:%d" % (self.udid, self.lane_id, newtid), stage_trace)
                     # Update event thread ID
                     # Do we need to compact Register file for slots?
                     self.check_and_compact(self.program.getUdpSizeonly())
@@ -1471,7 +1355,6 @@ class VirtualEngineLane:
             printd("%d:finish stage:yield_term:%d, yield_exec:%d\n" % (self.lane_id, yield_term, yield_exec), stage_trace)
             self.printUDPR(full_trace)
             self.curr_thread.current_states = next_states
-            # print("LaneID: %d yield_term: %d current_states: %d" %(self.lane_id, yield_term, len(current_states)))
             # print("After yield/yield_terminate:%s, EventQ Size:%d all_lanes:%d" % (self.lane_state, self.EvQ.getOccup(), self.all_lanes_done))
             # next_states = []
             for idx in range(len(self.UDPR)):
@@ -1554,18 +1437,20 @@ class VirtualEngineLane:
 
             if not self.all_lanes_done:
                 event = self.EvQ.popEvent()
+                # self.metric.event_q_len -= 1
                 if event.thread_id == 0xFF:
                     # Update event thread ID
                     event.setthreadid(self.curr_thread.tid)
                 continuation = self.rd_obbuffer("OB_0")
                 self.OpBuffer.clearOp(1)
+                # self.metric.operand_q_len -= 1
                 if (continuation & 0xFFFFFFFF) != 0xFFFFFFFF:
                     ret_event = continuation & 0x000000FF
                     ret_tid = (continuation & 0x00FF0000) >> 16
                     ret_lane_id = (continuation & 0xFF000000) >> 24
                     self.curr_thread.set_ret(ret_tid, ret_lane_id, ret_event)
 
-                #self.metric.curr_event_scyc = self.metric.cycle
+                #self.curr_event_scyc = self.metric.cycle
                 self.curr_event_sins = self.metric.total_acts
                 # Only for Triangle Count
                 if event.event_label == 0:
@@ -1584,7 +1469,6 @@ class VirtualEngineLane:
                     self.metric.last_exec_cycle = event.cycle
         else:
             trans = state.get_tran(input_label)
-        # printd("LaneID: %d EventQ after Activation EventPop:%d TransLen:%d" % (self.lane_id, self.EvQ.getOccup(), len(trans)), progress_trace)
 
         # ====== signature fail, look for majority transition
         # if not found, which means signature fail in machine level
@@ -1672,8 +1556,8 @@ class VirtualEngineLane:
                 # property, and fork multiple activations ======
                 action = transition.getAction(seqnum)
                 printd(
-                    "Lane: %d exec-Trans-action:%s, yield_exec:%d, seqnum:%d, numActions:%d"
-                    % (self.lane_id, action.opcode, yield_exec, seqnum, numActions),
+                    "UDID:%d Lane:%d exec-Trans-action:%s, yield_exec:%d, seqnum:%d, numActions:%d"
+                    % (self.udid, self.lane_id, action.opcode, yield_exec, seqnum, numActions),
                     stage_trace,
                 )
                 action_dst_property, forked_activations, yield_exec, next_seqnum, yield_term = self.actionHandler(action, seqnum)
@@ -1687,10 +1571,10 @@ class VirtualEngineLane:
             self.upproc.decr_events()
         if yield_exec == 1:
             self.lane_state = "lane_yield"
-            printd("Lane:%d Oustanding Events:%d Yield_exe:%d" % (self.lane_id, self.upproc.outstanding_events, yield_exec), stage_trace)
+            printd("UDID:%d Lane:%d Yield_exe:%d" % (self.udid, self.lane_id, yield_exec), stage_trace)
         if yield_term == 1:
             self.lane_state = "lane_term"
-            printd("Lane:%d Oustanding Events:%d Yield_term:%d" % (self.lane_id, self.upproc.outstanding_events, yield_term), stage_trace)
+            printd("UDID:%d Lane:%d Yield_term:%d" % (self.udid, self.lane_id, yield_term), stage_trace)
         return Activation(dst_state, dst_property), forked_activations, yield_term, yield_exec
 
     def actionHandler(self, action, seqnum):
@@ -1930,14 +1814,6 @@ class VirtualEngineLane:
         elif action.opcode == "jmp":
             self.metric.branch_ins += 1
             next_seqnum, seqnum_set, dst_property, forked_activations, yield_exec, yield_term = self.do_jmp(action)
-        elif action.opcode == "send_old":
-            # self.metric.cycle += 3
-            self.metric.msg_ins += 1
-            if self.sim:
-                self.do_send_old_sim(action)
-            else:
-                self.do_send_old(action)
-        # New Send instruction interface
         elif action.opcode == "send4":
             self.metric.msg_ins += 1
             self.do_send4(action)
@@ -2017,11 +1893,6 @@ class VirtualEngineLane:
             self.metric.cycle -= 1
             self.metric.exec_cycles -= 1
             self.do_perflog(action)
-        elif action.opcode == "userctr":
-            self.metric.total_acts -= 1
-            self.metric.cycle -= 1
-            self.metric.exec_cycles -= 1
-            self.do_user_ctr(action)
         elif action.opcode == "fp_div":
             self.metric.yld_ins += 1
             self.do_fp_div(action)
@@ -2050,8 +1921,8 @@ class VirtualEngineLane:
         if reg_ident[0:4] == "UDPR":
             idx = self.parseIdx(reg_ident)
             printd(
-                "Lane:%d Reg:%s:%d RegBase:%d"
-                % (self.lane_id, reg_ident, self.UDPR[idx + self.curr_thread.udprbase], self.curr_thread.udprbase),
+                "   rd_reg UDID:%d Lane:%d Reg:%s:%d RegBase:%d"
+                % (self.udid, self.lane_id, reg_ident, self.UDPR[idx + self.curr_thread.udprbase], self.curr_thread.udprbase),
                 stage_trace,
             )
             return self.UDPR[idx + self.curr_thread.udprbase]
@@ -2059,7 +1930,7 @@ class VirtualEngineLane:
             # return self.SBP
             return self.curr_thread.SBP  # Marzi
         elif reg_ident == "LID":
-            return self.lane_id
+            return ((self.udid << 6) & 0xC0 | (self.lane_id & 0x3F))
         elif reg_ident == "SBPB":
             return self.SBPB()
         elif reg_ident[0:2] == "OB":
@@ -2084,10 +1955,15 @@ class VirtualEngineLane:
         else:
             idx = self.parseIdx(reg_ident)
             self.UDPR[idx + self.curr_thread.udprbase] = data
+            printd(
+                "   wr_reg UDID:%d Lane:%d Reg:%s:%d RegBase:%d"
+                % (self.udid, self.lane_id, reg_ident, self.UDPR[idx + self.curr_thread.udprbase], self.curr_thread.udprbase),
+                stage_trace,
+            )
 
     def rd_obbuffer(self, ob_ident):
         offs = self.parseOffs(ob_ident)
-        printd("%d %s:%d" % (self.lane_id, ob_ident, self.OpBuffer.getOp(offs + self.curr_thread.opbase)), stage_trace)
+        printd("UDID:%d Lane:%d %s:%d" % (self.udid, self.lane_id, ob_ident, self.OpBuffer.getOp(offs + self.curr_thread.opbase)), stage_trace)
         return self.OpBuffer.getOp(offs + self.curr_thread.opbase)
         # return self.OpBuffer[offs]
 
@@ -2103,17 +1979,26 @@ class VirtualEngineLane:
         offs = self.parseOffs(ob_ident) + self.curr_thread.opbase
         # FIXME
         self.OpBuffer.setOp(data)
+        self.metric.operand_q_len += 1
         # self.OpBuffer[offs] = data
 
     def wr_ear(self, ear_idx, dw1, dw2):
         data = ((dw2 & 0xFFFFFFFF) << 32) + (dw1 & 0xFFFFFFFF)
         idx = self.parseEars(ear_idx)
-        # printd("WR_EAR: idx:%d, data:%d" % (idx, data), progress_trace)
         self.ear[idx] = data
+        printd(
+            "   wr_ear UDID:%d Lane:%d EAR_%s:%d"
+            % (self.udid, self.lane_id, idx, data),
+            stage_trace,
+        )
 
     def rd_ear(self, ear_idx):
-        # printd("RD_EAR:%s" % ear_idx, progress_trace)
         idx = self.parseEars(ear_idx)
+        printd(
+            "   rd_ear UDID:%d Lane:%d EAR_%s:%d"
+            % (self.udid, self.lane_id, idx, self.ear[idx]),
+            stage_trace,
+        )
         return self.ear[idx]
 
     def rd_imm(self, imm):
@@ -2181,7 +2066,7 @@ class VirtualEngineLane:
             # print("not yet support "),
             action.printOut(error)
             exit()
-        # print("mov_lm2reg - src:%s src_addr:%x, lm_data:%d, dst:%s" % (action.src, src_addr,lm_data, action.dst))
+        #print("mov_lm2reg - src:%s src_addr:%d, lm_data:%d, dst:%s" % (action.src, src_addr,lm_data, action.dst))
         # self.metric.cycle += 1
         # self.metric.exec_cycles += 1
         self.metric.up_lm_read_bytes += numOfBytes
@@ -2191,8 +2076,8 @@ class VirtualEngineLane:
         src_data = self.rd_register(action.src)
         numOfBytes = self.rd_imm(action.imm)
         lm_addr = self.rd_register(action.dst)
-        # print("mov_reg2lm: src:%s data:%d, LM_addr = %d" % (action.src, src_data, lm_addr))
         lm_addr = self.ds_base + lm_addr
+        #print("mov_reg2lm: src:%s data:%d, LM_addr = %d" % (action.src, src_data, lm_addr))
         if numOfBytes == 4:
             src_data = src_data & 0xFFFFFFFF
             self.LM.write_word(lm_addr, src_data)
@@ -2257,8 +2142,6 @@ class VirtualEngineLane:
     def do_mov_ob2reg(self, action):
         src_data = self.rd_obbuffer(action.src)
         self.wr_register(action.dst, src_data)
-        # if action.src == "OB_0" and action.dst == "UDPR_3":
-        #     self.metric.frontier_edit_ins += 6
 
     def do_mov_ob2ear(self, action):
         src = action.src.split("_")
@@ -2268,13 +2151,6 @@ class VirtualEngineLane:
         data2 = self.rd_obbuffer(src2)
         # print("lane %s OB2EAR: src1:%s, src2:%s, dst:%s, data1:%d, data2:%d " % (self.lane_id, src1, src2, action.dst, data1, data2))
         self.wr_ear(action.dst, data1, data2)
-        if action.dst == "EAR_1":
-            self.metric.vertex_per_lane += 1
-            num_edges = self.rd_register("UDPR_1")
-            self.metric.edge_per_lane += num_edges
-            if num_edges > self.metric.max_edge_per_lane:
-                self.metric.max_edge_per_lane = num_edges
-            self.metric.ins_for_iter += 8
 
     def do_ev_update_1(self, action):
         src = self.rd_register(action.src)
@@ -2317,6 +2193,11 @@ class VirtualEngineLane:
                 else:
                     newword = (newword & word_mask) | (imm2 << i * 8)
         self.wr_register(action.src, newword)
+        printd(
+            "udid%s lane %s do_ev_update_2 - src (%s), imm %s, mask 0x%x, masks %s, newword %s"
+            % (self.udid, self.lane_id, src, imm, word_mask, masks, newword),
+            stage_trace,
+        )
     
     def do_ev_update_reg_imm(self, action):
         src = self.curr_event.event_word
@@ -2356,6 +2237,11 @@ class VirtualEngineLane:
                     oneset = 1
                 else:
                     newword = (newword & word_mask) | (imm2 << i * 8)
+        printd(
+            "udid%s lane %s do_ev_update_2 - src (%s), imm %s, mask 0x%x, masks %s, newword %s"
+            % (self.udid, self.lane_id, src, imm, word_mask, masks, newword),
+            stage_trace,
+        )
         self.wr_register(action.dst, newword)
 
     def do_compare_string(self, action):
@@ -2365,8 +2251,6 @@ class VirtualEngineLane:
         ref_byte = self.in_stream[ref_p : ref_p + 8]
         cur_byte = self.in_stream[cur_p : cur_p + 8]
         while ref_byte == cur_byte and length < 255:
-            # printd("find same:\n", full_trace)
-            # printd(str(ref_byte)+","+str(cur_byte)+'\n',full_trace)
             ref_p += 8
             cur_p += 8
             length += 1
@@ -2406,7 +2290,6 @@ class VirtualEngineLane:
         src_data = self.rd_register(action.src)
         imm = int(action.imm)
         res = src_data + imm
-        printd("Debug:src_data:%d, imm:%d, res:%d, dst:%s" % (src_data, imm, res, action.dst), stage_trace)
         self.wr_register(action.dst, res)
 
     # ====== copy from [src_addr, src_addr+length) ======
@@ -2532,7 +2415,6 @@ class VirtualEngineLane:
         self.out_stream[dst_ptr << 3 : (dst_ptr << 3) + 8] = data
         dst_ptr += 1
         self.wr_register(action.dst, dst_ptr)
-        # printd("put:"+str(hex(data))+"\n", full_trace)
 
     def do_lshift_add_imm(self, action):
         src = self.rd_register(action.src)
@@ -2626,7 +2508,6 @@ class VirtualEngineLane:
             print("numOfBytes Wrong in " + action.printOut(error))
             exit()
         self.wr_register(action.dst, dst_ptr)
-        # printd("put:"+str(hex(data))+"\n",full_trace)
 
     def do_compare_less_than(self, action):
         if action.src[0] == "U":
@@ -2678,7 +2559,6 @@ class VirtualEngineLane:
         # else:
         #    res = 0
         res = src - rt
-        # printd("comp_reg: action.src:%s, action.rt:%s" % (action.src, action.rt), progress_trace)
         self.wr_register(action.dst, res)
 
     def do_compare_reg_equal(self, action):
@@ -3153,7 +3033,6 @@ class VirtualEngineLane:
         # Changes by Marzi
         # self.SBP += old_CR_Advance - self.CR_Advance
         self.curr_thread.SBP += old_CR_Advance - self.curr_thread.CR_Advance
-        # printd ("issue:"+str(self.curr_thread.CR_Issue)+" advance:"+str(self.CR_Advance)+"\n",full_trace)
 
     def do_set_complete(self, action):
         imm = self.rd_imm(action.imm)
@@ -3199,7 +3078,6 @@ class VirtualEngineLane:
             op2 = action.op2  # Imm Value
         op1 = int(op1)
         op2 = int(op2)
-        # printd("BNE-OP1:%d, OP2:%d" % (op1,op2), progress_trace)
         if op1 != op2:
             if action.dst_issb == 1:
                 next_seqnum = 0
@@ -3209,13 +3087,13 @@ class VirtualEngineLane:
             else:
                 next_seqnum = int(action.dst)
                 seqnum_set = 1
-            if action.op1 == "UDPR_11":
-                self.metric.cmp_fail_count += 1
+            # if action.op1 == "UDPR_11":
+            #     self.metric.cmp_fail_count += 1
         else:
             next_seqnum = 0
             seqnum_set = 0
-            if action.op1 == "UDPR_11":
-                self.metric.cmp_succ_count += 1
+            # if action.op1 == "UDPR_11":
+            #     self.metric.cmp_succ_count += 1
         return next_seqnum, seqnum_set, dst_property, forked_activations, yield_exec, yield_term
 
     def do_beq(self, action):
@@ -3236,12 +3114,12 @@ class VirtualEngineLane:
             op2 = action.op2  # Imm Value
         op1 = int(op1)
         op2 = int(op2)
-        if action.op1 == "UDPR_4" and action.op2 == "UDPR_0":
-            self.metric.num_update += 1
+        # if action.op1 == "UDPR_4" and action.op2 == "UDPR_0":
+        #     self.metric.num_update += 1
         # print("lane %s do_beq - op1 %s(%s) op2 %s(%s) action.dst: %s" % (self.lane_id, action.op1, op1, action.op2, op2, action.dst))
         if op1 == op2:
-            if action.op1 == "UDPR_4" and action.dst == "19":
-                self.metric.num_send_rd += 1
+            # if action.op1 == "UDPR_4" and action.dst == "19":
+            #     self.metric.num_send_rd += 1
             if action.dst_issb == 1:
                 next_seqnum = 0
                 seqnum_set = 0
@@ -3251,8 +3129,8 @@ class VirtualEngineLane:
                 # print("do_beq - branch to target action.dst: %s" % action.dst)
                 next_seqnum = int(action.dst)
                 seqnum_set = 1
-            if action.op1 == "UDPR_4" and action.op2 == "UDPR_0":
-                self.metric.num_hit += 1
+            # if action.op1 == "UDPR_4" and action.op2 == "UDPR_0":
+            #     self.metric.num_hit += 1
         else:
             next_seqnum = 0
             seqnum_set = 0
@@ -3378,8 +3256,8 @@ class VirtualEngineLane:
         op1 = int(op1)
         op2 = int(op2)
         if op1 <= op2:
-            if action.op1 == "UDPR_8":
-                self.metric.base_ins += 3
+            # if action.op1 == "UDPR_8":
+            #     self.metric.base_ins += 3
             if action.dst_issb == 1:
                 next_seqnum = 0
                 seqnum_set = 0
@@ -3389,8 +3267,8 @@ class VirtualEngineLane:
                 next_seqnum = int(action.dst)
                 seqnum_set = 1
         else:
-            if action.op1 == "UDPR_4":
-                self.metric.num_collision += 1
+            # if action.op1 == "UDPR_4":
+            #     self.metric.num_collision += 1
                 # print("lane %s ble - op1 %s(%s) op2 %s(%s) dst %s" % (self.lane_id, action.op1, op1, action.op2, op2, action.dst))
             next_seqnum = 0
             seqnum_set = 0
@@ -3413,134 +3291,6 @@ class VirtualEngineLane:
             seqnum_set = 1
         return next_seqnum, seqnum_set, dst_property, forked_activations, yield_exec, yield_term
 
-    def do_send_old(self, action):
-        if action.dst != "TOP":
-            event_word = self.rd_register(action.event)
-            dest = self.rd_register(action.dst)
-            addr = self.rd_register(action.addr)
-            addr_mode = int(action.addr_mode)
-            if dest == -1 or dest == 0xFFFFFFFF:
-                lane_num = self.lane_id
-            else:
-                lane_num = dest - 2
-            printd(
-                "send_old, event_word:%d, dest:%d, addr:%d, addr_mode:%d, lane_num:%d" % (event_word, dest, addr, addr_mode, lane_num),
-                stage_trace,
-            )
-            if (dest > 1 or dest == -1) and action.rw == "r":  # read message
-                size = int(action.size)
-                if addr_mode > 0:
-                    ear_base = "EAR_" + str(addr_mode - 1)
-                    dram_addr = self.address_generate_unit(ear_base, addr)
-                ori_lane = (event_word & 0xFF000000) >> 24
-                event_label = event_word & 0x000000FF
-                ev_operands = [None for i in range(int(size / 4))]
-                for i in range(int(size / 4)):
-                    if addr_mode > 0 and addr_mode > 0:
-                        ev_operands[i] = self.dram.read_word(dram_addr + 4 * i)
-                        self.metric.up_dram_read_bytes += 4
-                    else:
-                        addr = addr + self.ds_base
-                        ev_operands[i] = self.LM.read_word(addr + 4 * i)
-                        self.metric.cycle += 1
-                        self.metric.exec_cycles += 1
-                self.all_lanes[lane_num].OpBuffer.setOp(0)
-                for val in ev_operands:
-                    self.all_lanes[lane_num].OpBuffer.setOp(val)
-                event_label = event_word & 0x000000FF
-
-                next_event = Event(event_label, len(ev_operands))
-                next_event.setlanenum(self.lane_id)
-                next_event.setthreadid(self.curr_thread.tid)
-                next_event.set_cycle(self.metric.last_exec_cycle + 1 + (self.all_lanes[lane_num].EvQ.getOccup()))
-                self.all_lanes[lane_num].EvQ.pushEvent(next_event)
-                self.upproc.incr_events()
-                # release lock for lane
-            elif action.rw == "w":
-                if addr_mode > 0 and addr_mode < 5:  # write data from Reg to DRAM
-                    ear_base = "EAR_" + str(addr_mode - 1)
-                    dram_addr = self.address_generate_unit(ear_base, addr)
-                    data = self.rd_register(action.dst)
-                    size = int(action.size)
-                    for i in range(int(size / 4)):
-                        self.dram.write_word(dram_addr, data)
-                    event_label = event_word & 0x000000FF
-                    next_event = Event(event_label, 0)
-                    next_event.setlanenum(self.lane_id)
-                    next_event.setthreadid(self.curr_thread.tid)
-                    next_event.set_cycle(self.metric.last_exec_cycle + 1 + (self.EvQ.getOccup()) + dram_lat)
-                    self.OpBuffer.setOp(0)
-                    self.EvQ.pushEvent(next_event)
-                    self.upproc.incr_events()
-                    # print("Lane: %d W mode, 0<addr_mode<5: Increment Events: %d" % (self.lane_id, self.upproc.outstanding_events))
-                elif addr_mode == 0:  # write data from Rw to different lane
-                    data = self.rd_register(action.dst)  # data from Rw
-                    if addr != -1:
-                        lane_num = addr - 2  # dest lane num (Ra)
-                    else:
-                        lane_num = self.lane_id
-                    size = int(action.size)
-                    # self.q_locks[lane_num].acquire()
-                    self.all_lanes[lane_num].OpBuffer.setOp(0)
-                    self.all_lanes[lane_num].OpBuffer.setOp(data)
-                    event_label = event_word & 0x000000FF
-                    if event_label == 1:
-                        # it takes master 6 instructions to update the frontier
-                        self.metric.frontier_edit_ins += 8
-                    next_event = Event(event_label, 1)
-                    next_event.setlanenum(lane_num)
-                    next_event.setthreadid(0xFF)
-                    next_event.set_cycle(self.metric.last_exec_cycle + 1 + (self.all_lanes[lane_num].EvQ.getOccup()))
-                    self.all_lanes[lane_num].EvQ.pushEvent(next_event)
-                    self.upproc.incr_events()
-                elif addr_mode == 5:  # write data from LM to different lane
-                    lm_addr = self.rd_register(action.dst)  # data from Rw
-                    if addr != -1:
-                        lane_num = addr - 2  # dest lane num (Ra)
-                    else:
-                        lane_num = self.lane_id
-                    size = int(action.size)
-                    ev_operands = [None for i in range(int(size / 4))]
-                    lm_addr = lm_addr + self.ds_base
-                    for i in range(int(size / 4)):
-                        ev_operands[i] = self.LM.read_word(lm_addr + 4 * i)
-                        self.metric.cycle += 1
-                        self.metric.exec_cycles += 1
-                    self.all_lanes[lane_num].OpBuffer.setOp(0)
-
-                    for val in ev_operands:
-                        self.all_lanes[lane_num].OpBuffer.setOp(val)
-                    event_label = event_word & 0x000000FF
-                    next_event = Event(event_label, len(ev_operands))
-                    next_event.setlanenum(lane_num)
-                    next_event.setthreadid(0xFF)
-                    next_event.set_cycle(self.metric.last_exec_cycle + 1 + (self.all_lanes[lane_num].EvQ.getOccup()))
-                    self.all_lanes[lane_num].EvQ.pushEvent(next_event)
-                    self.upproc.incr_events()
-                elif addr_mode > 5:  # write data from LM to DRAM
-                    ear_base = "EAR_" + str(addr_mode - 6)
-                    dram_addr = self.address_generate_unit(ear_base, addr)
-                    lm_addr = self.ds_base + self.rd_register(action.dst)
-                    size = int(action.size)
-                    write_operands = [None for i in range(int(size / 4))]
-                    for i in range(int(size / 4)):
-                        word = self.LM.read_word(lm_addr + 4 * i)
-                        self.dram.write_word(dram_addr + 4 * i, word)
-                        self.metric.cycle += 1
-                        self.metric.exec_cycles += 1
-                    event_label = event_word & 0x000000FF
-                    next_event = Event(event_label, 0)
-                    next_event.set_cycle(self.metric.last_exec_cycle + 1 + (self.EvQ.getOccup()) + dram_lat)
-                    next_event.setlanenum(self.lane_id)
-                    next_event.setthreadid(self.curr_thread.tid)
-                    self.OpBuffer.setOp(0)
-                    self.EvQ.pushEvent(next_event)
-                    self.upproc.incr_events()
-        else:
-            size = int(action.size)
-            data = self.rd_register(action.addr)
-            self.top.sendResult(data)
-
     def do_send_top(self, action):
         # if dest == 1 and action.rw == 'w': #send message back to TOP
         size = int(action.size)
@@ -3548,213 +3298,6 @@ class VirtualEngineLane:
         data = self.rd_register(action.addr)
         # print("send to TOP data:%d" % data)
         self.top.sendResult(data)
-
-    def do_send_old_sim(self, action):
-        """
-        0 - Number of sends
-        Decoding for send mmap
-        offs+0 - Send_Mode 4 bits
-           0 - Lane / Memory bound
-           1 - With Return?
-           2 - Load/Store (for memory bound transactions)
-           3 - Old style Send (compatibility bit)
-        offs+1 - event cycle as a clue for simulator
-        offs+2 - event_word (destination event - only used for lane bound)
-        offs+3 - dest lower addr (or Lane Number)
-        offs+4 - dest higher addr (or lane Number / replicated)
-        offs+5 - continuation_word
-        offs+6 - Size in bytes
-        off+7 - offs+n (n-6 datawords to be stored in case of store messages)
-        """
-        if action.dst != "TOP":
-            self.send_mm.seek(0)
-            self.num_sends += 1
-            val = struct.pack("I", self.num_sends)
-            self.send_mm.write(val)
-            self.send_mm.seek(self.mm_offset)
-
-            event_word = self.rd_register(action.event)
-            dest = self.rd_register(action.dst)
-            addr = self.rd_register(action.addr)
-            addr_mode = int(action.addr_mode)
-            cont_word = 0
-            mode = 0
-            next_event_word = 0x0
-            # if self.lane_id == 2:
-            #    pdb.set_trace()
-            if dest == -1 or dest == 0xFFFFFFFF:
-                lane_num = self.lane_id
-            else:
-                lane_num = dest - 2
-            printd(
-                "send_old, event_word:%d, dest:%d, addr:%d, addr_mode:%d, lane_num:%d" % (event_word, dest, addr, addr_mode, lane_num),
-                stage_trace,
-            )
-            if (dest > 1 or dest == -1) and action.rw == "r":  # read message
-                size = int(action.size)
-                ev_operands = [None for i in range(int(size / 4))]
-                event_label = event_word & 0x000000FF
-
-                next_event = Event(event_label, len(ev_operands))
-                next_event.set_cycle(self.metric.last_exec_cycle + 1)
-                if addr_mode > 0:
-                    # DRAM bound .. it's all about continuation
-                    ear_base = "EAR_" + str(addr_mode - 1)
-                    dram_addr = self.address_generate_unit(ear_base, addr)
-                    next_event.setlanenum(lane_num)
-                    if lane_num == self.lane_id:
-                        next_event.setthreadid(self.curr_thread.tid)
-                        mode = 10
-                    else:
-                        mode = 8
-                    cont_word = next_event.event_word
-                else:
-                    # continuation bound for another lane (read from LM) // continuation is important here
-                    next_event.setlanenum(lane_num)
-                    next_event_word = next_event.event_word
-                    mode = 1
-                    addr = addr + self.ds_base
-                    ev_operands[i] = self.LM.read_word(addr + 4 * i)
-                    self.metric.cycle += 1
-                    self.metric.exec_cycles += 1
-                printd(
-                    "send_old, mode:%d, exec_cycle:%d, next_event_word:%d,\
-                     addr_mode:%d, dram_addr:%lx, lane_num:%d cont_word :%d, \
-                     size:%d"
-                    % (mode, self.metric.cycle, next_event_word, addr_mode, dram_addr, lane_num, cont_word, size),
-                    stage_trace,
-                )
-                # printd("Offset:%d" % self.mm_offset)
-                # pdb.set_trace()
-                val = struct.pack("I", mode)
-                self.send_mm.write(val)
-                val = struct.pack("I", self.metric.cycle - self.metric.curr_event_scyc)
-                # val=struct.pack('I', self.metric.cycle)
-                self.send_mm.write(val)
-                val = struct.pack("I", next_event_word)
-                self.send_mm.write(val)
-                if addr_mode > 0:
-                    val = struct.pack("I", (dram_addr & 0xFFFFFFFF))  # lower int
-                else:
-                    val = struct.pack("I", lane_num)
-                self.send_mm.write(val)
-                if addr_mode > 0:
-                    val = struct.pack("I", ((dram_addr >> 32) & 0xFFFFFFFF))  # upper int
-                else:
-                    val = struct.pack("I", lane_num)
-                self.send_mm.write(val)
-                val = struct.pack("I", cont_word)
-                self.send_mm.write(val)
-                val = struct.pack("I", size)
-                self.send_mm.write(val)
-                # if addr_mode > 0:
-                #    for val in ev_operands:
-                #        val=struct.pack('I', val)
-                #        self.send_mm.write(val)
-                self.mm_offset = self.send_mm.tell()
-
-                # release lock for lane
-            elif action.rw == "w":
-                size = int(action.size)
-                # ev_operands = [None for i in range(int(size/4))]
-                ev_operands = []
-                if addr_mode > 0 and addr_mode < 5:  # write data from Reg to DRAM
-                    ear_base = "EAR_" + str(addr_mode - 1)
-                    mode = 14  # 1110 Old store
-                    dram_addr = self.address_generate_unit(ear_base, addr)
-                    data = self.rd_register(action.dst)
-                    ev_operands.append(data)
-                    event_label = event_word & 0x000000FF
-                    next_event = Event(event_label, 0)
-                    next_event.setlanenum(self.lane_id)
-                    next_event.set_cycle(self.metric.last_exec_cycle + 1)
-                    cont_word = next_event.event_word
-                    # print("Lane: %d W mode, 0<addr_mode<5: Increment Events: %d" % (self.lane_id, self.upproc.outstanding_events))
-                elif addr_mode == 0:  # write data from Rw to different lane
-                    # pdb.set_trace()
-                    data = self.rd_register(action.dst)  # data from Rw
-                    ev_operands.append(data)
-                    mode = 1
-                    if addr != -1 and addr != 0xFFFFFFFF:
-                        lane_num = addr - 2  # dest lane num (Ra)
-                    else:
-                        lane_num = self.lane_id
-                    # self.all_lanes[lane_num].OpBuffer.setOp(data)
-                    event_label = event_word & 0x000000FF
-                    if event_label == 1:
-                        # it takes master 6 instructions to update the frontier
-                        self.metric.frontier_edit_ins += 8
-                    printd("send_old:Write:Lane_num:%d" % lane_num, stage_trace)
-                    next_event = Event(event_label, 1)
-                    next_event.setlanenum(lane_num)
-                    if lane_num == self.lane_id:
-                        next_event.setthreadid(self.curr_thread.tid)
-                    next_event.set_cycle(self.metric.last_exec_cycle + 1)
-                    next_event_word = next_event.event_word
-
-                elif addr_mode == 5:  # write data from LM to different lane
-                    lm_addr = self.rd_register(action.dst)  # data from Rw
-                    mode = 1
-                    if addr != -1 and addr != 0xFFFFFFFF:
-                        lane_num = addr - 2  # dest lane num (Ra)
-                    else:
-                        lane_num = self.lane_id
-                    lm_addr = lm_addr + self.ds_base
-                    for i in range(int(size / 4)):
-                        ev_operands.append(self.LM.read_word(lm_addr + 4 * i))
-                        self.metric.cycle += 1
-                        self.metric.exec_cycles += 1
-
-                    event_label = event_word & 0x000000FF
-                    next_event = Event(event_label, len(ev_operands))
-                    next_event.setlanenum(lane_num)
-                    next_event.set_cycle(self.metric.last_exec_cycle + 1)
-                    next_event_word = next_event.event_word
-                elif addr_mode > 5:  # write data from LM to DRAM
-                    mode = 14
-                    ear_base = "EAR_" + str(addr_mode - 6)
-                    dram_addr = self.address_generate_unit(ear_base, addr)
-                    lm_addr = self.ds_base + self.rd_register(action.dst)
-                    for i in range(int(size / 4)):
-                        ev_operands.append(self.LM.read_word(lm_addr + 4 * i))
-                        self.metric.cycle += 1
-                        self.metric.exec_cycles += 1
-                    event_label = event_word & 0x000000FF
-                    next_event = Event(event_label, 0)
-                    next_event.set_cycle(self.metric.last_exec_cycle + 1)
-                    next_event.setlanenum(self.lane_id)
-                    cont_word = next_event.event_word
-                val = struct.pack("I", mode)
-                self.send_mm.write(val)
-                val = struct.pack("I", self.metric.cycle - self.metric.curr_event_scyc)
-                # val=struct.pack('I', self.metric.cycle)
-                self.send_mm.write(val)
-                val = struct.pack("I", next_event_word)
-                self.send_mm.write(val)
-                if addr_mode == 0 or addr_mode == 5:
-                    val = struct.pack("I", lane_num)
-                    self.send_mm.write(val)
-                    val = struct.pack("I", lane_num)
-                    self.send_mm.write(val)
-                else:
-                    val = struct.pack("I", (dram_addr & 0xFFFFFFFF))  # lower int
-                    self.send_mm.write(val)
-                    val = struct.pack("I", ((dram_addr >> 32) & 0xFFFFFFFF))  # upper int
-                    self.send_mm.write(val)
-                val = struct.pack("I", cont_word)
-                self.send_mm.write(val)
-                val = struct.pack("I", size)
-                self.send_mm.write(val)
-                for val in ev_operands:
-                    val = struct.pack("I", val)
-                    self.send_mm.write(val)
-                self.mm_offset = self.send_mm.tell()
-                printd("Done writing into map", stage_trace)
-
-        else:
-            size = int(action.size)
-            data = self.rd_register(action.addr)
-            self.top.sendResult(data)
 
     def send_basic(self, event, dest, cont, op1, op2, mode_0, mode_1, mode_2, s4, size=0):
         """
@@ -3780,7 +3323,8 @@ class VirtualEngineLane:
         """
 
         if self.upproc.perf_log_internal_enable:
-            self.metric.write_perf_log(0, self.lane_id, self.curr_thread.tid,
+            self.metric.log_perf_stats(self.upproc.perf_logger, self.metric.cycle,
+                                       0, self.lane_id, self.curr_thread.tid,
                                        self.curr_event.event_base, self.curr_event.event_label,
                                        set([PerfLogPayload.UD_ACTION_STATS.value,
                                            PerfLogPayload.UD_TRANS_STATS.value, PerfLogPayload.UD_QUEUE_STATS.value,
@@ -3801,10 +3345,12 @@ class VirtualEngineLane:
             stage_trace,
         )
         # print("Send_basic Operands: Event:%x, Dest:%d, Cont:%s, Op1:%s, Op2:%s, s4:%d" % (event if event is not None else 0, dest, str(cont), op1, op2, s4))
-        # pdb.set_trace()
+        #pdb.set_trace()
+        dest_udid = 0
         if mode_1 == 1:
             # send with return
-            cont = (int(cont) & 0x0000FFFF) | ((self.lane_id << 24) & 0xFF000000) | ((self.curr_thread.tid << 16) & 0x00FF0000)
+            dest_udid = self.udid
+            cont = (int(cont) & 0x0000FFFF) | ((dest_udid << 30) & 0xC0000000)  | ((self.lane_id << 24) & 0xFF000000) | ((self.curr_thread.tid << 16) & 0x00FF0000)
 
         next_event = None
         ev_operands = []
@@ -3814,9 +3360,8 @@ class VirtualEngineLane:
             event_label = event & 0x000000FF
             event_tid = (event & 0x00FF0000) >> 16
             lane_num = dest
-            if event_label == 1:
-                # it takes master 6 instructions to update the frontier
-                self.metric.frontier_edit_ins += 8
+            dest_lane = dest & 0x3F
+            dest_udid = (dest & 0xC0 >> 6)
             if not self.sim:
                 self.all_lanes[lane_num].OpBuffer.setOp(cont)
             if s4:
@@ -3835,7 +3380,7 @@ class VirtualEngineLane:
                 else:
                     next_event = Event(event_label, 1)
                 size = len(ev_operands) * 4
-                next_event.setlanenum(lane_num)
+                next_event.setlanenum(dest_lane, dest_udid)
                 next_event.setthreadid(event_tid)
                 if not self.sim:
                     next_event.set_cycle(self.metric.last_exec_cycle + 1 + (self.all_lanes[lane_num].EvQ.getOccup()))
@@ -3856,7 +3401,7 @@ class VirtualEngineLane:
                     for val in ev_operands:
                         self.all_lanes[lane_num].OpBuffer.setOp(val)
                 next_event = Event(event_label, int(size / 4))
-                next_event.setlanenum(lane_num)
+                next_event.setlanenum(dest_lane ,dest_udid)
                 next_event.setthreadid(event_tid)
                 if not self.sim:
                     next_event.set_cycle(self.metric.last_exec_cycle + 1 + (self.all_lanes[lane_num].EvQ.getOccup()))
@@ -3868,12 +3413,12 @@ class VirtualEngineLane:
                     "send_basic, mode:%d, exec_cycle:%d, next_event_word:%d,\
                 lane_num:%d cont_word :%d, \
                 size:%d"
-                    % (mode, self.metric.cycle-self.metric.curr_event_scyc, next_event.event_word, lane_num, cont, size),
+                    % (mode, self.metric.cycle-self.curr_event_scyc, next_event.event_word, lane_num, cont, size),
                     stage_trace,
                 )
                 val = struct.pack("I", mode)
                 self.send_mm.write(val)
-                val = struct.pack("I", self.metric.cycle - self.metric.curr_event_scyc)
+                val = struct.pack("I", int(self.metric.cycle - self.curr_event_scyc))
                 # val=struct.pack('I', self.metric.cycle)
                 self.send_mm.write(val)
                 next_event_word = next_event.event_word
@@ -3898,6 +3443,8 @@ class VirtualEngineLane:
             event_label = cont & 0x000000FF
             event_tid = (cont & 0x00FF0000) >> 16
             lane_num = (cont & 0xFF000000) >> 24
+            dest_lane = lane_num & 0x3F
+            dest_udid = (lane_num & 0xC0 >> 6)
             gaddr = dest
             dram_addr = self.address_generate_unit(ear_base, gaddr)
             if mode_2 == 0:
@@ -3916,7 +3463,7 @@ class VirtualEngineLane:
                         self.all_lanes[lane_num].OpBuffer.setOp(val)
                 # next_event = Event(event_label, len(ev_operands))
                 next_event = Event(event_label, int(size / 4))
-                next_event.setlanenum(lane_num)
+                next_event.setlanenum(dest_lane, dest_udid)
                 next_event.setthreadid(event_tid)
                 if not self.sim:
                     next_event.set_cycle(self.metric.last_exec_cycle + 1 + (self.all_lanes[lane_num].EvQ.getOccup()))
@@ -3955,7 +3502,7 @@ class VirtualEngineLane:
                             self.dram.write_word(dram_addr, val)
                             self.metric.up_write_read_bytes += 4
                 next_event = Event(event_label, 0)
-                next_event.setlanenum(lane_num)
+                next_event.setlanenum(dest_lane, dest_udid)
                 next_event.setthreadid(event_tid)
                 if not self.sim:
                     next_event.set_cycle(self.metric.last_exec_cycle + 1 + (self.all_lanes[lane_num].EvQ.getOccup()))
@@ -3968,14 +3515,14 @@ class VirtualEngineLane:
                 "send_basic, mode:%d, exec_cycle:%d, next_event_word:%d,\
                  dram_addr:%lx, lane_num:%d cont_word :%d, \
                  size:%d"
-                % (mode, self.metric.cycle-self.metric.curr_event_scyc, next_event_word, dram_addr, lane_num, cont, size),
+                % (mode, self.metric.cycle-self.curr_event_scyc, next_event_word, dram_addr, lane_num, cont, size),
                 stage_trace,
             )
             if self.sim:
                 mode = ((((mode_2 & 0x1) << 2) & 0x4) | (((mode_1 & 0x1) << 1) & 0x2) | (((mode_0 & 0x4) >> 2) & 0x1)) & 0x7
                 val = struct.pack("I", mode)
                 self.send_mm.write(val)
-                val = struct.pack("I", self.metric.cycle - self.metric.curr_event_scyc)
+                val = struct.pack("I", self.metric.cycle - self.curr_event_scyc)
                 # val=struct.pack('I', self.metric.cycle)
                 self.send_mm.write(val)
                 next_event_word = next_event.event_word
@@ -3994,11 +3541,11 @@ class VirtualEngineLane:
                     self.send_mm.write(val)
                 self.mm_offset = self.send_mm.tell()
 
-        printd(
-            "Send_Basic: Lane_num:%d, EvQ.size:%d, totalevents:%d"
-            % (lane_num, self.all_lanes[lane_num].EvQ.getOccup(), self.upproc.outstanding_events),
-            stage_trace,
-        )
+        # printd(
+        #     "Send_Basic: Lane_num:%d, EvQ.size:%d, totalevents:%d"
+        #     % (lane_num, self.all_lanes[lane_num].EvQ.getOccup(), self.upproc.outstanding_events),
+        #     stage_trace,
+        # )
         next_event.printOut(stage_trace)
 
     def do_send4(self, action):
@@ -4272,23 +3819,6 @@ class VirtualEngineLane:
         op2 = size * 4
         self.send_basic(event_word, dest, cont, op1, op2, mode_0, mode_1, mode_2, 0)
 
-    def do_send_any(self, action):
-        event_word = self.rd_register(action.event)
-        # event_word = action.event
-        dest = self.rd_register(action.dst)
-        cont = 0  # self.rd_register(action.cont)
-        op1 = "UDPR_X"  # self.rd_register(action.op1)
-        # addr_mode = int(action.addr_mode)
-        high_bit = 1  # (addr_mode & 0x10) >> 4
-        mode_0 = 4
-        mode_1 = 0
-        mode_2 = 0
-        reglist = action.reglist
-        size = len(reglist)
-        # move all registers from reg to LM and then use datatptr len with regular interface
-        op2 = size * 4
-        self.send_basic(event_word, dest, cont, op1, op2, mode_0, mode_1, mode_2, 0)
-
     def do_send_any_wret(self, action):
         event_word = self.rd_register(action.event)
         # event_word = action.event
@@ -4325,9 +3855,10 @@ class VirtualEngineLane:
         self.metric.ops_removed += self.curr_event.numOps()
         printd("Clearing %d Operands on Yield" % (self.curr_event.numOps()), stage_trace)
         self.OpBuffer.clearOp(self.curr_event.numOps())
+        self.metric.operand_q_len -= self.curr_event.numOps()
         self.curr_thread.ear = self.ear
         ins_per_event = self.metric.total_acts - self.curr_event_sins
-        cyc_per_event = self.metric.cycle - self.metric.curr_event_scyc
+        cyc_per_event = self.metric.cycle - self.curr_event_scyc
 
         if ins_per_event in self.metric.ins_per_event:
             self.metric.ins_per_event[ins_per_event] += 1
@@ -4351,7 +3882,8 @@ class VirtualEngineLane:
                 self.metric.ins_per_match[ins_per_match] = 1
 
         if self.upproc.perf_log_internal_enable:
-            self.metric.write_perf_log(0, self.lane_id, self.curr_thread.tid,
+            self.metric.log_perf_stats(self.upproc.perf_logger, self.metric.cycle,
+                                       0, self.lane_id, self.curr_thread.tid,
                                        self.curr_event.event_base, self.curr_event.event_label,
                                        set([PerfLogPayload.UD_ACTION_STATS.value,
                                            PerfLogPayload.UD_TRANS_STATS.value, PerfLogPayload.UD_QUEUE_STATS.value,
@@ -4373,13 +3905,12 @@ class VirtualEngineLane:
         self.metric.ops_removed += self.curr_event.numOps()
         printd("Clearing %d Operands on terminate" % (self.curr_event.numOps()), stage_trace)
         self.OpBuffer.clearOp(self.curr_event.numOps())
+        self.metric.operand_q_len -= self.curr_event.numOps()
         # Clear UDPR and threadstate and udpallocs
         self.udpthreadallocs = [x for x in self.udpthreadallocs if x[2] != self.curr_thread.tid]
         self.tstable.remThreadfromTST(self.curr_thread.tid)
-        # print("Yield_Terminate:%d" % yield_term)
-        # print("TriangleCount Check: UDPR_3:%d" % self.rd_register("UDPR_3"))
         ins_per_event = self.metric.total_acts - self.curr_event_sins
-        cyc_per_event = self.metric.cycle - self.metric.curr_event_scyc
+        cyc_per_event = self.metric.cycle - self.curr_event_scyc
         if ins_per_event in self.metric.ins_per_event:
             self.metric.ins_per_event[ins_per_event] += 1
         else:
@@ -4402,7 +3933,8 @@ class VirtualEngineLane:
                 self.metric.ins_per_match[ins_per_match] = 1
 
         if self.upproc.perf_log_internal_enable:
-            self.metric.write_perf_log(0, self.lane_id, self.curr_thread.tid,
+            self.metric.log_perf_stats(self.upproc.perf_logger, self.metric.cycle,
+                                       0, self.lane_id, self.curr_thread.tid,
                                        self.curr_event.event_base, self.curr_event.event_label,
                                        set([PerfLogPayload.UD_ACTION_STATS.value,
                                            PerfLogPayload.UD_TRANS_STATS.value, PerfLogPayload.UD_QUEUE_STATS.value,
@@ -4421,34 +3953,29 @@ class VirtualEngineLane:
         print(fmstr % (tuple(regval)), flush=True)
 
     def do_perflog(self, action):
-        if not self.metric.perf_log_enable:
+        if self.upproc.perf_logger is None:
             return
         if action.mode == 0:
-            self.metric.write_perf_log(0, self.lane_id, self.curr_thread.tid,
+            self.metric.log_perf_stats(self.upproc.perf_logger, self.metric.cycle,
+                                       0, self.lane_id, self.curr_thread.tid,
                                        self.curr_event.event_base, self.curr_event.event_label,
                                        set(action.payload_list))
         elif action.mode == 1:
             msg_reglist = []
             for reg in action.reglist:
                 msg_reglist.append((reg, self.rd_register(reg)))
-            self.metric.write_perf_log(0, self.lane_id, self.curr_thread.tid,
+            self.metric.log_perf_stats(self.upproc.perf_logger, self.metric.cycle,
+                                       0, self.lane_id, self.curr_thread.tid,
                                        self.curr_event.event_base, self.curr_event.event_label,
                                        set(), action.msg_id, action.fmtstr, msg_reglist)
         elif action.mode == 2:
             msg_reglist = []
             for reg in action.reglist:
                 msg_reglist.append((reg, self.rd_register(reg)))
-            self.metric.write_perf_log(0, self.lane_id, self.curr_thread.tid,
+            self.metric.log_perf_stats(self.upproc.perf_logger, self.metric.cycle,
+                                       0, self.lane_id, self.curr_thread.tid,
                                        self.curr_event.event_base, self.curr_event.event_label,
                                        set(action.payload_list), action.msg_id, action.fmtstr, msg_reglist)
-
-    def do_user_ctr(self, action):
-        if action.mode == 0:
-            # increment mode
-            self.metric.user_counters[action.ctr_num] += action.arg
-        if action.mode == 1:
-            # set abs mode
-            self.metric.user_counters[action.ctr_num] = action.arg
 
     def do_fp_add(self, action):
         src = self.rd_register(action.src)
@@ -4457,7 +3984,7 @@ class VirtualEngineLane:
         res = src + rt
         # res = round(res * (1<<10))
         printd(
-            "Lane %s do_fp_add - src: %s(%d), rt: %s(%d), dst: %s(%d)" % (self.lane_id, action.src, src, action.rt, rt, action.dst, res),
+            "UDID:%d Lane:%s do_fp_add - src: %s(%d), rt: %s(%d), dst: %s(%d)" % (self.udid, self.lane_id, action.src, src, action.rt, rt, action.dst, res),
             stage_trace,
         )
         self.wr_register(action.dst, res)
@@ -4469,8 +3996,8 @@ class VirtualEngineLane:
         # print("Lane %s do_fp_div - src: %s(%f), rt: %s(%d), dst: %s(%f)" % (self.lane_id, action.src, src, action.rt, self.rd_register(action.rt), action.dst, res))
         res = round(res * (1 << 20))
         printd(
-            "Lane %s do_fp_div - src: %s(%d), rt: %s(%s), dst: %s(%d)"
-            % (self.lane_id, action.src, self.rd_register(action.src), action.rt, rt, action.dst, res),
+            "UDID:%d Lane:%s do_fp_div - src: %s(%d), rt: %s(%s), dst: %s(%d)"
+            % (self.udid, self.lane_id, action.src, self.rd_register(action.src), action.rt, rt, action.dst, res),
             stage_trace,
         )
         self.wr_register(action.dst, res)

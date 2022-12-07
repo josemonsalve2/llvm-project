@@ -4,6 +4,7 @@ if (UPDOWNRT_ENABLE_TESTS)
         simrt_send_event.cpp
         simrt_pyEmu_memcpy.cpp
         simrt_pyEmu_mm_memcpy.cpp
+        simrt_pyEmu_mm_memcpy_multiud.cpp
         simrt_pyEmu_sendevent.cpp
         simrt_pyEmu_t2ud_signal.cpp
         simrt_memcpy.cpp

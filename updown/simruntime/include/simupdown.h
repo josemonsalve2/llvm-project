@@ -96,14 +96,14 @@ private:
   std::string programFile;
   std::string programName;
   std::string simulationDir;
-  Upstream_PyIntf *upstream_pyintf;
+  Upstream_PyIntf **upstream_pyintf;
   /// When python is not enabled, we bypass all the calls to the python
   /// interface. This restricts simulation to only memory operations
   bool python_enabled;
 
   /// Contains a mapped memory to the file system that is used to communicate
   /// with the emulator.
-  uint32_t **sendmap;
+  uint32_t ***sendmap;
 
   /**
    * @brief Allocate memory for the simulation of the updown
@@ -298,13 +298,14 @@ public:
     delete sendmap;
     if (!python_enabled) return;
     //remove temp files for python communication
-    for (unsigned int i = 0; i < MachineConfig.NumLanes; i++) {
-      std::string file_name = "./lane" + std::to_string(i) + "_send.txt";
-      UPDOWN_INFOMSG("Removing file %s", file_name.c_str());
-      if (remove(file_name.c_str()) != 0) {
-        UPDOWN_ERROR("unable to remove file %s", file_name.c_str());
+    for (uint32_t ud = 0; ud < MachineConfig.NumUDs; ud++)
+      for (unsigned int ln = 0; ln < MachineConfig.NumLanes; ln++) {
+        std::string file_name = "./" + std::to_string(ud) + "_lane" + std::to_string(ln) + "_send.txt";
+        UPDOWN_INFOMSG("Removing file %s", file_name.c_str());
+        if (remove(file_name.c_str()) != 0) {
+          UPDOWN_ERROR("unable to remove file %s", file_name.c_str());
+        }
       }
-    }
   }
 };
 

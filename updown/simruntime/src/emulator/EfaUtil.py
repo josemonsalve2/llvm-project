@@ -103,9 +103,6 @@ class Operand:
         self.perflog_mode = 0
         self.perflog_payload_list = 0
         self.perflog_msg_id = 0
-        self.userctr_mode = 0
-        self.userctr_num = 0
-        self.userctr_arg = 0
 
 
 def ParseAction(asm_inst):
@@ -376,7 +373,7 @@ def ParseAction(asm_inst):
             if int(operand.op2[3:]) > maxop:
                 maxop = int(operand.op2[3:])
 
-    elif opcode == "send_old" or opcode == "send_with_ret" or opcode == "send_reply":
+    elif opcode == "send_with_ret" or opcode == "send_reply":
         ActionClass = "MAction"
         # operand.event_label = part[1]
         operand.event = part[1]
@@ -613,12 +610,6 @@ def ParseAction(asm_inst):
         else:
             print("Invalid 'perflog' mode.")
             exit(1)
-
-    elif opcode == "userctr":
-        ActionClass = "UserCounterAction"
-        operand.userctr_mode = int(part[1])
-        operand.userctr_num = int(part[2])
-        operand.userctr_arg = int(part[3])
 
     # Send Pseudo Instructions!
     # send any
