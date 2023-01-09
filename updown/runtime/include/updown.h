@@ -339,9 +339,10 @@ struct ud_machine_t {
   uint64_t CapNumLanes = NUM_LANES_CAPACITY;          // Max number of UpDowns
   uint64_t CapSPmemPerLane = SPMEM_CAPACITY_PER_LANE; // Max bank size per lane
   uint64_t CapControlPerLane =
-      CONTROL_CAPACITY_PER_LANE;     // Max Control Sigs and regs per lane
-  uint64_t NumUDs = DEF_NUM_UDS;     // Number of UpDowns
-  uint64_t NumLanes = DEF_NUM_LANES; // Number of lanes
+      CONTROL_CAPACITY_PER_LANE;       // Max Control Sigs and regs per lane
+  uint64_t NumUDs = DEF_NUM_UDS;       // Number of UpDowns
+  uint64_t NumLanes = DEF_NUM_LANES;   // Number of lanes
+  uint32_t LocalMemAddrMode = 0;                 // Local Memory Mode
 
   // Sizes for memories
   uint64_t MapMemSize = DEF_MAPPED_SIZE; // Mapped Memory size

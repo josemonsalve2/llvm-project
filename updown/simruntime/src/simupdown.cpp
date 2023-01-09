@@ -52,7 +52,8 @@ void SimUDRuntime_t::initPythonInterface(EmulatorLogLevel printLevel) {
   // Helper File Description
   for (int ud = 0; ud < MachineConfig.NumUDs; ud++) {
     upstream_pyintf[ud] = new Upstream_PyIntf(ud, MachineConfig.NumLanes, programFile,
-                                          programName, simulationDir, 0,
+                                          programName, simulationDir,
+                                        MachineConfig.LocalMemAddrMode,
                                           MachineConfig.SPBankSize, LogFileName);
     upstream_pyintf[ud]->set_print_level(printLevel);
 
