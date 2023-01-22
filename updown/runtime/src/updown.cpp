@@ -80,7 +80,7 @@ uint64_t UDRuntime_t::get_lane_physical_memory(uint8_t ud_id, uint8_t lane_num,
   auto alignment = sizeof(word_t);
   auto aligned_offset = offset - offset % alignment;
   UPDOWN_WARNING_IF(offset % alignment != 0, "Unaligned offset %u", offset);
-  uint64_t returned_offset =
+  uint64_t returned_offset = MachineConfig.SPBankSize * ud_id +
       MachineConfig.SPBankSize * lane_num + // Lane offset
       aligned_offset;
   return returned_offset;

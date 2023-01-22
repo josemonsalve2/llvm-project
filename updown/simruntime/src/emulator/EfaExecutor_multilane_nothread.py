@@ -3488,7 +3488,7 @@ class VirtualEngineLane:
                             self.metric.up_write_read_bytes += 4
                         else:
                             ev_operands.append(data2)
-
+                    size = len(ev_operands) * 4 
                 else:
                     size = int(op2)
                     # ev_operands = [None for i in range(int(size/4))]

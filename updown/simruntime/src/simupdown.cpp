@@ -152,7 +152,7 @@ void SimUDRuntime_t::executeSingleLane(uint8_t ud_id, uint8_t lane_num) {
         uint64_t lower = sendmap[ud_id][lane_num][offset++]; //[8*i+5];
         uint64_t upper = sendmap[ud_id][lane_num][offset++]; //[8*i+4];
         sdest = (lower & 0xffffffff) | ((upper << 32) & 0xffffffff00000000);
-        UPDOWN_INFOMSG("Memory Bound Load: %d, Store: %d", !smode_2,
+        UPDOWN_INFOMSG("Memory Bound - Load?: %d, Store?: %d", !smode_2,
                         smode_2);
         UPDOWN_INFOMSG("Send Dest: %lX, Upper: %lX, Lower: %lX", sdest,
                         upper, lower);
@@ -167,7 +167,7 @@ void SimUDRuntime_t::executeSingleLane(uint8_t ud_id, uint8_t lane_num) {
       // Get continuation and size
       scont = sendmap[ud_id][lane_num][offset++]; //[8*i+6];
       ssize = sendmap[ud_id][lane_num][offset++]; //[8*i+7];
-      UPDOWN_INFOMSG("Send Cont: %d, Size: %d", scont, ssize);
+      UPDOWN_INFOMSG("Send Cont: %d (0x%lX), Size: %d", scont, scont, ssize);
       uint8_t sdata[ssize];
       uint32_t sdata_32[ssize / 4];
 
@@ -181,21 +181,17 @@ void SimUDRuntime_t::executeSingleLane(uint8_t ud_id, uint8_t lane_num) {
       }
       // Store operation
       if (smode_2 == 1) {
-        for (int j = 0; j < ssize; j += 4) {
-          sdata[j] = (uint8_t)(sendmap[ud_id][lane_num][offset + (j / 4)] &
-                                0xff); //[8*i+8+(j/4)] & 0xff);
-          sdata[j + 1] =
-              (uint8_t)((sendmap[ud_id][lane_num][offset + (j / 4)] & 0xff00) >> 8);
-          sdata[j + 2] =
-              (uint8_t)((sendmap[ud_id][lane_num][offset + (j / 4)] & 0xff0000) >>
-                        16);
-          sdata[j + 3] =
-              (uint8_t)((sendmap[ud_id][lane_num][offset + (j / 4)] & 0xff000000) >>
-                        24);
-          offset++;
+        for (int j = 0; j < ssize; j += 4 ) {
+          uint32_t recv_val = sendmap[ud_id][lane_num][offset++];
+          sdata[j] = (uint8_t)(recv_val & 0xFF);
+          sdata[j+1] = (uint8_t)((recv_val & 0xFF00) >> 8);
+          sdata[j+2] = (uint8_t)((recv_val & 0xFF0000) >> 16);
+          sdata[j+3] = (uint8_t)((recv_val & 0xFF000000) >> 24);
           UPDOWN_INFOMSG(
-              "Send Data[0]: %d, Data:[1]: %d, Data[2]: %d, Data[3]: %d",
-              sdata[j], sdata[j + 1], sdata[j + 2], sdata[j + 3]);
+              "Send Data[0]: %d (0x%X), Data:[1]: %d (0x%X), "
+              "Data[2]: %d (0x%X), Data[3]: %d (0x%X)",
+              sdata[j], sdata[j], sdata[j + 1], sdata[j + 1],
+              sdata[j + 2], sdata[j + 2], sdata[j + 3], sdata[j + 3]);
         }
       }
       // The continuation Lane ID
@@ -203,12 +199,12 @@ void SimUDRuntime_t::executeSingleLane(uint8_t ud_id, uint8_t lane_num) {
       dest_ud_id = (scont & 0xC0000000) >> 30;
       UPDOWN_INFOMSG("Send UD %d: LaneID:%d", dest_ud_id, lane_id);
 
-      if (!smode_0) { // memory bound messages
-        // TODO: Send message to memory
-        if (!smode_2) {
+      if (smode_0 == 0) {
+        // DRAM memory bound messages
+        if (smode_2 == 0) {
           // Loads
           UPDOWN_INFOMSG(
-              "Loading from Mapped Memory address: %lX, size: %d", sdest,
+              "Loading from Mapped Memory address: 0x%lX, size: %d", sdest,
               ssize);
 
           ptr_t src = reinterpret_cast<ptr_t>(sdest);
@@ -219,18 +215,18 @@ void SimUDRuntime_t::executeSingleLane(uint8_t ud_id, uint8_t lane_num) {
           upstream_pyintf[dest_ud_id]->insert_operand(
               fake_cont, lane_id); // Insert continuation first!
           for (int i = 0; i < ssize / 4; i++) {
-            edata = ((((sdata[4 * i + 3] & 0xff) << 24) & 0xff000000) |
-                      (((sdata[4 * i + 2] & 0xff) << 16) & 0x00ff0000) |
-                      (((sdata[4 * i + 1] & 0xff) << 8) & 0x0000ff00) |
-                      (((sdata[4 * i] & 0xff)) & 0x000000ff));
-            UPDOWN_INFOMSG("edata[%d]:%d", i, edata);
+            edata = ((((sdata[4 * i + 3] & 0xFF) << 24) & 0xFF000000) |
+                      (((sdata[4 * i + 2] & 0xFF) << 16) & 0x00FF0000) |
+                      (((sdata[4 * i + 1] & 0xFF) << 8) & 0x0000FF00) |
+                      (((sdata[4 * i] & 0xFF)) & 0x000000FF));
+            UPDOWN_INFOMSG("edata[%d]: %d (0x%X)", i, edata, edata);
             upstream_pyintf[dest_ud_id]->insert_operand(edata, lane_id);
           }
           upstream_pyintf[dest_ud_id]->insert_event(scont, ssize / 4, dest_ud_id, lane_id);
 
         } else {
           // Stores
-          UPDOWN_INFOMSG("Storing to Mapped Memory address: %lX, size: %d",
+          UPDOWN_INFOMSG("Storing to Mapped Memory address: 0x%lX, size: %d",
                           sdest, ssize);
 
           ptr_t src = reinterpret_cast<ptr_t>(sdata);
