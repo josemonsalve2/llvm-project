@@ -4477,6 +4477,8 @@ Action *Driver::BuildOffloadingActions(Compilation &C,
             A = C.MakeAction<ColossusExternalCompiler>(A, types::TY_Object);
           else
           A = ConstructPhaseAction(C, Args, Phase, A, Kind);
+        } else {
+          A = ConstructPhaseAction(C, Args, Phase, A, Kind);
         }
 
         if (isa<CompileJobAction>(A) && isa<CompileJobAction>(HostAction) &&
