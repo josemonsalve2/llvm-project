@@ -205,7 +205,7 @@ void ColossusCodeGenFunction::EmitStmt(const Stmt *S,
 CGOpenMPRuntimeColossus::CGOpenMPRuntimeColossus(CodeGenModule &CGM)
     : CGOpenMPRuntime(CGM, "_", "$") {
   if (!CGM.getLangOpts().OpenMPIsDevice)
-    llvm_unreachable("OpenMP can only handle device code.");
+    return;
 
   llvm::OpenMPIRBuilder &OMPBuilder = getOMPBuilder();
 }
@@ -216,8 +216,6 @@ void CGOpenMPRuntimeColossus::emitCodelets(const OMPExecutableDirective &D,
                                            llvm::Constant *&OutlinedFnID,
                                            bool IsOffloadEntry,
                                            const RegionCodeGenTy &CodeGen) {
-
-  printf("Calling emitCodelets\n");
 
   EntryFunctionState EST;
 
@@ -270,6 +268,10 @@ void CGOpenMPRuntimeColossus::emitTargetOutlinedFunction(
   if (!IsOffloadEntry) // Nothing to do.
     return;
 
+  if (!CGM.getLangOpts().OpenMPIsDevice)
+    CGOpenMPRuntime::emitTargetOutlinedFunction(
+        D, ParentName, OutlinedFn, OutlinedFnID, IsOffloadEntry, CodeGen);
+
   assert(!ParentName.empty() && "Invalid target region parent name!");
 
   // Emit the codelets inside the target region
@@ -281,6 +283,17 @@ void CGOpenMPRuntimeColossus::emitTaskCall(
     CodeGenFunction &CGF, SourceLocation Loc, const OMPExecutableDirective &D,
     llvm::Function *TaskFunction, QualType SharedsTy, Address Shareds,
     const Expr *IfCond, const OMPTaskDataTy &Data) {
+  if (!CGM.getLangOpts().OpenMPIsDevice)
+    CGOpenMPRuntime::emitTaskCall(CGF, Loc, D, TaskFunction, SharedsTy, Shareds,
+                                  IfCond, Data);
+}
 
-  printf("hereeeee\n");
+void CGOpenMPRuntimeColossus::emitTargetCall(
+    CodeGenFunction &CGF, const OMPExecutableDirective &D,
+    llvm::Function *OutlinedFn, llvm::Value *OutlinedFnID, const Expr *IfCond,
+    llvm::PointerIntPair<const Expr *, 2, OpenMPDeviceClauseModifier> Device,
+    llvm::function_ref<llvm::Value *(CodeGenFunction &CGF,
+                                     const OMPLoopDirective &D)>
+        SizeEmitter) {
+  printf("Emitting target call\n");
 }

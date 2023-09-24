@@ -2434,7 +2434,7 @@ public:
   /// directive, or null if no if clause is used.
   /// \param Device Expression evaluated in device clause associated with the
   /// target directive, or null if no device clause is used and device modifier.
-  void emitTargetCall(
+  virtual void emitTargetCall(
       CodeGenFunction &CGF, const OMPExecutableDirective &D,
       llvm::Function *OutlinedFn, llvm::Value *OutlinedFnID, const Expr *IfCond,
       llvm::PointerIntPair<const Expr *, 2, OpenMPDeviceClauseModifier> Device,

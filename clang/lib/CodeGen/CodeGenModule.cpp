@@ -242,6 +242,19 @@ void CodeGenModule::createOpenCLRuntime() {
 }
 
 void CodeGenModule::createOpenMPRuntime() {
+  // TODO: This is a hacky way to overwrite the code generation in
+  // the host as well. This will likely result in the wrong codegen
+  // for the host target and task regions.
+  // Check if openmp-targets option has the colossus tripple.
+  // If so, generate the colossus runtime.
+  auto &TT = getLangOpts().OMPTargetTriples;
+  for (auto &T : TT) {
+    if (T.getArch() == llvm::Triple::colossus) {
+      OpenMPRuntime.reset(new CGOpenMPRuntimeColossus(*this));
+      return;
+    }
+  }
+
   // Select a specialized code generation class based on the target, if any.
   // If it does not exist use the default implementation.
   switch (getTriple().getArch()) {

@@ -97,6 +97,14 @@ private:
                     llvm::Function *TaskFunction, QualType SharedsTy,
                     Address Shareds, const Expr *IfCond,
                     const OMPTaskDataTy &Data) override;
+
+  void emitTargetCall(
+      CodeGenFunction &CGF, const OMPExecutableDirective &D,
+      llvm::Function *OutlinedFn, llvm::Value *OutlinedFnID, const Expr *IfCond,
+      llvm::PointerIntPair<const Expr *, 2, OpenMPDeviceClauseModifier> Device,
+      llvm::function_ref<llvm::Value *(CodeGenFunction &CGF,
+                                       const OMPLoopDirective &D)>
+          SizeEmitter) override;
 };
 
 } // CodeGen namespace.
