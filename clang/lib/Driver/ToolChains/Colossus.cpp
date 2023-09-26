@@ -180,8 +180,8 @@ void COLOSSUS::Backend::ConstructJob(Compilation &C, const JobAction &JA,
   // Pass -v to popc if it was passed to the driver.
   if (Args.hasArg(options::OPT_v))
     CmdArgs.push_back("-v");
+  // CmdArgs.push_back("-target=ipu2");
   CmdArgs.push_back("-o");
-  CmdArgs.push_back("-S");
   const char *OutputFileName = Args.MakeArgString(TC.getInputFilename(Output));
   if (std::string(OutputFileName) != std::string(Output.getFilename()))
     C.addTempFile(OutputFileName);
@@ -345,7 +345,7 @@ ColossusToolChain::ColossusToolChain(const Driver &D, const llvm::Triple &Triple
 
 std::string ColossusToolChain::getInputFilename(const InputInfo &Input) const {
   // Only object files are changed, for example assembly files keep their .s
-  // extensions. 
+  // extensions.
   if (Input.getType() != types::TY_Object)
     return ToolChain::getInputFilename(Input);
 

@@ -4472,11 +4472,12 @@ Action *Driver::BuildOffloadingActions(Compilation &C,
           if (Phase == phases::Compile)
             A = C.MakeAction<CompileJobAction>(A, types::TY_LLVM_IR);
           else if (Phase == phases::Backend)
-            A = C.MakeAction<ColossusExternalCompiler>(A, types::TY_PP_Asm);
-          else if (Phase == phases::Assemble)
+            // A = C.MakeAction<ColossusExternalCompiler>(A, types::TY_PP_Asm);
             A = C.MakeAction<ColossusExternalCompiler>(A, types::TY_Object);
-          else
-          A = ConstructPhaseAction(C, Args, Phase, A, Kind);
+          else if (Phase == phases::Assemble) {
+            // A = C.MakeAction<ColossusExternalCompiler>(A, types::TY_Object);
+          } else
+            A = ConstructPhaseAction(C, Args, Phase, A, Kind);
         } else {
           A = ConstructPhaseAction(C, Args, Phase, A, Kind);
         }
