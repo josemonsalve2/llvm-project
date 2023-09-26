@@ -31,60 +31,78 @@
 extern "C" {
 #endif
 
-int32_t __tgt_rtl_register_lib(__tgt_bin_desc *Desc) {
-  // Create the IPU model device
-  poplar::IPUModel ipuModel;
-  poplar::Device device = ipuModel.createDevice();
-  poplar::Target target = device.getTarget();
-
-  // Create the Graph object
-  poplar::Graph graph(target);
-
-  // Add codelets to the graph
-  graph.addCodelets("tut3_codelets.cpp");
-
-  // Add variables to the graph
-  poplar::Tensor v1 = graph.addVariable(poplar::FLOAT, {4}, "v1");
-  poplar::Tensor v2 = graph.addVariable(poplar::FLOAT, {4}, "v2");
-  for (unsigned i = 0; i < 4; ++i) {
-    graph.setTileMapping(v1[i], i);
-    graph.setTileMapping(v2[i], i);
-  }
-
-  // Create a control program that is a sequence of steps
+class PoplarProgram {
   poplar::program::Sequence prog;
+  poplar::Graph graph;
+  poplar::Engine *engine;
 
-  // Add steps to initialize the variables
-  poplar::Tensor c1 = graph.addConstant<float>(poplar::FLOAT, {4}, {1.0, 1.5, 2.0, 2.5});
-  graph.setTileMapping(c1, 0);
-  prog.add(poplar::program::Copy(c1, v1));
-
-  poplar::ComputeSet computeSet = graph.addComputeSet("computeSet");
-  for (unsigned i = 0; i < 4; ++i) {
-    poplar::VertexRef vtx = graph.addVertex(computeSet, "SumVertex");
-    graph.connect(vtx["in"], v1.slice(i, 4));
-    graph.connect(vtx["out"], v2[i]);
-    graph.setTileMapping(vtx, i);
-    graph.setPerfEstimate(vtx, 20);
+public:
+  PoplarProgram() = delete;
+  PoplarProgram(poplar::Target t) : graph(t), engine(nullptr) {
+    std::cout << "PoplarProgram constructor\n";
   }
 
-  // Add step to execute the compute set
-  prog.add(poplar::program::Execute(computeSet));
+  // move consrtuctor
+  PoplarProgram(PoplarProgram &&other) {
+    std::cout << "PoplarProgram move constructor\n";
+    prog = std::move(other.prog);
+    graph = std::move(other.graph);
+    engine = other.engine;
+    other.engine = nullptr;
+  }
 
-  // Add step to print out v2
-  prog.add(poplar::program::PrintTensor("v2", v2));
+  void addStep(poplar::program::Program &step) { prog.add(step); }
 
-  // Create the engine
-  poplar::Engine engine(graph, prog);
-  engine.load(device);
+  poplar::Graph &getGraph() { return graph; }
 
-  // Run the control program
-  std::cout << "Running program\n";
-  engine.run(0);
-  std::cout << "Program complete\n";
+  void run() {
+    if (engine == nullptr)
+      engine = new poplar::Engine(graph, prog);
 
-  return 0;
-}
+    std::cout << "Running program\n";
+    engine->run(0);
+    std::cout << "Program complete\n";
+  }
+
+  ~PoplarProgram() { std::cout << "PoplarProgram destructor\n"; }
+};
+
+class DeviceRTLty {
+  poplar::IPUModel ipuModel;
+  poplar::Device device;
+  poplar::Target target;
+
+  std::vector<PoplarProgram> programs;
+
+public:
+  DeviceRTLty() {
+    device = ipuModel.createDevice();
+    target = device.getTarget();
+    std::cout << "DeviceRTLty constructor\n";
+  }
+
+  void loadCodelets(std::string codeletFile) {
+    std::cout << "Loading codelets from " << codeletFile << "\n";
+    for (auto &prog : programs) {
+      prog.getGraph().addCodelets(codeletFile);
+    }
+  }
+
+  poplar::IPUModel &getIPUModel() { return ipuModel; }
+  poplar::Device &getDevice() { return device; }
+  poplar::Target &getTarget() { return target; }
+
+  int addNewProgram() {
+    programs.emplace_back(target);
+    return programs.size() - 1;
+  }
+
+  ~DeviceRTLty() { std::cout << "DeviceRTLty destructor\n"; }
+};
+
+DeviceRTLty DeviceRTL;
+
+int32_t __tgt_rtl_register_lib(__tgt_bin_desc *Desc) { return 0; }
 
 int32_t __tgt_rtl_unregister_lib(__tgt_bin_desc *Desc) {
   return 0;
