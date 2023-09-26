@@ -31,24 +31,57 @@
 extern "C" {
 #endif
 
+/// Each PoplarProgram object has its own graph and engine
 class PoplarProgram {
   poplar::program::Sequence prog;
   poplar::Graph graph;
+  poplar::Device *device;
   poplar::Engine *engine;
+  std::vector<poplar::ComputeSet> computeSets;
+  std::vector<poplar::VertexRef> vertices;
 
 public:
   PoplarProgram() = delete;
-  PoplarProgram(poplar::Target t) : graph(t), engine(nullptr) {
+  PoplarProgram(poplar::Target t, poplar::Device& d) : graph(t), device(&d), engine(nullptr) {
     std::cout << "PoplarProgram constructor\n";
+
+
+    // Load the codelets to the program
+    //TODO: get codeletFilename here
+    std::string codeletFile = "codelets.cpp";
+    graph.addCodelets(codeletFile);
+
+
   }
 
-  // move consrtuctor
+  // move constructor 
   PoplarProgram(PoplarProgram &&other) {
     std::cout << "PoplarProgram move constructor\n";
     prog = std::move(other.prog);
     graph = std::move(other.graph);
     engine = other.engine;
+    device = other.device;
     other.engine = nullptr;
+  }
+
+  // Add a computeSet and returns its ID
+  int addComputeSet() {
+    computeSets.emplace_back(graph.addComputeSet());
+    return computeSets.size() - 1;
+  }
+
+  // Add a vertex to a computeSet and returns its ID
+  int addVertexToComputeSet(int computeSetID, std::string codeletName) {
+    auto &computeSet = computeSets[computeSetID];
+    auto vertex = graph.addVertex(computeSet, codeletName);
+    vertices.push_back(vertex);
+
+    return vertices.size() - 1;
+  }
+
+  // Get a computeSet by ID
+  poplar::ComputeSet &getComputeSet(int computeSetID) {
+    return computeSets[computeSetID];
   }
 
   void addStep(poplar::program::Program &step) { prog.add(step); }
@@ -56,8 +89,25 @@ public:
   poplar::Graph &getGraph() { return graph; }
 
   void run() {
+    // Add execute step to each computeSet
+    for (auto &computeSet : computeSets) {
+      prog.add(poplar::program::Execute(computeSet));
+    }
+
+    //TODO: check if this will ever be not null
     if (engine == nullptr)
       engine = new poplar::Engine(graph, prog);
+
+    // TODO: check because this seems cosmologically wrong....
+    engine->load(*device);
+
+    // Round robin associate each vertex with a tile
+    int tile = 0;
+    for (auto &vertex : vertices) {
+      tile = (tile + 1) % graph.getTarget().getNumTiles();
+      graph.setTileMapping(vertex, tile);
+    }
+
 
     std::cout << "Running program\n";
     engine->run(0);
@@ -81,21 +131,49 @@ public:
     std::cout << "DeviceRTLty constructor\n";
   }
 
-  void loadCodelets(std::string codeletFile) {
-    std::cout << "Loading codelets from " << codeletFile << "\n";
-    for (auto &prog : programs) {
-      prog.getGraph().addCodelets(codeletFile);
-    }
-  }
+  // moved to program constructor
+  // void loadCodelets(std::string codeletFile) {
+  //   std::cout << "Loading codelets from " << codeletFile << "\n";
+  //   for (auto &prog : programs) {
+  //     prog.getGraph().addCodelets(codeletFile);
+  //   }
+  // }
 
   poplar::IPUModel &getIPUModel() { return ipuModel; }
   poplar::Device &getDevice() { return device; }
   poplar::Target &getTarget() { return target; }
 
+  // Returns the ID of the new program
   int addNewProgram() {
-    programs.emplace_back(target);
+    programs.emplace_back(target, device);
+
+    // Will we ever pop programs? If so, this will need to be changed
     return programs.size() - 1;
   }
+
+  // Returns the ID of the new computeSet
+  int newComputeSet(int programID) {
+    auto &prog = programs[programID];
+    int newComputeSetID = prog.addComputeSet();
+
+    return newComputeSetID;
+  }
+
+  int addVertex(int computeSetID, int programID, std::string codeletName){
+    auto &prog = programs[programID];
+    auto &computeSet = prog.getComputeSet(computeSetID);
+
+    int vertexId = prog.addVertexToComputeSet(computeSetID, codeletName);
+
+    return vertexId;
+  }
+
+  void runProgram(int programID) {
+    auto &prog = programs[programID];
+    prog.run();
+  }
+
+
 
   ~DeviceRTLty() { std::cout << "DeviceRTLty destructor\n"; }
 };
