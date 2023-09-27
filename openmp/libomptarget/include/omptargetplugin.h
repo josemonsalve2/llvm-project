@@ -179,6 +179,9 @@ int32_t __tgt_rtl_init_async_info(int32_t ID, __tgt_async_info **AsyncInfoPtr);
 int32_t __tgt_rtl_init_device_info(int32_t ID, __tgt_device_info *DeviceInfoPtr,
                                    const char **ErrStr);
 
+// Grahcore functons
+int addNewProgram();
+
 #ifdef __cplusplus
 }
 #endif

@@ -67,6 +67,11 @@ struct RTLInfoTy {
   typedef int32_t(init_async_info_ty)(int32_t, __tgt_async_info **);
   typedef int64_t(init_device_into_ty)(int64_t, __tgt_device_info *,
                                        const char **);
+  // Graphcore functions
+  typedef int addNewPrgram_ty();
+  typedef int newComputeSet_ty(int programID);
+  typedef int addVertex_ty(int computeSetID, int programID, std::string codeletName);
+  typedef void runProgram_ty(int programID);
 
   int32_t Idx = -1;             // RTL index, index is the number of devices
                                 // of other RTLs that were registered before,
@@ -114,6 +119,11 @@ struct RTLInfoTy {
   init_async_info_ty *init_async_info = nullptr;
   init_device_into_ty *init_device_info = nullptr;
   release_async_info_ty *release_async_info = nullptr;
+  // Grahcore types
+  addNewPrgram_ty *addNewProgram = nullptr;
+  newComputeSet_ty *newComputeSet = nullptr;
+  addVertex_ty *addVertex = nullptr;
+  runProgram_ty *runProgram = nullptr;
 
   // Are there images associated with this RTL.
   bool isUsed = false;
