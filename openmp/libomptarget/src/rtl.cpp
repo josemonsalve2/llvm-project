@@ -210,6 +210,20 @@ void RTLsTy::LoadRTLs() {
         dlsym(dynlib_handle, "__tgt_rtl_init_async_info");
     *((void **)&R.init_device_info) =
         dlsym(dynlib_handle, "__tgt_rtl_init_device_info");
+
+    // Graphcore functions
+    *((void **)&R.addNewProgram) =
+        dlsym(dynlib_handle, "addNewProgram");
+
+    *((void **)&R.newComputeSet) =
+        dlsym(dynlib_handle, "newComputeSet");
+
+    *((void **)&R.addVertex) =
+        dlsym(dynlib_handle, "addVertex");
+
+    *((void **)&R.runProgram) =
+        dlsym(dynlib_handle, "runProgram");
+    
   }
 
   DP("RTLs loaded!\n");
