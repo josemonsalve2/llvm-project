@@ -242,6 +242,10 @@ TargetInfo *AllocateTarget(const llvm::Triple &Triple,
   case llvm::Triple::bpfel:
     return new BPFTargetInfo(Triple, Opts);
 
+    // IPU local patch begin
+  case llvm::Triple::colossus:
+    return new ColossusTargetInfo(Triple, Opts);
+    // IPU local patch end
   case llvm::Triple::msp430:
     return new MSP430TargetInfo(Triple, Opts);
 
@@ -397,8 +401,8 @@ TargetInfo *AllocateTarget(const llvm::Triple &Triple,
   case llvm::Triple::nvptx64:
     return new NVPTXTargetInfo(Triple, Opts, /*TargetPointerWidth=*/64);
 
-  case llvm::Triple::colossus:
-    return new ColossusTargetInfo(Triple, Opts, /*TargetPointerWidth=*/64);
+    // case llvm::Triple::colossus:
+    //   return new ColossusTargetInfo(Triple, Opts, /*TargetPointerWidth=*/64);
 
   case llvm::Triple::amdgcn:
   case llvm::Triple::r600:

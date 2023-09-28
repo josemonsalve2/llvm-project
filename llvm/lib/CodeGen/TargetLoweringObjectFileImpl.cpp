@@ -207,6 +207,13 @@ void TargetLoweringObjectFileELF::Initialize(MCContext &Ctx,
     PersonalityEncoding = dwarf::DW_EH_PE_absptr;
     TTypeEncoding = dwarf::DW_EH_PE_absptr;
     break;
+  // IPU local patch begin
+  case Triple::colossus:
+    LSDAEncoding = dwarf::DW_EH_PE_absptr;
+    PersonalityEncoding = dwarf::DW_EH_PE_absptr;
+    TTypeEncoding = dwarf::DW_EH_PE_absptr;
+    break;
+  // IPU local patch end
   case Triple::mips:
   case Triple::mipsel:
   case Triple::mips64:

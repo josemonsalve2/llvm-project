@@ -151,7 +151,15 @@ public:
     return false;
   }
 
-  /// Target specific predicate for whether a given fixup requires the
+  // IPU local patch begin
+  /// Check whether the given instruction should be emitted as a relaxable
+  /// fragment.
+  ///
+  /// \param Inst - The instruction to test.
+  virtual bool needsRelaxableFragment(const MCInst &Inst) { return false; }
+  // IPU local patch end
+
+    /// Target specific predicate for whether a given fixup requires the
   /// associated instruction to be relaxed.
   virtual bool fixupNeedsRelaxationAdvanced(const MCFixup &Fixup, bool Resolved,
                                             uint64_t Value,

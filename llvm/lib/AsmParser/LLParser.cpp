@@ -1898,6 +1898,9 @@ void LLParser::parseOptionalDLLStorageClass(unsigned &Res) {
 ///   ::= 'amdgpu_ps'
 ///   ::= 'amdgpu_cs'
 ///   ::= 'amdgpu_kernel'
+// IPU local patch begin
+///   ::= 'colossus_vertex'
+// IPU local patch end
 ///   ::= 'tailcc'
 ///   ::= 'cc' UINT
 ///
@@ -1950,6 +1953,9 @@ bool LLParser::parseOptionalCallingConv(unsigned &CC) {
   case lltok::kw_amdgpu_ps:      CC = CallingConv::AMDGPU_PS; break;
   case lltok::kw_amdgpu_cs:      CC = CallingConv::AMDGPU_CS; break;
   case lltok::kw_amdgpu_kernel:  CC = CallingConv::AMDGPU_KERNEL; break;
+  // IPU local patch begin
+  case lltok::kw_colossus_vertex:CC = CallingConv::Colossus_Vertex; break;
+  // IPU local patch end
   case lltok::kw_tailcc:         CC = CallingConv::Tail; break;
   case lltok::kw_cc: {
       Lex.Lex();

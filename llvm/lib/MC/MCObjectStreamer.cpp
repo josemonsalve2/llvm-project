@@ -435,6 +435,10 @@ void MCObjectStreamer::emitInstructionImpl(const MCInst &Inst,
   MCAssembler &Assembler = getAssembler();
   MCAsmBackend &Backend = Assembler.getBackend();
   if (!(Backend.mayNeedRelaxation(Inst, STI) ||
+  // IPU local patch begin
+  // T793
+        Backend.needsRelaxableFragment(Inst) ||
+  // IPU local patch end
         Backend.allowEnhancedRelaxation())) {
     emitInstToData(Inst, STI);
     return;

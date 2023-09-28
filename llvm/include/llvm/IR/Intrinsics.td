@@ -2033,6 +2033,9 @@ include "llvm/IR/IntrinsicsPowerPC.td"
 include "llvm/IR/IntrinsicsX86.td"
 include "llvm/IR/IntrinsicsARM.td"
 include "llvm/IR/IntrinsicsAArch64.td"
+// IPU local patch begin
+include "llvm/IR/IntrinsicsColossus.td"
+// IPU local patch end
 include "llvm/IR/IntrinsicsXCore.td"
 include "llvm/IR/IntrinsicsHexagon.td"
 include "llvm/IR/IntrinsicsNVVM.td"

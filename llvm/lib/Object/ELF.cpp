@@ -87,6 +87,15 @@ StringRef llvm::object::getELFRelocationTypeName(uint32_t Machine,
       break;
     }
     break;
+  // IPU local patch begin
+  case ELF::EM_GRAPHCORE_IPU:
+    switch (Type) {
+#include "llvm/BinaryFormat/ELFRelocs/Colossus.def"
+    default:
+      break;
+    }
+    break;
+  // IPU local patch end
   case ELF::EM_LANAI:
     switch (Type) {
 #include "llvm/BinaryFormat/ELFRelocs/Lanai.def"

@@ -486,6 +486,10 @@ public:
   
   virtual void onLabelParsed(MCSymbol *Symbol) {}
 
+  // IPU local patch begin
+  virtual void onStatementPrefix(AsmToken Token) {}
+  // IPU local patch end
+
   /// Ensure that all previously parsed instructions have been emitted to the
   /// output streamer, if the target does not emit them immediately.
   virtual void flushPendingInstructions(MCStreamer &Out) {}

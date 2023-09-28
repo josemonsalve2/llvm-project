@@ -940,6 +940,11 @@ void raw_string_ostream::write_impl(const char *Ptr, size_t Size) {
   OS.append(Ptr, Size);
 }
 
+// IPU local patch begin
+// Workaround for https://bugs.gentoo.org/704252
+uint64_t raw_string_ostream::current_pos() const { return OS.size(); }
+// IPU local patch end
+
 //===----------------------------------------------------------------------===//
 //  raw_svector_ostream
 //===----------------------------------------------------------------------===//

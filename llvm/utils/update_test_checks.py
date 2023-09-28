@@ -61,9 +61,6 @@ def main():
 
   script_name = os.path.basename(__file__)
   opt_basename = os.path.basename(initial_args.opt_binary)
-  if not re.match(r'^opt(-\d+)?(\.exe)?$', opt_basename):
-    common.error('Unexpected opt name: ' + opt_basename)
-    sys.exit(1)
   opt_basename = 'opt'
 
   for ti in common.itertests(initial_args.tests, parser,

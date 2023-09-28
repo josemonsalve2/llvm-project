@@ -1813,6 +1813,12 @@ public:
     return 5;
   }
 
+  // IPU local patch begin
+  /// Some (target specific pseudo) instructions may not be CSE'd. This hook
+  /// can be used to avoid CSE candidate considerations for MachineInstrs.
+  virtual bool canBeCSECandidate(const MachineInstr &MI) const { return true; }
+  // IPU local patch end
+
   /// Return the maximal number of alias checks on memory operands. For
   /// instructions with more than one memory operands, the alias check on a
   /// single MachineInstr pair has quadratic overhead and results in

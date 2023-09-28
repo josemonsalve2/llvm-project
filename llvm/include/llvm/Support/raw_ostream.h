@@ -637,8 +637,10 @@ class raw_string_ostream : public raw_ostream {
 
   /// Return the current position within the stream, not counting the bytes
   /// currently in the buffer.
-  uint64_t current_pos() const override { return OS.size(); }
-
+  // IPU local patch begin
+  // Workaround for https://bugs.gentoo.org/704252
+  uint64_t current_pos() const override;
+  // IPU local patch end
 public:
   explicit raw_string_ostream(std::string &O) : OS(O) {
     SetUnbuffered();

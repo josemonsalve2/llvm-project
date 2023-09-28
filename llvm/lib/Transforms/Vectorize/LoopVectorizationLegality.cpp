@@ -684,6 +684,14 @@ bool LoopVectorizationLegality::canVectorizeInstrs() {
           // recurrences.
           AllowedExit.insert(&I);
           continue;
+// IPU local patch begin
+          // IPU TODO
+          reportVectorizationFailure(
+              "Found value that is neither a induction nor reduction value",
+              "value could not be identified as an induction or reduction varaible",
+              "NeitherInductionNorReduction", ORE, TheLoop, Phi);
+          return false;
+// IPU local patch end
         }
 
         // We only allow if-converted PHIs with exactly two incoming values.

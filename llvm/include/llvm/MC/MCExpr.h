@@ -354,6 +354,13 @@ public:
     VK_VE_TPOFF_HI32,  // symbol@tpoff_hi
     VK_VE_TPOFF_LO32,  // symbol@tpoff_lo
 
+    // IPU local patch begin
+    VK_COLOSSUS_RELATIVE_16_S2, // symbol@relative@16@s2
+    VK_COLOSSUS_18_S2,          // symbol@18@s2
+    VK_COLOSSUS_19_S2,          // symbol@19@s2
+    VK_COLOSSUS_21,             // symbol@21
+    // IPU local patch end
+
     VK_TPREL,
     VK_DTPREL
   };

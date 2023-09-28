@@ -170,6 +170,9 @@ enum Kind {
   kw_amdgpu_cs,
   kw_amdgpu_kernel,
   kw_amdgpu_gfx,
+  // IPU local patch begin
+  kw_colossus_vertex,
+  // IPU local patch end
   kw_tailcc,
 
   // Attributes:

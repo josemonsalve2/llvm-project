@@ -39,6 +39,12 @@
 #define LLVM_THREADING_USE_STD_CALL_ONCE 0
 #endif
 
+// IPU local patch begin
+// TODO: Temporary disable std::call_once for colossus due to runtime failures
+#undef LLVM_THREADING_USE_STD_CALL_ONCE
+#define LLVM_THREADING_USE_STD_CALL_ONCE 0
+// IPU local patch end
+
 #if LLVM_THREADING_USE_STD_CALL_ONCE
 #include <mutex>
 #else

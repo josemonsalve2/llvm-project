@@ -36,6 +36,9 @@ StringRef Triple::getArchTypeName(ArchType Kind) {
   case avr:            return "avr";
   case bpfeb:          return "bpfeb";
   case bpfel:          return "bpfel";
+// IPU local patch begin
+  case colossus:       return "colossus";
+// IPU local patch end
   case csky:           return "csky";
   case dxil:           return "dxil";
   case hexagon:        return "hexagon";
@@ -55,7 +58,6 @@ StringRef Triple::getArchTypeName(ArchType Kind) {
   case msp430:         return "msp430";
   case nvptx64:        return "nvptx64";
   case nvptx:          return "nvptx";
-  case colossus:       return "colossus";
   case ppc64:          return "powerpc64";
   case ppc64le:        return "powerpc64le";
   case ppc:            return "powerpc";
@@ -104,7 +106,11 @@ StringRef Triple::getArchTypePrefix(ArchType Kind) {
   case armeb:
   case thumb:
   case thumbeb:     return "arm";
+  
+// IPU local patch begin
+  case colossus:    return "colossus";
 
+// IPU local patch end
   case avr:         return "avr";
 
   case ppc64:
@@ -232,7 +238,6 @@ StringRef Triple::getOSTypeName(OSType Kind) {
   case NaCl: return "nacl";
   case NetBSD: return "netbsd";
   case OpenBSD: return "openbsd";
-  case Colossus: return "unknown";
   case PS4: return "ps4";
   case PS5: return "ps5";
   case RTEMS: return "rtems";
@@ -320,6 +325,9 @@ Triple::ArchType Triple::getArchTypeForLLVMName(StringRef Name) {
     .Case("armeb", armeb)
     .Case("avr", avr)
     .StartsWith("bpf", BPFArch)
+// IPU local patch begin
+    .Case("colossus", colossus)
+// IPU local patch end
     .Case("m68k", m68k)
     .Case("mips", mips)
     .Case("mipsel", mipsel)
@@ -454,7 +462,9 @@ static Triple::ArchType parseArch(StringRef ArchName) {
     .Cases("powerpc64le", "ppc64le", Triple::ppc64le)
     .Case("xscale", Triple::arm)
     .Case("xscaleeb", Triple::armeb)
-    .Case("aarch64", Triple::aarch64)
+// IPU local patch begin
+    .Case("colossus", Triple::colossus)
+// IPU local patch end    .Case("aarch64", Triple::aarch64)
     .Case("aarch64_be", Triple::aarch64_be)
     .Case("aarch64_32", Triple::aarch64_32)
     .Case("arc", Triple::arc)
@@ -490,7 +500,6 @@ static Triple::ArchType parseArch(StringRef ArchName) {
     .Case("xcore", Triple::xcore)
     .Case("nvptx", Triple::nvptx)
     .Case("nvptx64", Triple::nvptx64)
-    .Case("colossus", Triple::colossus)
     .Case("le32", Triple::le32)
     .Case("le64", Triple::le64)
     .Case("amdil", Triple::amdil)
@@ -805,6 +814,9 @@ static Triple::ObjectFormatType getDefaultFormat(const Triple &T) {
   case Triple::avr:
   case Triple::bpfeb:
   case Triple::bpfel:
+// IPU local patch begin
+  case Triple::colossus:
+// IPU local patch end
   case Triple::csky:
   case Triple::hexagon:
   case Triple::hsail64:
@@ -823,7 +835,6 @@ static Triple::ObjectFormatType getDefaultFormat(const Triple &T) {
   case Triple::msp430:
   case Triple::nvptx64:
   case Triple::nvptx:
-  case Triple::colossus:
   case Triple::ppc64le:
   case Triple::ppcle:
   case Triple::r600:
@@ -1389,6 +1400,9 @@ static unsigned getArchPointerBitWidth(llvm::Triple::ArchType Arch) {
   case llvm::Triple::arc:
   case llvm::Triple::arm:
   case llvm::Triple::armeb:
+// IPU local patch begin
+  case llvm::Triple::colossus:
+// IPU local patch end
   case llvm::Triple::csky:
   case llvm::Triple::dxil:
   case llvm::Triple::hexagon:
@@ -1432,7 +1446,6 @@ static unsigned getArchPointerBitWidth(llvm::Triple::ArchType Arch) {
   case llvm::Triple::mips64:
   case llvm::Triple::mips64el:
   case llvm::Triple::nvptx64:
-  case llvm::Triple::colossus:
   case llvm::Triple::ppc64:
   case llvm::Triple::ppc64le:
   case llvm::Triple::renderscript64:
@@ -1480,6 +1493,9 @@ Triple Triple::get32BitArchVariant() const {
   case Triple::arc:
   case Triple::arm:
   case Triple::armeb:
+// IPU local patch begin
+  case Triple::colossus:
+// IPU local patch end
   case Triple::csky:
   case Triple::dxil:
   case Triple::hexagon:
@@ -1492,7 +1508,6 @@ Triple Triple::get32BitArchVariant() const {
   case Triple::mips:
   case Triple::mipsel:
   case Triple::nvptx:
-  case Triple::colossus:
   case Triple::ppc:
   case Triple::ppcle:
   case Triple::r600:
@@ -1547,6 +1562,9 @@ Triple Triple::get64BitArchVariant() const {
   case Triple::UnknownArch:
   case Triple::arc:
   case Triple::avr:
+// IPU local patch begin
+  case Triple::colossus:
+// IPU local patch end
   case Triple::csky:
   case Triple::dxil:
   case Triple::hexagon:
@@ -1554,7 +1572,6 @@ Triple Triple::get64BitArchVariant() const {
   case Triple::lanai:
   case Triple::m68k:
   case Triple::msp430:
-  case Triple::colossus:
   case Triple::r600:
   case Triple::shave:
   case Triple::sparcel:
@@ -1632,6 +1649,9 @@ Triple Triple::getBigEndianArchVariant() const {
   case Triple::amdil64:
   case Triple::amdil:
   case Triple::avr:
+// IPU local patch begin
+  case Triple::colossus:
+// IPU local patch end
   case Triple::dxil:
   case Triple::hexagon:
   case Triple::hsail64:
@@ -1733,6 +1753,9 @@ bool Triple::isLittleEndian() const {
   case Triple::amdil:
   case Triple::arm:
   case Triple::avr:
+// IPU local patch begin
+  case Triple::colossus:
+// IPU local patch end
   case Triple::bpfel:
   case Triple::csky:
   case Triple::dxil:

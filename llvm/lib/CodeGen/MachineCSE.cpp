@@ -427,6 +427,12 @@ bool MachineCSE::isCSECandidate(MachineInstr *MI) {
   if (MI->getOpcode() == TargetOpcode::LOAD_STACK_GUARD)
     return false;
 
+  // IPU local patch begin
+  // Hook to ignore instructions depending on target specific requirements.
+  if (!TII->canBeCSECandidate(*MI))
+    return false;
+  // IPU local patch end
+
   return true;
 }
 

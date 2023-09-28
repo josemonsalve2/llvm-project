@@ -332,6 +332,11 @@ void MCObjectFileInfo::initMachOMCObjectFileInfo(const Triple &T) {
 
 void MCObjectFileInfo::initELFMCObjectFileInfo(const Triple &T, bool Large) {
   switch (T.getArch()) {
+  // IPU local patch begin
+  case Triple::colossus:
+    FDECFIEncoding = dwarf::DW_EH_PE_absptr;
+    break;
+  // IPU local patch end
   case Triple::mips:
   case Triple::mipsel:
   case Triple::mips64:

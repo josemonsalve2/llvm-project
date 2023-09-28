@@ -4036,3 +4036,22 @@ def NoRandomizeLayout : InheritableAttr {
   let LangOpts = [COnly];
 }
 def : MutualExclusions<[RandomizeLayout, NoRandomizeLayout]>;
+
+// IPU local patch begin
+/// Colossus attributes.
+def TargetColossus : TargetArch<["colossus"]>;
+def ColossusVertex : Attr, TargetSpecificAttr<TargetColossus> {
+  let Spellings = [GNU<"colossus_vertex">,
+                   CXX11<"colossus", "vertex">];
+  let Subjects = SubjectList<[FunctionLike]>;
+  let Documentation = [Undocumented];
+}
+
+// Specification of constraints, eg that vertices impose on their edges
+def PoplarConstraint :  Attr {
+  let Spellings = [CXX11<"poplar", "constraint", 201603>];
+  let Subjects = SubjectList<[Struct, Function], ErrorDiag, "ExpectedFunctionMethodOrClass">;
+  let Args = [VariadicStringArgument<"Cond">];
+  let Documentation = [Undocumented];
+}
+// IPU local patch end

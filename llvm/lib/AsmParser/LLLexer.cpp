@@ -629,6 +629,9 @@ lltok::Kind LLLexer::LexIdentifier() {
   KEYWORD(amdgpu_cs);
   KEYWORD(amdgpu_kernel);
   KEYWORD(amdgpu_gfx);
+  // IPU local patch begin
+  KEYWORD(colossus_vertex);
+  // IPU local patch end
   KEYWORD(tailcc);
 
   KEYWORD(cc);

@@ -252,6 +252,11 @@ namespace CallingConv {
     /// M68k_INTR - Calling convention used for M68k interrupt routines.
     M68k_INTR = 101,
 
+    /// IPU local patch begin
+    /// \brief The CC used for vertex functions on Colossus devices.
+    Colossus_Vertex = 102,
+    /// IPU local patch end
+
     /// The highest possible calling convention ID. Must be some 2^k - 1.
     MaxID = 1023
   };

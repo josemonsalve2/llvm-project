@@ -381,6 +381,12 @@ StringRef MCSymbolRefExpr::getVariantKindName(VariantKind Kind) {
   case VK_VE_TLS_GD_LO32: return "tls_gd_lo";
   case VK_VE_TPOFF_HI32: return "tpoff_hi";
   case VK_VE_TPOFF_LO32: return "tpoff_lo";
+  // IPU local patch begin
+  case VK_COLOSSUS_RELATIVE_16_S2: return "relative@16@s2";
+  case VK_COLOSSUS_18_S2: return "abs18@s2";
+  case VK_COLOSSUS_19_S2: return "abs19@s2";
+  case VK_COLOSSUS_21: return "abs21";
+  // IPU local patch end
   }
   llvm_unreachable("Invalid variant kind");
 }
@@ -524,6 +530,12 @@ MCSymbolRefExpr::getVariantKindForName(StringRef Name) {
     .Case("tls_gd_lo", VK_VE_TLS_GD_LO32)
     .Case("tpoff_hi", VK_VE_TPOFF_HI32)
     .Case("tpoff_lo", VK_VE_TPOFF_LO32)
+    // IPU local patch begin
+    .Case("relative@16@s2", VK_COLOSSUS_RELATIVE_16_S2)
+    .Case("abs18@s2", VK_COLOSSUS_18_S2)
+    .Case("abs19@s2", VK_COLOSSUS_19_S2)
+    .Case("abs@21", VK_COLOSSUS_21)
+    // IPU local patch end
     .Default(VK_Invalid);
 }
 

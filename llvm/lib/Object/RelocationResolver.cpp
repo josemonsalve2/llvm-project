@@ -511,6 +511,20 @@ static uint64_t resolveCSKY(uint64_t Type, uint64_t Offset, uint64_t S,
   }
 }
 
+// IPU Local patch begin
+static bool supportsColossus(uint64_t Type) {
+  return Type == ELF::R_COLOSSUS_32;
+}
+
+static uint64_t resolveColossus(uint64_t Type, uint64_t /*Offset*/, uint64_t S,
+                                uint64_t /*LocData*/, int64_t Addend) {
+  if (Type == ELF::R_COLOSSUS_32)
+    return S + Addend;
+  llvm_unreachable("Invalid relocation type");
+}
+
+// IPU Local patch end
+
 static bool supportsCOFFX86(uint64_t Type) {
   switch (Type) {
   case COFF::IMAGE_REL_I386_SECREL:
@@ -760,6 +774,10 @@ getRelocationResolver(const ObjectFile &Obj) {
       return {supportsRISCV, resolveRISCV};
     case Triple::csky:
       return {supportsCSKY, resolveCSKY};
+    // IPU Local patch begin
+    case Triple::colossus:
+      return {supportsColossus, resolveColossus};
+    // IPU Local patch end
     default:
       return {nullptr, nullptr};
     }

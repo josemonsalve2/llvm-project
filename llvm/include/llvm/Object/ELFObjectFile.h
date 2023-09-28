@@ -59,6 +59,10 @@ class ELFObjectFileBase : public ObjectFile {
 
   StringRef getAMDGPUCPUName() const;
 
+  // IPU local patch begin
+  StringRef getColossusArchName() const;
+  // IPU local patch end
+
 protected:
   ELFObjectFileBase(unsigned int Type, MemoryBufferRef Source);
 

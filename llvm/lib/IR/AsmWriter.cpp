@@ -334,6 +334,11 @@ static void PrintCallingConv(unsigned cc, raw_ostream &Out) {
   case CallingConv::AMDGPU_CS:     Out << "amdgpu_cs"; break;
   case CallingConv::AMDGPU_KERNEL: Out << "amdgpu_kernel"; break;
   case CallingConv::AMDGPU_Gfx:    Out << "amdgpu_gfx"; break;
+  // IPU local patch begin
+  case CallingConv::Colossus_Vertex:
+    Out << "colossus_vertex";
+    break;
+    // IPU local patch end
   }
 }
 

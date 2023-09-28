@@ -358,6 +358,10 @@ Optional<StringRef> ELFObjectFileBase::tryGetCPUName() const {
   switch (getEMachine()) {
   case ELF::EM_AMDGPU:
     return getAMDGPUCPUName();
+  // IPU local patch begin
+  case ELF::EM_GRAPHCORE_IPU:
+    return getColossusArchName();
+  // IPU local patch end
   default:
     return None;
   }
@@ -499,6 +503,26 @@ StringRef ELFObjectFileBase::getAMDGPUCPUName() const {
     llvm_unreachable("Unknown EF_AMDGPU_MACH value");
   }
 }
+
+// IPU local patch begin
+StringRef ELFObjectFileBase::getColossusArchName() const {
+  assert(getEMachine() == ELF::EM_GRAPHCORE_IPU);
+  unsigned IPU = getPlatformFlags() & ELF::EF_GRAPHCORE_ARCH;
+
+  switch (IPU) {
+  // IPU Colossus Architectures
+  case ELF::EF_GRAPHCORE_ARCH_IPU1:
+    return "ipu1";
+  case ELF::EF_GRAPHCORE_ARCH_IPU2:
+    return "ipu2";
+  case ELF::EF_GRAPHCORE_ARCH_IPU21:
+    return "ipu21";
+  default:
+    errs() << "objdump defaulting to architecture ipu1.\n";
+    return "ipu1";
+  }
+}
+// IPU local patch end
 
 // FIXME Encode from a tablegen description or target parser.
 void ELFObjectFileBase::setARMSubArch(Triple &TheTriple) const {
